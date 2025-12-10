@@ -1,0 +1,61 @@
+<!-- templates/event/create.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tạo sự kiện</title>
+</head>
+<body>
+
+<h1>Tạo sự kiện mới</h1>
+
+<form th:action="@{/events/create}" th:object="${event}" method="post">
+
+    <label>Tiêu đề:</label><br>
+    <input type="text" th:field="*{title}" required>
+    <br><br>
+
+    <label>Danh mục (category_id):</label><br>
+    <input type="number" th:field="*{category.category_id}" required>
+    <br><br>
+
+    <label>Thời gian bắt đầu:</label><br>
+    <input type="datetime-local" th:field="*{startTime}" required>
+    <br><br>
+
+    <label>Thời gian kết thúc:</label><br>
+    <input type="datetime-local" th:field="*{endTime}" required>
+    <br><br>
+
+    <label>Người tạo (created_by):</label><br>
+    <input type="number" th:field="*{created_by}" required>
+    <br><br>
+
+    <label>Địa điểm:</label><br>
+    <input type="text" th:field="*{location}">
+    <br><br>
+
+    <label>Giới hạn người tham gia:</label><br>
+    <input type="number" th:field="*{max_participants}">
+    <br><br>
+
+    <label>Mô tả:</label><br>
+    <textarea th:field="*{description}"></textarea>
+    <br><br>
+
+    <label>Chi tiết:</label><br>
+    <textarea th:field="*{detail}"></textarea>
+    <br><br>
+
+    <label>Ảnh (URL):</label><br>
+    <input type="text" th:field="*{image}">
+    <br><br>
+
+    <button type="submit">💾 Lưu</button>
+</form>
+
+<br>
+<a th:href="@{/events}">⬅ Quay lại danh sách</a>
+
+</body>
+</html>

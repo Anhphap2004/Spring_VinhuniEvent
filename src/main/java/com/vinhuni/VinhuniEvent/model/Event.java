@@ -13,8 +13,12 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long event_id;
-    @Column(nullable = false)
-    private Integer category_id;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.SET_NULL)
+    private EventCategory category;
 
     @Column(length = 200, nullable = false)
     private String title;

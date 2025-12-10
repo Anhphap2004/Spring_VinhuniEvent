@@ -17,6 +17,10 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<Event> getEventsByCategoryId(Long categoryId) {
+        return repo.findEventsByCategoryId(categoryId);
+    }
+    @Override
     public List<Event> getAllEvents() {
         return repo.findAll();
     }
