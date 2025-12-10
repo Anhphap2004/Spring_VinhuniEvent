@@ -1,0 +1,87 @@
+<header th:fragment="header">
+    <div>
+        <a class="AnhhPhapp-tet-left" href="#">
+            <img alt="tet" th:src="@{/assets/TrangTri/img-before-head.webp}" style="width:200px;" />
+        </a>
+    </div>
+    <div>
+        <a class="AnhhPhapp-tet-right" href="#">
+            <img alt="tet" th:src="@{/assets/TrangTri/mat-trang-long-den-trung-thu.webp}" style="width:150px;" />
+        </a>
+    </div>
+    <div class="container-fluid" style="background-color:#b31121;">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg py-4">
+
+                <!-- Logo -->
+                <a th:href="@{/}" class="navbar-brand" style="color:white;">
+                    <h1 class="fw-bold mb-0">Vinhuni<span style="color:#ffd74e;">Event</span></h1>
+                </a>
+
+                <!-- Toggle btn (mobile) -->
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                        style="color:white;">
+                    <span class="fa fa-bars"></span>
+                </button>
+
+                <!-- Menu -->
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav mx-auto">
+                        <a th:href="@{/}" class="nav-item nav-link"
+                           style="color:white;"
+                           onmouseover="this.style.color='#ffc107';"
+                           onmouseout="this.style.color='white';">Home</a>
+
+                        <a th:href="@{/about}" class="nav-item nav-link"
+                           style="color:white;"
+                           onmouseover="this.style.color='#ffc107';"
+                           onmouseout="this.style.color='white';">About</a>
+
+                        <a th:href="@{/services}" class="nav-item nav-link"
+                           style="color:white;"
+                           onmouseover="this.style.color='#ffc107';"
+                           onmouseout="this.style.color='white';">Services</a>
+
+                        <a th:href="@{/events}" class="nav-item nav-link"
+                           style="color:white;"
+                           onmouseover="this.style.color='#ffc107';"
+                           onmouseout="this.style.color='white';">Events</a>
+
+                        <a th:href="@{/menu}" class="nav-item nav-link"
+                           style="color:white;"
+                           onmouseover="this.style.color='#ffc107';"
+                           onmouseout="this.style.color='white';">Menu</a>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" style="color:white;"
+                               onmouseover="this.style.color='#ffc107';"
+                               onmouseout="this.style.color='white';"
+                               data-bs-toggle="dropdown">Pages</a>
+                            <div class="dropdown-menu" style="background-color:#dc3545;">
+                                <a th:href="@{/booking}" class="dropdown-item"
+                                   style="color:white;"
+                                   onmouseover="this.style.color='#ffc107';"
+                                   onmouseout="this.style.color='white';">Booking</a>
+                                <a th:href="@{/blog}" class="dropdown-item"
+                                   style="color:white;"
+                                   onmouseover="this.style.color='#ffc107';"
+                                   onmouseout="this.style.color='white';">Blog</a>
+                            </div>
+                        </div>
+
+                        <a th:href="@{/contact}" class="nav-item nav-link"
+                           style="color:white;"
+                           onmouseover="this.style.color='#ffc107';"
+                           onmouseout="this.style.color='white';">Contact</a>
+                    </div>
+
+                    <!-- Book Now -->
+                    <a th:href="@{/booking}" class="btn btn-light py-2 px-4 d-none d-xl-inline-block rounded-pill">
+                        Book Now
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
