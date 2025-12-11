@@ -1,4 +1,51 @@
 <header th:fragment="header">
+    <style>
+        /* CSS cho nút Giáng Sinh Dropdown */
+        .btn-account {
+            background-color: #FFD700; /* Vàng Kim - Nút chính */
+            color: #b31121 !important; /* Chữ Đỏ */
+            font-weight: bold;
+            border: 2px solid #b31121;
+            transition: all 0.3s;
+            margin-left: 10px;
+            padding: 10px 20px;
+        }
+        .btn-account:hover {
+            background-color: #ffe56b;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* Menu Dropdown */
+        .dropdown-menu-christmas {
+            background-color: #dc3545; /* Nền đỏ đậm cho dropdown */
+            border: 2px solid #FFD700; /* Viền vàng */
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .dropdown-item-christmas {
+            color: white !important;
+            font-weight: 500;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dropdown-item-christmas:hover {
+            background-color: #b31121; /* Đỏ đậm hơn khi hover */
+            color: #FFD700 !important; /* Chữ vàng kim khi hover */
+        }
+
+        /* Định vị hình ảnh trang trí */
+        .AnhhPhapp-tet-left, .AnhhPhapp-tet-right {
+            position: absolute;
+            top: 0;
+            z-index: 100;
+        }
+        .AnhhPhapp-tet-left { left: 0; }
+        .AnhhPhapp-tet-right { right: 0; }
+
+    </style>
+
     <div>
         <a class="AnhhPhapp-tet-left" href="#">
             <img alt="tet" th:src="@{/assets/TrangTri/img-before-head.webp}" style="width:200px;" />
@@ -9,23 +56,21 @@
             <img alt="tet" th:src="@{/assets/TrangTri/mat-trang-long-den-trung-thu.webp}" style="width:150px;" />
         </a>
     </div>
+
     <div class="container-fluid" style="background-color:#b31121;">
         <div class="container">
             <nav class="navbar navbar-expand-lg py-4">
 
-                <!-- Logo -->
                 <a th:href="@{/}" class="navbar-brand" style="color:white;">
                     <h1 class="fw-bold mb-0">Vinhuni<span style="color:#ffd74e;">Event</span></h1>
                 </a>
 
-                <!-- Toggle btn (mobile) -->
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                         style="color:white;">
                     <span class="fa fa-bars"></span>
                 </button>
 
-                <!-- Menu -->
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav mx-auto">
                         <a th:href="@{/}" class="nav-item nav-link"
@@ -76,10 +121,43 @@
                            onmouseout="this.style.color='white';">Contact</a>
                     </div>
 
-                    <!-- Book Now -->
-                    <a th:href="@{/booking}" class="btn btn-light py-2 px-4 d-none d-xl-inline-block rounded-pill">
-                        Book Now
-                    </a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="btn rounded-pill btn-account dropdown-toggle"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+
+                            <span th:if="${loggedInUser != null}">
+                                Tài khoản
+                            </span>
+                            <span th:if="${loggedInUser == null}">
+                                Tài khoản
+                            </span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-christmas">
+
+                            <div th:if="${loggedInUser != null}">
+                                <span class="dropdown-item dropdown-item-christmas" style="font-style: italic; font-weight: bold; cursor: default;">
+                                    Xin chào, <span th:text="${loggedInUser.full_name}">User Name</span>
+                                </span>
+                                <div class="dropdown-divider"></div>
+                                <a th:href="@{/logout}" class="dropdown-item dropdown-item-christmas">
+                                    <i class="fa fa-sign-out"></i> Đăng Xuất
+                                </a>
+                            </div>
+
+                            <div th:if="${loggedInUser == null}">
+                                <a th:href="@{/login}" class="dropdown-item dropdown-item-christmas">
+                                    <i class="fa fa-sign-in"></i> Đăng Nhập
+                                </a>
+                                <a th:href="@{/register}" class="dropdown-item dropdown-item-christmas">
+                                    <i class="fa fa-user-plus"></i> Đăng Ký
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+
                 </div>
             </nav>
         </div>

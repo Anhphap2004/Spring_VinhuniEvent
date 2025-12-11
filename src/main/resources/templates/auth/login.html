@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main/layout/base}">
+
+<head>
+    <title>🔔 Đăng nhập Tài khoản - Mùa Giáng Sinh 🎁</title>
+    <style>
+        /* 1. Nền Tuyết và Căn giữa */
+        @keyframes snowfall {
+            0% { background-position: 0 0; }
+            100% { background-position: 500px 1000px; }
+        }
+        @keyframes subtle-glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.1); }
+        }
+
+        .christmas-bg {
+            background-color: #A52A2A; /* Đỏ Giáng sinh */
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCA1MDAgMTAwMCI+ICAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idHJhbnNwYXJlbnQiLz4KICAgIDxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjEiIGZpbGw9IndoaXRlIi8+CiAgICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIwLjgiIGZpbGw9IndoaXRlIi8+CiAgICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjYiIGZpbGw9IndoaXRlIi8+CiAgICA8Y2lyY2xlIGN4PSI3MCIgY3k9IjcwIiByPSIwLjQiIGZpbGw9IndoaXRlIi8+CiAgICA8Y2lyY2xlIGN4PSI5MCIgY3k9IjkwIiByPSIwLjIiIGZpbGw9IndoaXRlIi8+CiAgIDwvIHN2Zz4=');
+            background-size: 500px 1000px;
+            animation: snowfall 20s linear infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* 2. Hộp đăng nhập đơn (nhỏ hơn, tập trung hơn) */
+        .login-box-christmas {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            padding: 40px 50px;
+            max-width: 450px; /* Nhỏ gọn hơn */
+            width: 90%;
+            border: 10px solid #006400; /* Viền xanh cây thông */
+            outline: 3px solid #FFD700;
+            position: relative;
+            z-index: 10;
+            animation: subtle-glow 8s infinite alternate;
+        }
+
+        .login-box-christmas h2 {
+            text-align: center;
+            color: #A52A2A;
+            font-family: 'Georgia', serif;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 5px #ffcc00;
+            border-bottom: 2px dashed #006400;
+            padding-bottom: 10px;
+        }
+
+        /* 3. Input fields */
+        .login-box-christmas form input[type="email"],
+        .login-box-christmas form input[type="password"] {
+            width: 100%;
+            border: 3px solid #006400;
+            border-radius: 15px;
+            padding: 14px 18px;
+            transition: all 0.4s;
+            background-color: #f7fff7;
+            margin-bottom: 20px;
+            box-sizing: border-box; /* Rất quan trọng để padding không làm tràn width 100% */
+        }
+
+        .login-box-christmas form input:focus {
+            border-color: #A52A2A;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 1);
+            transform: translateY(-1px);
+        }
+
+        /* 4. Nút đăng nhập (Tận dụng hiệu ứng Kẹo Gậy) */
+        .btn-login-christmas {
+            background: linear-gradient(90deg, #006400 0%, #FFFFFF 50%, #A52A2A 100%);
+            background-size: 200% 100%;
+            border: 4px solid #FFD700;
+            color: #FFFFFF;
+            font-weight: 900;
+            padding: 18px 25px;
+            border-radius: 40px;
+            font-size: 1.2em;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s;
+            text-transform: uppercase;
+            margin-top: 20px;
+            width: 100%;
+            cursor: pointer;
+        }
+        .btn-login-christmas:hover {
+            background-position: 100% 0; /* Hoạt ảnh trượt gradient */
+            color: #006400;
+            transform: scale(1.03);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 5. Link đăng ký */
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link p {
+            color: #006400;
+        }
+        .register-link a {
+            color: #A52A2A;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+            color: #FFD700;
+        }
+
+        /* 6. Decoration (nếu muốn) */
+        .decor-star {
+            position: absolute;
+            top: 5px; right: 5px;
+            font-size: 2.5em;
+            color: #FFD700;
+            transform: rotate(20deg);
+            z-index: 15;
+        }
+    </style>
+</head>
+
+<body>
+
+<div layout:fragment="content" class="christmas-bg">
+
+    <div class="login-box-christmas">
+
+        <span class="decor-star">⭐</span>
+
+        <h2>🔔 Đăng Nhập Hệ Thống 🎁</h2>
+
+        <div th:if="${param.error}" class="alert alert-danger">
+            Email hoặc mật khẩu không chính xác!
+        </div>
+
+        <div th:if="${param.logout}" class="alert alert-success">
+            Bạn đã đăng xuất thành công.
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <input type="email" name="email" placeholder="Email đăng nhập)" required>
+            <input type="password" name="password" placeholder="Mật khẩu" required>
+
+            <button type="submit" class="btn-login-christmas">ĐĂNG NHẬP NGAY</button>
+
+            <p th:if="${error}" th:text="${error}" style="color: red; text-align: center; margin-top: 10px;"></p>
+        </form>
+
+        <div class="register-link">
+            <p>Chưa có tài khoản? <a th:href="@{/register}">Đăng ký ngay</a></p>
+        </div>
+
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main/layout/base}">
+<head>
+    <title>🎄 Đăng ký Tài khoản - Mùa Giáng Sinh 🎅</title>
+    <style>
+        /* 1. Nền Tuyết và Căn giữa */
+        @keyframes snowfall {
+            0% { background-position: 0 0; }
+            100% { background-position: 500px 1000px; }
+        }
+
+        .christmas-bg {
+            background-color: #A52A2A; /* Đỏ Giáng sinh */
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCA1MDAgMTAwMCI+ICAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idHJhbnNwYXJlbnQiLz4KICAgIDxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjEiIGZpbGw9IndoaXRlIi8+CiAgICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIwLjgiIGZpbGw9IndoaXRlIi8+CiAgICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjYiIGZpbGw9IndoaXRlIi8+CiAgICA8Y2lyY2xlIGN4PSI3MCIgY3k9IjcwIiByPSIwLjQiIGZpbGw9IndoaXRlIi8+CiAgICA8Y2lyY2xlIGN4PSI5MCIgY3k9IjkwIiByPSIwLjIiIGZpbGw9IndoaXRlIi8+CiAgIDwvIHN2Zz4=');
+            background-size: 500px 1000px;
+            animation: snowfall 20s linear infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px; /* Tăng padding tổng thể */
+        }
+
+        /* 2. Hộp đăng ký lớn 2 cột */
+        .register-container {
+            background: rgba(255, 255, 255, 0.98); /* Nền trắng sáng */
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            max-width: 1100px; /* **RẤT QUAN TRỌNG** - Tăng kích thước để chứa 2 cột */
+            width: 95%;
+            border: 10px solid #006400; /* Viền xanh cây thông */
+            position: relative;
+            z-index: 10;
+            overflow: hidden; /* Cần thiết cho bố cục nội bộ */
+        }
+
+        /* 3. Bố cục 2 cột chính (Grid) */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr; /* Cột giới thiệu nhỏ hơn (1 phần), Cột form lớn hơn (1.3 phần) */
+            gap: 30px;
+        }
+
+        /* 4. Khu vực Giới thiệu (Cột trái) */
+        .intro-section {
+            background: #EFEFEF; /* Nền xám nhạt */
+            padding: 25px;
+            border-radius: 15px;
+            border: 3px dashed #A52A2A; /* Viền đỏ kẹo */
+            text-align: center;
+            position: relative;
+        }
+
+        .intro-section h3 {
+            color: #006400;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #FFD700;
+        }
+
+        .intro-image {
+            width: 100%;
+            height: 200px;
+            background-color: #DDD;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            /* Thay thế bằng ảnh VinhUni thật */
+            background-image: url('/assets/img/vinhregister.jpg');
+            background-size: cover;
+        }
+
+        .intro-text {
+            text-align: justify;
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* 5. Khu vực Form (Cột phải) */
+        .form-section {
+            padding: 5px;
+        }
+
+        .form-section h2 {
+            text-align: center;
+            color: #A52A2A;
+            font-size: 2.8em;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 5px #FFD700;
+            border-bottom: 2px solid #006400;
+            padding-bottom: 10px;
+        }
+
+        /* 6. Bố cục Ngang cho các cặp input (làm Form gọn hơn) */
+        .input-pair {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .input-pair > div {
+            flex: 1 1 50%;
+        }
+
+        /* 7. Input fields */
+        .form-control {
+            border: 2px solid #006400;
+            border-radius: 12px; /* Bo tròn hơn */
+            padding: 12px 15px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #FFD700;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.9);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #006400;
+            margin-bottom: 5px;
+        }
+
+        /* 8. Nút đăng ký */
+        .btn-christmas {
+            background: linear-gradient(45deg, #A52A2A 33%, #FFFFFF 33%, #FFFFFF 66%, #A52A2A 66%);
+            border: 4px solid #006400; /* Viền xanh nổi bật */
+            color: #006400;
+            font-weight: bold;
+            padding: 18px 25px;
+            border-radius: 30px;
+            font-size: 1.3em;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-transform: uppercase;
+            margin-top: 30px;
+        }
+
+        .btn-christmas:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 9. Responsiveness */
+        @media (max-width: 950px) {
+            .main-layout {
+                grid-template-columns: 1fr; /* Chuyển về 1 cột trên Tablet/Mobile */
+            }
+            .register-container {
+                padding: 20px;
+                max-width: 600px;
+            }
+            .input-pair {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="christmas-bg">
+
+    <div class="register-container">
+
+        <div class="main-layout">
+
+            <div class="intro-section">
+                <h3>🔔 Chào mừng đến với VinhUni 🏫</h3>
+
+                <div class="intro-image">
+                </div>
+
+                <div class="intro-text">
+                    <p>
+                        Trường Đại học Vinh, với bề dày lịch sử và chất lượng đào tạo hàng đầu khu vực, tự hào là nơi chắp cánh ước mơ cho hàng ngàn sinh viên mỗi năm. Đăng ký ngay hôm nay để trở thành một phần của cộng đồng tri thức năng động và nhận ngay các tài liệu học tập Giáng sinh đặc biệt!
+                    </p>
+                    <p class="mt-3" style="color: #A52A2A; font-weight: bold;">
+                        Hạn chót đăng ký ưu đãi Giáng sinh: 25/12!
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>🎅 ĐĂNG KÝ TÀI KHOẢN SINH VIÊN 🦌</h2>
+
+                <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+                <div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}"></div>
+
+                <form th:action="@{/register}" method="post" th:object="${user}">
+
+                    <div class="input-pair">
+                        <div>
+                            <label class="form-label">Họ và tên</label>
+                            <input type="text" th:field="*{full_name}" class="form-control" required>
+                            <p th:errors="*{full_name}" class="text-danger small"></p>
+                        </div>
+                        <div>
+                            <label class="form-label">Mã Sinh Viên</label>
+                            <input type="text" th:field="*{student_code}" class="form-control" required>
+                            <p th:errors="*{student_code}" class="text-danger small"></p>
+                        </div>
+                    </div>
+
+                    <div class="input-pair">
+                        <div>
+                            <label class="form-label">Email</label>
+                            <input type="email" th:field="*{email}" class="form-control" required>
+                            <p th:errors="*{email}" class="text-danger small"></p>
+                        </div>
+                        <div>
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="text" th:field="*{phone_number}" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="input-pair">
+                        <div>
+                            <label class="form-label">Mật khẩu</label>
+                            <input type="password" th:field="*{password_hash}" class="form-control" required>
+                            <p th:errors="*{password_hash}" class="text-danger small"></p>
+                        </div>
+                        <div>
+                            <label class="form-label">Xác nhận mật khẩu</label>
+                            <input type="password" name="confirmPassword" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="input-pair">
+                        <div>
+                            <label class="form-label">Khoa</label>
+                            <input type="text" th:field="*{faculty}" class="form-control">
+                        </div>
+                        <div>
+                            <label class="form-label">Ngành</label>
+                            <input type="text" th:field="*{major}" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="input-pair">
+                        <div style="flex: 1 1 100%;">
+                            <label class="form-label">Ngày sinh</label>
+                            <input type="date" th:field="*{birth_date}" class="form-control">
+                        </div>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-christmas w-100">
+                        Đăng ký ngay & Nhận quà Noel!
+                    </button>
+
+                    <div class="login-link mt-3 text-center">
+                        <p>Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a></p>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
