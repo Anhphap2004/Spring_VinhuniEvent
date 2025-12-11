@@ -6,6 +6,8 @@ import com.vinhuni.VinhuniEvent.service.RoleService;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RoleServiceImpl implements RoleService {
 
@@ -16,5 +18,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role getRoleById(int id) {
         return roleRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Role> findAllRoles() {
+        return roleRepository.findAll();
     }
 }

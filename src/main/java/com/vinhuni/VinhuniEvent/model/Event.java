@@ -2,6 +2,9 @@ package com.vinhuni.VinhuniEvent.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDateTime;
 @Getter
 @Setter
@@ -29,8 +32,10 @@ public class Event {
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
-    @Column(name = "created_by", nullable = false)
-    private Integer created_by;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by", referencedColumnName = "user_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private User created_by;
 
     @Column(columnDefinition = "TEXT")
     private String description;

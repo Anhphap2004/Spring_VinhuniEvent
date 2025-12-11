@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}"></title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .detail-table { width: 50%; border-collapse: collapse; margin-top: 20px; }
+        .detail-table th, .detail-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .detail-table th { background-color: #f2f2f2; width: 30%; }
+        .user-image { max-width: 150px; height: auto; border-radius: 8px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="main container-fluid py-5 px-4">
+<h1 th:text="${pageTitle}">Chi tiết Người dùng</h1>
+
+<div th:object="${user}">
+    <div th:if="*{imageUrl}">
+        <img th:src="*{imageUrl}" alt="Ảnh đại diện" class="user-image"/>
+    </div>
+
+    <table class="detail-table">
+        <tr>
+            <th>ID</th>
+            <td th:text="*{user_id}"></td>
+        </tr>
+        <tr>
+            <th>Họ và Tên</th>
+            <td th:text="*{full_name}"></td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td th:text="*{email}"></td>
+        </tr>
+        <tr>
+            <th>Vai trò (Role)</th>
+            <td th:text="*{role != null ? role.role_name : 'Chưa gán'}"></td>
+        </tr>
+        <tr>
+            <th>Mã Sinh viên</th>
+            <td th:text="*{student_code}"></td>
+        </tr>
+        <tr>
+            <th>Khoa</th>
+            <td th:text="*{faculty}"></td>
+        </tr>
+        <tr>
+            <th>Chuyên ngành</th>
+            <td th:text="*{major}"></td>
+        </tr>
+        <tr>
+            <th>Ngày sinh</th>
+            <td th:text="*{#temporals.format(birth_date, 'dd-MM-yyyy')}"></td>
+        </tr>
+        <tr>
+            <th>Số điện thoại</th>
+            <td th:text="*{phone_number}"></td>
+        </tr>
+        <tr>
+            <th>Trạng thái Active</th>
+            <td th:text="*{is_active ? 'Có' : 'Không'}"></td>
+        </tr>
+        <tr>
+            <th>Ngày tạo</th>
+            <td th:text="*{#temporals.format(created_date, 'HH:mm:ss dd-MM-yyyy')}"></td>
+        </tr>
+    </table>
+
+    <div style="margin-top: 20px;">
+        <a th:href="@{/admin/users/edit/{id}(id=*{user_id})}"><button>✏️ Chỉnh sửa</button></a>
+        <a th:href="@{/admin/users}"><button>↩️ Quay lại Danh sách</button></a>
+    </div>
+</div>
+</div>
+</body>
+</html>

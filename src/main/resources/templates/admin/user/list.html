@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Người dùng</title>
+    <style>
+        /* CSS tùy chỉnh */
+        :root {
+            --primary-color: #007bff; /* Màu xanh dương chủ đạo */
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --warning-color: #ffc107;
+            --light-bg: #f8f9fa;
+        }
+
+        /* Định dạng chung */
+        .main {
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+            background-color: var(--light-bg);
+        }
+
+        /* Tiêu đề */
+        h1 {
+            color: #343a40;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Thông báo */
+        .message-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            margin-bottom: 1.5rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+        }
+
+        /* Nút thêm mới */
+        .btn-add-new {
+            margin-bottom: 1rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+        }
+
+        /* Bảng */
+        .table-custom {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: 0.5rem;
+            overflow: hidden; /* Quan trọng để bo góc bảng */
+        }
+
+        .table-custom thead th {
+            background-color: var(--primary-color);
+            color: #fff;
+            vertical-align: middle;
+            border-bottom: none;
+            padding: 1rem 0.75rem;
+            font-weight: 600;
+        }
+
+        .table-custom tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #e9ecef;
+            cursor: pointer;
+        }
+
+        .table-custom tbody td {
+            vertical-align: middle;
+            padding: 0.75rem;
+        }
+
+        /* Trạng thái Active */
+        .badge-active {
+            display: inline-block;
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+
+        .active-true {
+            background-color: var(--success-color);
+        }
+
+        .active-false {
+            background-color: var(--danger-color);
+        }
+
+        /* Hành động */
+        .action-links a {
+            color: var(--info-color);
+            text-decoration: none;
+            margin-right: 0.5rem;
+            font-weight: 500;
+        }
+
+        .action-links a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .action-links .delete-link {
+            color: var(--danger-color);
+        }
+
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="main container-fluid">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h1 class="h3 mb-0">📋 Quản lý Người dùng</h1>
+        </div>
+        <div class="card-body">
+
+            <div th:if="${message}" class="message-success" role="alert">
+                <i class="bi bi-check-circle-fill"></i> <span th:text="${message}">Thông báo sẽ hiển thị ở đây.</span>
+            </div>
+
+            <p>
+                <a th:href="@{/admin/users/new}" class="btn btn-primary btn-add-new">
+                    <i class="bi bi-plus-circle-fill"></i> ➕ Thêm Người dùng mới
+                </a>
+            </p>
+
+            <div class="table-responsive">
+                <table class="table table-hover table-custom">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Mã SV</th>
+                        <th>Họ và Tên</th>
+                        <th>Email</th>
+                        <th>Vai trò (Role)</th>
+                        <th class="text-center">Active</th>
+                        <th class="text-center">Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.user_id}">1</td>
+                        <td th:text="${user.student_code}">SV001</td>
+                        <td th:text="${user.full_name}">Nguyễn Văn A</td>
+                        <td th:text="${user.email}">a.nguyen@example.com</td>
+                        <td th:text="${user.role != null ? user.role.role_name : 'N/A'}">STUDENT</td>
+                        <td class="text-center">
+                            <span th:classappend="${user.is_active ? 'active-true' : 'active-false'}"
+                                  class="badge badge-active"
+                                  th:text="${user.is_active ? 'Có' : 'Không'}">Có</span>
+                        </td>
+                        <td class="text-center action-links">
+                            <a th:href="@{/admin/users/view/{id}(id=${user.user_id})}" title="Xem chi tiết">
+                                <i class="bi bi-eye-fill"></i> Xem
+                            </a>
+                            |
+                            <a th:href="@{/admin/users/edit/{id}(id=${user.user_id})}" title="Chỉnh sửa">
+                                <i class="bi bi-pencil-square"></i> Sửa
+                            </a>
+                            |
+                            <a th:href="@{/admin/users/delete/{id}(id=${user.user_id})}"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng ' + '[[${user.full_name}]]' + ' này không?');"
+                               class="delete-link" title="Xóa người dùng">
+                                <i class="bi bi-trash-fill"></i> Xóa
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div> </div> </div> </div>
+</body>
+</html>
