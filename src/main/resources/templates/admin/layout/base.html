@@ -22,9 +22,13 @@
 
 <body>
 <div class="wrapper">
-  <div th:replace="admin/fragments/nav :: admin_side_bar"></div>
-<div layout:fragment="content"></div>
+  <div th:replace="admin/fragments/side_bar :: admin_side_bar"></div>
 
+    <div class="main">
+        <div th:replace="admin/fragments/nav_top :: nav_top"></div>
+        <div layout:fragment="content"></div>
+        <div th:replace="admin/fragments/footer :: footer"></div>
+    </div>
 </div>
 
 <script th:src="@{/admin/js/app.js}"></script>

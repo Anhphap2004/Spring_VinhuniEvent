@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Danh mục Sự kiện</title>
+</head>
+<body>
+<div layout:fragment="content" class="main container-fluid py-5 px-4">
+
+    <h1 class="mb-4 text-primary">Danh sách Danh mục Sự kiện</h1>
+
+    <!-- Message thông báo -->
+    <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
+
+    <!-- Nút thêm mới -->
+    <div class="mb-3">
+        <a th:href="@{/event_categories/new}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Thêm Danh mục mới
+        </a>
+    </div>
+
+    <!-- Bảng danh mục -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-primary">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Tên Danh mục</th>
+                <th scope="col">Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category : ${eventCategories}">
+                <td th:text="${category.category_id}">1</td>
+                <td th:text="${category.category_name}">Thể thao</td>
+                <td>
+                    <a th:href="@{/event_categories/edit/{id}(id=${category.category_id})}"
+                       class="btn btn-sm btn-warning me-2">
+                        <i class="bi bi-pencil-square"></i> Sửa
+                    </a>
+                    <a th:href="@{/event_categories/delete/{id}(id=${category.category_id})}"
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                        <i class="bi bi-trash"></i> Xóa
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+</body>
+</html>
