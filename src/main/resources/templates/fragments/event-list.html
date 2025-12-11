@@ -1,0 +1,49 @@
+<div th:fragment="eventListFragment">
+    <div class="row g-4">
+        <div class="col-lg-12">
+            <div class="row g-4 horizontal-scroll-container">
+
+                <div class="col-md-6 col-lg-4 col-xl-3 flex-shrink-0"
+                     th:each="e, i : ${events}"
+                     th:attr="data-wow-delay=${0.1 + i.index * 0.2} + 's'">
+
+                    <a th:href="@{'/events/' + ${e.event_id}}" class="event-card-link d-block text-decoration-none text-body h-100">
+
+                        <div class="card shadow-sm wow fadeInUp h-100 border-0 rounded" data-wow-delay="0.1s">
+
+                            <div class="card-img-top overflow-hidden position-relative" style="height: 200px;">
+                                <img class="img-fluid w-100 h-100"
+                                     th:src="@{${e.image}|}"
+                                     alt="Event Image"
+                                     style="object-fit: cover;">
+
+                                <div class="text-white text-start rounded-pill py-1 px-3 position-absolute top-0 end-0 m-2"
+                                     style="font-size: 0.85rem; z-index: 10; background-color: var(--christmas-red);">
+                                    <span th:text="${#temporals.format(e.startTime, 'dd MMM')}" class="fw-bold">01 Jan</span>
+                                </div>
+                            </div>
+
+                            <div class="card-body text-start p-3">
+                                <h5 class="card-title text-dark mb-2 fw-bold text-truncate" th:text="${e.title}">Event Title</h5>
+
+                                <div class="text-secondary small">
+                                    <p class="mb-1"><i class="far fa-clock me-2" style="color: var(--christmas-red);"></i>
+                                        <span th:text="${#temporals.format(e.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(e.endTime, 'HH:mm')}">10:00 - 12:00</span>
+                                    </p>
+                                    <p class="mb-0"><i class="fas fa-map-marker-alt me-2" style="color: var(--christmas-red);"></i>
+                                        <span th:text="${e.location != null ? e.location : 'Online / TBA'}">Location Detail</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div th:if="${#lists.isEmpty(events)}" class="col-12 text-center py-5">
+                    <p class="lead text-muted">Không tìm thấy sự kiện nào trong danh mục này.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -52,6 +52,7 @@ public class EventController {
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("event", new Event());
+        model.addAttribute("eventCategories", eventCategoryService.getAllEventCategories());
         return "main/event/create";
     }
 

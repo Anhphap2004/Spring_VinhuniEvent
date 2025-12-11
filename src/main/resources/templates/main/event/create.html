@@ -15,9 +15,16 @@
     <input type="text" th:field="*{title}" required>
     <br><br>
 
-    <label>Danh mục (category_id):</label><br>
-    <input type="number" th:field="*{category.category_id}" required>
+    <label>Danh mục:</label><br>
+    <select th:field="*{category.category_id}" required>
+        <option value="">-- Chọn danh mục --</option>
+        <option th:each="c : ${eventCategories}"
+                th:value="${c.category_id}"
+                th:text="${c.category_name}">
+        </option>
+    </select>
     <br><br>
+
 
     <label>Thời gian bắt đầu:</label><br>
     <input type="datetime-local" th:field="*{startTime}" required>

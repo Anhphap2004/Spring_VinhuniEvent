@@ -1,0 +1,160 @@
+<div th:fragment="mainEventSection">
+
+    <style>
+        /* Định nghĩa màu Giáng Sinh */
+        :root {
+            --christmas-red: #C0392B; /* Màu Đỏ đậm */
+            --primary-color: var(--christmas-red); /* Thay thế primary color */
+        }
+
+        /* BẮT BUỘC: Container cuộn ngang cho cả Category và Event */
+        .horizontal-scroll-container {
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            padding-bottom: 15px;
+        }
+
+        /* Giao diện Thẻ sự kiện (Card Hover Effect) */
+        .event-card-link:hover > div {
+            transform: translateY(-5px);
+            /* Sử dụng box-shadow màu đỏ nhạt */
+            box-shadow: 0 10px 20px rgba(192, 57, 43, 0.3) !important;
+            transition: all 0.3s ease-in-out;
+        }
+        .event-card-link:hover img {
+            transform: scale(1.05);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        /* Giao diện Danh mục (Category List) */
+        .category-list-scroll {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+        .category-list-scroll a {
+            display: inline-block;
+            white-space: nowrap;
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--primary-color); /* Đỏ Viền */
+            color: var(--primary-color); /* Đỏ Chữ */
+            background-color: transparent;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .category-list-scroll a:hover,
+        .category-list-scroll a.active {
+            background-color: var(--primary-color); /* Đỏ Nền Active */
+            color: #ffffff; /* Trắng Chữ Active */
+            box-shadow: 0 4px 8px rgba(192, 57, 43, 0.4);
+        }
+        .category-item {
+            flex-shrink: 0;
+        }
+
+        /* Màu chữ phụ đề (Small Tag) */
+        .text-primary.christmas {
+            color: var(--primary-color) !important;
+        }
+
+    </style>
+
+    <div class="container-fluid event py-6">
+        <div class="container">
+
+            <div class="text-center wow bounceInUp" data-wow-delay="0.1s">
+                <small class="d-inline-block fw-bold text-primary christmas text-uppercase bg-light border border-primary christmas rounded-pill px-4 py-1 mb-3">
+                    Sự Kiện
+                </small>
+                <h1 class="display-5 mb-5">Bộ Sưu Tập Sự Kiện Nổi Bật</h1>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="horizontal-scroll-container category-list-scroll">
+
+                        <div class="category-item">
+                            <a href="javascript:void(0)"
+                               onclick="loadEvents(0)"
+                               class="active" id="cat-0">
+                                Tất cả
+                            </a>
+                        </div>
+
+                        <div class="category-item" th:each="c : ${eventCategories}">
+                            <a href="javascript:void(0)"
+                               th:onclick="|loadEvents(${c.category_id})|"
+                               th:id="'cat-' + ${c.category_id}">
+                                <span th:text="${c.category_name}"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="eventContainer">
+                <div th:insert="fragments/event-list :: eventListFragment"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Cập nhật Active class cho Category
+        function updateCategoryActive(categoryId) {
+            document.querySelectorAll('.category-list-scroll a').forEach(el => {
+                el.classList.remove('active');
+            });
+            const activeEl = document.getElementById('cat-' + categoryId);
+            if (activeEl) {
+                activeEl.classList.add('active');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCategoryActive(0);
+        });
+
+        function loadEvents(categoryId) {
+            updateCategoryActive(categoryId);
+
+            const eventContainer = document.getElementById("eventContainer");
+            if (eventContainer) {
+                // Hiển thị trạng thái tải bằng màu đỏ Giáng Sinh
+                eventContainer.innerHTML = `
+                    <div class="row py-5" style="text-align: center; color: var(--primary-color);">
+                        <i class="fas fa-spinner fa-spin fa-3x mb-3"></i>
+                        <p class="fw-bold">Đang tải sự kiện...</p>
+                    </div>`;
+            }
+
+            const endpoint = `/filter-events?category=${categoryId}`;
+
+            fetch(endpoint)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.text();
+                })
+                .then(html => {
+                    if (eventContainer) {
+                        eventContainer.innerHTML = html;
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải sự kiện:', error);
+                    if (eventContainer) {
+                        eventContainer.innerHTML = `
+                            <div class="row py-5" style="text-align: center; color: var(--primary-color);">
+                                <p class="fw-bold">Lỗi: Không thể tải danh sách sự kiện. Vui lòng thử lại.</p>
+                            </div>`;
+                    }
+                });
+        }
+    </script>
+</div>
