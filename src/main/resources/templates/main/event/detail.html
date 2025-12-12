@@ -41,6 +41,24 @@
             color: #343a40;
         }
 
+        /* CSS cho thông báo */
+        .alert-flash {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+        }
+        .alert-success {
+            color: #0f5132;
+            background-color: #d1e7dd;
+            border-color: #badbcc;
+        }
+        .alert-danger {
+            color: #842029;
+            background-color: #f8d7da;
+            border-color: #f5c2c7;
+        }
+
     </style>
 </head>
 <body>
@@ -59,7 +77,15 @@
             <p class="lead text-muted" th:text="${event.description}"></p>
         </div>
     </div>
+
     <div class="container py-4">
+
+        <div th:if="${successMessage}" class="alert-flash alert-success" th:text="${successMessage}">
+            Đăng ký thành công!
+        </div>
+        <div th:if="${errorMessage}" class="alert-flash alert-danger" th:text="${errorMessage}">
+            Có lỗi xảy ra!
+        </div>
         <div class="row g-5">
 
             <div class="col-lg-8">
@@ -84,6 +110,7 @@
                     <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách sự kiện
                 </a>
             </div>
+
             <div class="col-lg-4">
 
                 <div class="info-box shadow-sm mb-4">
@@ -114,18 +141,30 @@
                         <li>
                             <span class="fw-bold d-block">Được tạo bởi</span>
                             <i class="fas fa-user-tie me-2 text-muted"></i>
-                            <span th:text="${event.created_by}"></span>
+                            <span th:text="${event.created_by != null ? event.created_by.full_name : 'Quản trị viên'}"></span>
                         </li>
                     </ul>
                 </div>
+                <div class="mb-4">
 
-                <a href="#" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm" style="background-color: #dc3545; border-color: #dc3545;">
-                    <i class="fas fa-ticket-alt me-2"></i>Đăng Ký Tham Gia
-                </a>
+                    <div th:if="${isRegistered}" class="alert-flash alert-success text-center">
+                        <i class="fas fa-check-circle me-2"></i>Bạn đã đăng ký thành công sự kiện này!
+                    </div>
 
+                    <div th:unless="${isRegistered}">
+                        <form th:action="@{/events/{id}/register(id=${event.event_id})}" method="post">
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg w-100 fw-bold shadow-sm"
+                                    style="background-color: #dc3545; border-color: #dc3545;">
+                                <i class="fas fa-ticket-alt me-2"></i>ĐĂNG KÝ THAM GIA SỰ KIỆN
+                            </button>
+                        </form>
+                    </div>
+                </div>
                 <div class="info-box mt-4 text-center">
                     <small class="text-muted">Sự kiện bắt đầu sau:</small>
-                    <h3 class="fw-bold text-success">07 Ngày 14 Giờ</h3> </div>
+                    <h3 class="fw-bold text-success">07 Ngày 14 Giờ</h3>
+                </div>
             </div>
         </div>
     </div>

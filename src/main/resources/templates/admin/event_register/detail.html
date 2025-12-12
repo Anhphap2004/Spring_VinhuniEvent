@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <title th:text="${event.title} + ' | Chi tiết Đăng ký'"></title>
+</head>
+<div layout:fragment="content">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-list-alt me-2 text-primary"></i> Chi tiết Đăng ký
+        </h2>
+        <a th:href="@{/admin/event_register}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại Danh sách Sự kiện
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-primary text-white">
+            <h6 class="m-0 font-weight-bold" th:text="${event.title}">Tên Sự kiện</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Thời gian:</strong> <span th:text="${#temporals.format(event.startTime, 'dd/MM/yyyy HH:mm')}"></span></p>
+                    <p><strong>Địa điểm:</strong> <span th:text="${event.location}"></span></p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <h5 class="text-success">Tổng số người đăng ký: <span class="badge bg-success fs-5" th:text="${registrations.size()}">0</span></h5>
+                    <small class="text-muted">Số lượng tối đa: <span th:text="${event.max_participants}"></span></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-3">
+            <label for="statusFilter" class="form-label fw-bold">Lọc theo Trạng thái:</label>
+            <select id="statusFilter" class="form-select">
+                <option value="Tất cả">Tất cả</option>
+                <option value="Đã đăng ký">Đã đăng ký (Chờ xác nhận)</option>
+                <option value="Đã xác nhận">Đã xác nhận</option>
+                <option value="Đã hủy">Đã hủy</option>
+            </select>
+        </div>
+
+        <div class="col-md-9 mt-3 mt-md-0">
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show mb-0" role="alert">
+                <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}">Thông báo thành công</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show mb-0" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}">Thông báo lỗi</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="registrationTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th><i class="fas fa-user me-1"></i> Tên Người dùng</th>
+                        <th>Email/MSSV</th>
+                        <th>Ngày Đăng ký</th>
+                        <th class="text-center">Trạng thái</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="reg, stat : ${registrations}" th:data-status="${reg.status}">
+                        <td class="text-center" th:text="${stat.count}">1</td>
+                        <td th:text="${reg.user.full_name}">Nguyễn Văn A</td>
+                        <td>
+                            <small th:text="${reg.user.email}"></small><br>
+                            <strong th:text="${reg.user.student_code}"></strong>
+                        </td>
+                        <td th:text="${#temporals.format(reg.registrationDate, 'dd/MM/yyyy HH:mm')}">10/12/2024 14:30</td>
+
+                        <td class="text-center">
+                                <span th:text="${reg.status}"
+                                      th:classappend="${reg.status == 'Đã xác nhận' ? 'bg-success' : (reg.status == 'Đã hủy' ? 'bg-danger' : 'bg-warning')}"
+                                      class="badge">Trạng thái</span>
+                        </td>
+
+                        <td class="text-center">
+                            <div th:if="${reg.status == 'Đã đăng ký'}">
+                                <form th:action="@{/admin/event_register/update/{id}(id=${reg.registrationId})}" method="post" style="display: inline;">
+                                    <input type="hidden" name="status" value="Đã xác nhận">
+                                    <button type="submit" class="btn btn-success btn-sm me-1" title="Xác nhận"><i class="fas fa-check"></i></button>
+                                </form>
+                                <form th:action="@{/admin/event_register/update/{id}(id=${reg.registrationId})}" method="post" style="display: inline;">
+                                    <input type="hidden" name="status" value="Đã hủy">
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Hủy bỏ"><i class="fas fa-times"></i></button>
+                                </form>
+                            </div>
+                            <div th:if="${reg.status == 'Đã xác nhận'}">
+                                <form th:action="@{/admin/event_register/update/{id}(id=${reg.registrationId})}" method="post" style="display: inline;">
+                                    <input type="hidden" name="status" value="Đã hủy">
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Hủy bỏ"><i class="fas fa-times"></i> Hủy</button>
+                                </form>
+                            </div>
+                            <div th:if="${reg.status == 'Đã hủy'}">
+                                <span class="text-muted small">Đã Hủy</span>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script">
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterSelect = document.getElementById('statusFilter');
+        const tableBody = document.querySelector('#registrationTable tbody');
+        const rows = tableBody.querySelectorAll('tr');
+
+        // Hàm lọc chính: Ẩn/hiện các hàng dựa trên data-status
+        function filterTable() {
+            const selectedStatus = filterSelect.value;
+
+            rows.forEach(row => {
+                const rowStatus = row.getAttribute('data-status');
+
+                if (selectedStatus === 'Tất cả' || rowStatus === selectedStatus) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        filterSelect.addEventListener('change', filterTable);
+        filterTable();
+    });
+</script>
+</html>

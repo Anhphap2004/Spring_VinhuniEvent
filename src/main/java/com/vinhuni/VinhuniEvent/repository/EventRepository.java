@@ -11,4 +11,7 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("SELECT e FROM Event e WHERE e.category.category_id = :categoryId")
     List<Event> findEventsByCategoryId(@Param("categoryId") Long categoryId);
+
+    @Query("SELECT DISTINCT e FROM Event e LEFT JOIN FETCH e.eventRegistrations LEFT JOIN FETCH e.created_by")
+     List<Event> findAllWithRegistrationsAndUser();
 }

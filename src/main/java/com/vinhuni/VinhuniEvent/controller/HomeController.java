@@ -2,7 +2,6 @@ package com.vinhuni.VinhuniEvent.controller;
 
 import com.vinhuni.VinhuniEvent.model.Event;
 import com.vinhuni.VinhuniEvent.service.EventCategoryService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 import com.vinhuni.VinhuniEvent.service.EventService;
 import org.springframework.stereotype.Controller;
@@ -23,8 +22,7 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(Model model, HttpSession session) {
-        model.addAttribute("loggedInUser", session.getAttribute("loggedInUser"));
+    public String home(Model model) {
         model.addAttribute("events", eventService.getAllEvents());
         model.addAttribute("eventCategories", eventCategoryService.getAllEventCategories());
         return "main/home";

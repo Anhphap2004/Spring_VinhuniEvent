@@ -2,6 +2,7 @@ package com.vinhuni.VinhuniEvent.service.impl;
 import com.vinhuni.VinhuniEvent.model.Event;
 import com.vinhuni.VinhuniEvent.repository.EventRepository;
 import com.vinhuni.VinhuniEvent.service.EventService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +21,11 @@ public class EventServiceImpl implements EventService {
     public List<Event> getEventsByCategoryId(Long categoryId) {
         return repo.findEventsByCategoryId(categoryId);
     }
+
     @Override
+    @Transactional(readOnly = true) // Đảm bảo giao dịch đọc dữ liệu
     public List<Event> getAllEvents() {
-        return repo.findAll();
+        return repo.findAllWithRegistrationsAndUser();
     }
 
     @Override
@@ -39,4 +42,6 @@ public class EventServiceImpl implements EventService {
     public void deleteEvent(Long id) {
         repo.deleteById(id);
     }
+
+
 }
