@@ -1,8 +1,8 @@
 <div th:fragment="admin_side_bar">
 <nav id="sidebar" class="sidebar js-sidebar">
     <div class="sidebar-content js-simplebar">
-        <a class="sidebar-brand" href="index.html">
-            <span class="align-middle">AdminKit</span>
+        <a class="sidebar-brand" href="/admin">
+            <span class="align-middle">VinhuniEvent</span>
         </a>
 
         <ul class="sidebar-nav">
@@ -17,8 +17,8 @@
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-profile.html">
-                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+                <a class="sidebar-link" th:href="@{/admin/users}">
+                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Quản Lý Người Dùng</span>
                 </a>
             </li>
 
@@ -35,8 +35,13 @@
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" th:href="@{/event_categories}">
-                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Danh mục</span>
+                <a class="sidebar-link" th:href="@{/admin/event_categories}">
+                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Danh mục Sự Kiện</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" th:href="@{/admin/event_register}">
+                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">QL Đăng Ký Sự Kiện</span>
                 </a>
             </li>
 

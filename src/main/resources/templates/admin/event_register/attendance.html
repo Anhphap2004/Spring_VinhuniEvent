@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <title th:text="${event.title} + ' | Quản lý Điểm danh'"></title>
+</head>
+<div layout:fragment="content">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-user-check me-2 text-warning"></i> Điểm danh Sự kiện: <span th:text="${event.title}"></span>
+        </h2>
+        <a th:href="@{/admin/event_register}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại DS Sự kiện
+        </a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="row text-center">
+
+                <div class="col-md-2 col-6 border-end mb-3 mb-md-0">
+                    <p class="mb-0 text-muted small">Tổng Đăng ký (Tất cả)</p>
+                    <h5 class="text-primary" th:text="${totalRegistrations}">0</h5>
+                </div>
+
+                <div class="col-md-2 col-6 border-end mb-3 mb-md-0">
+                    <p class="mb-0 text-muted small">ĐK Hợp lệ (Non-Cancelled)</p>
+                    <h5 class="text-info" th:text="${totalConfirmed}">0</h5>
+                </div>
+
+                <div class="col-md-2 col-6 border-end mb-3 mb-md-0">
+                    <p class="mb-0 text-muted small">Đã Có mặt</p>
+                    <h5 class="text-success" th:text="${totalPresent}">0</h5>
+                </div>
+
+                <div class="col-md-2 col-6 border-end mb-3 mb-md-0">
+                    <p class="mb-0 text-muted small">Đã Vắng mặt</p>
+                    <h5 class="text-danger" th:text="${totalAbsent}">0</h5>
+                </div>
+
+                <div class="col-md-2 col-6 mb-3 mb-md-0">
+                    <p class="mb-0 text-muted small">Chưa Điểm danh</p>
+                    <h5 class="text-warning" th:text="${totalPendingAttendance}">0</h5>
+                </div>
+
+                <div class="col-md-2 col-6">
+                    <p class="mb-0 text-muted small">Đã Hủy</p>
+                    <h5 class="text-secondary" th:text="${totalCancelled}">0</h5>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Bộ Lọc Danh Sách Đăng ký</h6></div>
+        <div class="card-body">
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <label for="regStatusFilter" class="form-label fw-bold">Trạng thái Đăng ký:</label>
+                    <select id="regStatusFilter" class="form-select">
+                        <option value="all">Tất cả (ĐK)</option>
+                        <option value="Đã xác nhận">Đã xác nhận</option>
+                        <option value="Đã đăng ký">Chờ xác nhận</option>
+                        <option value="Đã hủy">Đã hủy</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="attStatusFilter" class="form-label fw-bold">Trạng thái Điểm danh:</label>
+                    <select id="attStatusFilter" class="form-select">
+                        <option value="all">Tất cả (ĐD)</option>
+                        <option value="present">Đã Có mặt</option>
+                        <option value="absent">Đã Vắng mặt</option>
+                        <option value="pending">Chưa Điểm danh</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-end">
+                    <button id="resetFilters" class="btn btn-outline-secondary w-100" type="button">
+                        <i class="fas fa-redo me-1"></i> Đặt lại Bộ lọc
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="attendanceTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="text-center">STT</th>
+                        <th>Tên Người dùng</th>
+                        <th>Email/MSSV</th>
+                        <th class="text-center">Trạng thái ĐK</th>
+                        <th class="text-center">Trạng thái ĐD</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="reg, stat : ${registrations}"
+                        th:with="attStatus=${attendanceStatusMap.get(reg.user.user_id)}"
+
+                        th:data-reg-status="${reg.status}"
+                        th:data-att-status="${attStatus == true ? 'present' : (attStatus == false ? 'absent' : 'pending')}">
+
+                        <td class="text-center" th:text="${stat.count}">1</td>
+                        <td th:text="${reg.user.full_name}">Nguyễn Văn A</td>
+                        <td>
+                            <small th:text="${reg.user.email}"></small><br>
+                            <strong th:text="${reg.user.student_code}"></strong>
+                        </td>
+
+                        <td class="text-center">
+                                <span th:text="${reg.status}"
+                                      th:classappend="${reg.status == 'Đã xác nhận' ? 'bg-success' : (reg.status == 'Đã hủy' ? 'bg-danger' : 'bg-warning')}"
+                                      class="badge"></span>
+                        </td>
+
+                        <td class="text-center">
+                            <span th:if="${attStatus == true}" class="badge bg-success">Đã Có mặt</span>
+                            <span th:if="${attStatus == false}" class="badge bg-danger">Vắng mặt</span>
+                            <span th:if="${attStatus == null}" class="badge bg-secondary">Chưa ĐD</span>
+                        </td>
+
+                        <td class="text-center">
+                            <form th:action="@{/admin/event_register/attendance/record}" method="post" style="display: inline;">
+                                <input type="hidden" name="eventId" th:value="${event.event_id}">
+                                <input type="hidden" name="userId" th:value="${reg.user.user_id}">
+                                <input type="hidden" name="isPresent" value="true">
+                                <button type="submit" class="btn btn-success btn-sm me-1" title="Điểm danh Có mặt">
+                                    <i class="fas fa-check"></i> Có mặt
+                                </button>
+                            </form>
+
+                            <form th:action="@{/admin/event_register/attendance/record}" method="post" style="display: inline;">
+                                <input type="hidden" name="eventId" th:value="${event.event_id}">
+                                <input type="hidden" name="userId" th:value="${reg.user.user_id}">
+                                <input type="hidden" name="isPresent" value="false">
+                                <button type="submit" class="btn btn-danger btn-sm" title="Điểm danh Vắng mặt">
+                                    <i class="fas fa-times"></i> Vắng
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script">
+    document.addEventListener('DOMContentLoaded', function() {
+        const regStatusFilter = document.getElementById('regStatusFilter');
+        const attStatusFilter = document.getElementById('attStatusFilter');
+        const resetFiltersButton = document.getElementById('resetFilters');
+        const tableBody = document.querySelector('#attendanceTable tbody');
+        const rows = tableBody.querySelectorAll('tr');
+
+        // Hàm lọc chính
+        function applyFilters() {
+            const selectedRegStatus = regStatusFilter.value;
+            const selectedAttStatus = attStatusFilter.value;
+
+            rows.forEach(row => {
+                const rowRegStatus = row.getAttribute('data-reg-status');
+                const rowAttStatus = row.getAttribute('data-att-status');
+
+                // Lọc 1: Theo trạng thái đăng ký
+                const regMatch = selectedRegStatus === 'all' || rowRegStatus === selectedRegStatus;
+
+                // Lọc 2: Theo trạng thái điểm danh
+                const attMatch = selectedAttStatus === 'all' || rowAttStatus === selectedAttStatus;
+
+                if (regMatch && attMatch) {
+                    row.style.display = ''; // Hiển thị
+                } else {
+                    row.style.display = 'none'; // Ẩn
+                }
+            });
+        }
+
+        // Gắn sự kiện lắng nghe
+        regStatusFilter.addEventListener('change', applyFilters);
+        attStatusFilter.addEventListener('change', applyFilters);
+
+        // Đặt lại bộ lọc
+        resetFiltersButton.addEventListener('click', function() {
+            regStatusFilter.value = 'all';
+            attStatusFilter.value = 'all';
+            applyFilters();
+        });
+
+        applyFilters();
+    });
+</script>
+</html>

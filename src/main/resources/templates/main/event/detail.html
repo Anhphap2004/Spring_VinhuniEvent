@@ -147,19 +147,33 @@
                 </div>
                 <div class="mb-4">
 
-                    <div th:if="${isRegistered}" class="alert-flash alert-success text-center">
-                        <i class="fas fa-check-circle me-2"></i>Bạn đã đăng ký thành công sự kiện này!
+                    <div th:if="${isRegistered}">
+
+                        <div th:if="${registrationStatus == 'Đã đăng ký'}"
+                             class="alert alert-warning text-center border-warning shadow-sm">
+                            <h5 class="alert-heading fw-bold"><i class="fas fa-hourglass-half me-2"></i>Đã đăng ký thành công, vui lòng chờ duyệt</h5>
+                            <p class="mb-0 small">Ban tổ chức sẽ xem xét và xác nhận đăng ký của bạn sớm nhất.</p>
+                        </div>
+
+                        <div th:if="${registrationStatus == 'Đã xác nhận đăng ký'}"
+                             class="alert alert-success text-center border-success shadow-sm">
+                            <h5 class="alert-heading fw-bold"><i class="fas fa-check-circle me-2"></i>Đã Được Duyệt, Đăng Kí thành công</h5>
+                            <p class="mb-0 small">Hẹn gặp lại bạn tại sự kiện!</p>
+                        </div>
+
                     </div>
 
                     <div th:unless="${isRegistered}">
                         <form th:action="@{/events/{id}/register(id=${event.event_id})}" method="post">
                             <button type="submit"
                                     class="btn btn-primary btn-lg w-100 fw-bold shadow-sm"
-                                    style="background-color: #dc3545; border-color: #dc3545;">
+                                    style="background-color: #dc3545; border-color: #dc3545; transition: all 0.3s;"
+                                    onclick="return confirm('Bạn có chắc chắn muốn đăng ký tham gia sự kiện này?')">
                                 <i class="fas fa-ticket-alt me-2"></i>ĐĂNG KÝ THAM GIA SỰ KIỆN
                             </button>
                         </form>
                     </div>
+
                 </div>
                 <div class="info-box mt-4 text-center">
                     <small class="text-muted">Sự kiện bắt đầu sau:</small>

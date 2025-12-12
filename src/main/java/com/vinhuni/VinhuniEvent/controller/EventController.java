@@ -2,6 +2,7 @@ package com.vinhuni.VinhuniEvent.controller;
 
 import com.vinhuni.VinhuniEvent.exception.RegistrationException;
 import com.vinhuni.VinhuniEvent.model.Event;
+import com.vinhuni.VinhuniEvent.model.EventRegistration;
 import com.vinhuni.VinhuniEvent.model.User;
 import com.vinhuni.VinhuniEvent.service.EventCategoryService;
 import com.vinhuni.VinhuniEvent.service.EventRegistrationService;
@@ -10,9 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import java.util.List;
-import java.util.NoSuchElementException;
+
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/events")
@@ -63,20 +65,28 @@ public class EventController {
         Event event = eventOptional.get();
         model.addAttribute("event", event);
 
-        if (loggedInUser == null) {
-            model.addAttribute("isRegistered", false);
+        // Mặc định là chưa đăng ký
+        boolean isRegistered = false;
+        String registrationStatus = "";
+
+        if (loggedInUser != null) {
+            Long currentUserId = loggedInUser.getUser_id();
+            model.addAttribute("currentUserId", currentUserId);
+
+            // LOGIC MỚI: Tìm bản ghi đăng ký để lấy trạng thái cụ thể
+            Optional<EventRegistration> registrationOpt = registrationService.findRegistration(id, currentUserId);
+
+            if (registrationOpt.isPresent()) {
+                isRegistered = true;
+                registrationStatus = registrationOpt.get().getStatus(); // Lấy "Đã đăng ký" hoặc "Đã xác nhận đăng ký"
+            }
+        } else {
             model.addAttribute("currentUserId", null);
-            return "main/event/detail";
         }
 
-        Long currentUserId = loggedInUser.getUser_id();
-        model.addAttribute("currentUserId", currentUserId);
-        try {
-            registrationService.checkIfRegistered(id, currentUserId);
-            model.addAttribute("isRegistered", true);
-        } catch (RegistrationException e) {
-            model.addAttribute("isRegistered", false);
-        }
+        // Truyền biến sang View
+        model.addAttribute("isRegistered", isRegistered);
+        model.addAttribute("registrationStatus", registrationStatus);
 
         return "main/event/detail";
     }
@@ -97,8 +107,10 @@ public class EventController {
 
         try {
             registrationService.registerForEvent(eventId, currentUserId);
+
+            // Thông báo hiển thị ngay sau khi bấm nút
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Bạn đã đăng ký sự kiện thành công!");
+                    "Đã đăng ký thành công, vui lòng chờ duyệt!");
 
         } catch (RegistrationException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -107,13 +119,7 @@ public class EventController {
         return "redirect:/events/" + eventId;
     }
 
-    @GetMapping("/create")
-    public String createForm(Model model) {
-        model.addAttribute("event", new Event());
-        model.addAttribute("eventCategories", eventCategoryService.getAllEventCategories());
-        return "main/event/create";
-    }
-
+    // Các method khác giữ nguyên
     @PostMapping("/create")
     public String save(@ModelAttribute Event event) {
         eventService.saveEvent(event);

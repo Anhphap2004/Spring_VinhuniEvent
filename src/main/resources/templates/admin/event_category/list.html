@@ -16,7 +16,7 @@
 
     <!-- Nút thêm mới -->
     <div class="mb-3">
-        <a th:href="@{/event_categories/new}" class="btn btn-success">
+        <a th:href="@{/admin/event_categories/new}" class="btn btn-success">
             <i class="bi bi-plus-circle"></i> Thêm Danh mục mới
         </a>
     </div>
@@ -36,11 +36,11 @@
                 <td th:text="${category.category_id}">1</td>
                 <td th:text="${category.category_name}">Thể thao</td>
                 <td>
-                    <a th:href="@{/event_categories/edit/{id}(id=${category.category_id})}"
+                    <a th:href="@{/admin/event_categories/edit/{id}(id=${category.category_id})}"
                        class="btn btn-sm btn-warning me-2">
                         <i class="bi bi-pencil-square"></i> Sửa
                     </a>
-                    <a th:href="@{/event_categories/delete/{id}(id=${category.category_id})}"
+                    <a th:href="@{/admin/event_categories/delete/{id}(id=${category.category_id})}"
                        class="btn btn-sm btn-danger"
                        onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
                         <i class="bi bi-trash"></i> Xóa

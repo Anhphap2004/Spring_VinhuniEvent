@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/event_categories")
+@RequestMapping("/admin/event_categories")
 public class EventCategoryController {
     private EventCategoryService eventCategoryService;
     public EventCategoryController(EventCategoryService eventCategoryService) {

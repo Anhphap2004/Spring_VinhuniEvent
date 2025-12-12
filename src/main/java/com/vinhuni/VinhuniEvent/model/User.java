@@ -38,7 +38,7 @@ public class User {
     @JoinColumn(name = "role_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude // LOẠI TRỪ
+    @EqualsAndHashCode.Exclude
     private Role role;
 
     @Column(name = "is_active")
