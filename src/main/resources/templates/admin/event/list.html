@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}"> <head>
+    <title>Quản lý Sự kiện</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Danh sách Sự kiện</h1>
+        <a th:href="@{/admin/events/create}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Thêm mới Sự kiện
+        </a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên sự kiện</th>
+                        <th>Hình ảnh</th>
+                        <th>Danh mục</th>
+                        <th>Bắt đầu</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${events}">
+                        <td th:text="${item.event_id}"></td>
+                        <td th:text="${item.title}"></td>
+                        <td class="text-center">
+                            <img th:src="${item.image}"
+                                 alt="Ảnh sự kiện"
+                                 style="width: 80px; height: 60px; object-fit: cover; border-radius: 6px;">
+                        </td>
+
+                        <td th:text="${item.category != null ? item.category.category_name : 'N/A'}"></td>
+                        <td th:text="${#temporals.format(item.startTime, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td>
+                            <span th:if="${item.is_active}" class="badge bg-success">Hoạt động</span>
+                            <span th:unless="${item.is_active}" class="badge bg-secondary">Tạm ẩn</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/admin/events/detail/{id}(id=${item.event_id})}" class="btn btn-info btn-sm">
+                                <i class="fas fa-eye">Chi tiết</i>
+                            </a>
+                            <a th:href="@{/admin/events/edit/{id}(id=${item.event_id})}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit">Sửa</i>
+                            </a>
+                            <a th:href="@{/admin/events/delete/{id}(id=${item.event_id})}"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa sự kiện này?');">
+                                <i class="fas fa-trash">Xoá</i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

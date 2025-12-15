@@ -28,4 +28,12 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
      */
     @Query("SELECT a FROM Attendance a JOIN FETCH a.user WHERE a.event.event_id = :eventId ORDER BY a.attendanceTime DESC")
     List<Attendance> findByEventIdFetchingUser(@Param("eventId") Long eventId);
+
+    /**
+     * SỬA LỖI TẠI ĐÂY:
+     * Thay vì dùng tên hàm findByUser_UserId (gây lỗi tìm kiếm userId),
+     * ta viết query tường minh trỏ thẳng vào a.user.user_id
+     */
+    @Query("SELECT a FROM Attendance a WHERE a.user.user_id = :userId")
+    List<Attendance> findByUserId(@Param("userId") Long userId);
 }

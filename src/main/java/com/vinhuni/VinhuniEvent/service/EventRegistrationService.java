@@ -16,4 +16,6 @@ public interface EventRegistrationService {
     // MỚI: Xóa bản ghi đăng ký (Dùng cho hủy)
     void deleteRegistration(Long registrationId) throws RegistrationException;
     Optional<EventRegistration> findRegistration(Long eventId, Long userId);
+
+    List<EventRegistration> getRegistrationsByUserId(Long userId);
 }

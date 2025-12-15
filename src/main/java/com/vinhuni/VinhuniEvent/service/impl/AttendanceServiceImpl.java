@@ -87,4 +87,9 @@ public class AttendanceServiceImpl implements AttendanceService {
         // Sử dụng phương thức JPQL JOIN FETCH
         return attendanceRepository.findByEventIdFetchingUser(eventId);
     }
+
+    // Lấy danh sách điểm danh của User để Map vào View
+    public List<Attendance> getAttendancesByUserId(Long userId) {
+        return attendanceRepository.findByUserId(userId);
+    }
 }

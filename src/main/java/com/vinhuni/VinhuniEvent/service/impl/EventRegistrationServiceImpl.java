@@ -89,4 +89,8 @@ public class EventRegistrationServiceImpl implements EventRegistrationService {
     public Optional<EventRegistration> findRegistration(Long eventId, Long userId) {
         return registrationRepository.findByEventAndUserIds(eventId, userId);
     }
+
+    public List<EventRegistration> getRegistrationsByUserId(Long userId) {
+        return registrationRepository.findByUserId(userId);
+    }
 }

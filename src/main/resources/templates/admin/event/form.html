@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+
+<head>
+    <title th:text="${event.event_id == null ? 'Thêm mới Sự kiện' : 'Cập nhật Sự kiện'}"></title>
+</head>
+
+<div layout:fragment="content">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary"
+                th:text="${event.event_id == null ? 'Thêm mới Sự kiện' : 'Cập nhật Sự kiện'}"></h6>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/admin/events/save}" th:object="${event}" method="post" enctype="multipart/form-data">
+                <input type="hidden" th:field="*{event_id}">
+                <input type="hidden" th:field="*{image}">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Tên sự kiện <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" th:field="*{title}" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>Danh mục <span class="text-danger">*</span></label>
+                        <select class="form-control" th:field="*{category}" required>
+                            <option value="">-- Chọn danh mục --</option>
+                            <option th:each="cat : ${categories}"
+                                    th:value="${cat.category_id}"
+                                    th:text="${cat.category_name}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Bắt đầu <span class="text-danger">*</span></label>
+                        <input type="datetime-local"
+                               class="form-control"
+                               th:value="${#temporals.format(event.startTime, 'yyyy-MM-dd''T''HH:mm')}"
+                               name="startTime"
+                               required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>Kết thúc <span class="text-danger">*</span></label>
+                        <input type="datetime-local"
+                               class="form-control"
+                               th:value="${#temporals.format(event.endTime, 'yyyy-MM-dd''T''HH:mm')}"
+                               name="endTime"
+                               required>
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+                    <label>Địa điểm</label>
+                    <input type="text" class="form-control" th:field="*{location}">
+                </div>
+
+                <div class="mb-3">
+                    <label>Số lượng tối đa</label>
+                    <input type="number" class="form-control" th:field="*{max_participants}">
+                </div>
+                <div class="mb-3">
+                    <label>Hình ảnh sự kiện</label>
+
+                    <input type="file" name="imageFile" class="form-control" accept="image/png, image/jpeg">
+
+                    <div class="mt-2" th:if="${event.image != null}">
+                        <img th:src="${event.image}" width="150" class="img-thumbnail" alt="Ảnh hiện tại">
+                        <p class="text-muted small">Ảnh hiện tại (Chọn ảnh mới để thay thế)</p>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Mô tả ngắn</label>
+                    <textarea class="form-control" rows="3" th:field="*{description}"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label>Nội dung chi tiết</label>
+                    <textarea class="form-control" rows="5" th:field="*{detail}"></textarea>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input type="checkbox" class="form-check-input" th:field="*{is_active}" id="isActive">
+                    <label class="form-check-label" for="isActive">Kích hoạt hiển thị ngay</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu lại</button>
+                <a th:href="@{/admin/events}" class="btn btn-secondary">Quay lại</a>
+            </form>
+        </div>
+    </div>
+</div>
+</html>

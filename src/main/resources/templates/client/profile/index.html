@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main/layout/base}">
+
+<head>
+    <title>Hồ sơ cá nhân</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="container py-5">
+        <div class="row">
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow border-0 text-center p-4">
+                    <div class="mb-3">
+                        <img th:src="${user.imageUrl != null ? user.imageUrl : 'https://ui-avatars.com/api/?name=' + user.full_name}"
+                             class="rounded-circle img-thumbnail" width="150" height="150">
+                    </div>
+                    <h4 class="fw-bold text-primary" th:text="${user.full_name}">Tên Sinh Viên</h4>
+              <div>  Mã Sinh Viên:  <p class="text-muted" th:text="${user.student_code}">Mã SV</p> </div>
+
+                    <hr>
+                    <div class="text-start">
+                        <p><i class="fas fa-envelope me-2 text-warning"></i> <span th:text="${user.email}"></span></p>
+                        <p><i class="fas fa-phone me-2 text-success"></i> <span th:text="${user.phone_number}"></span></p>
+                        <p><i class="fas fa-university me-2 text-info"></i> <span th:text="${user.faculty} + ' - ' + ${user.major}"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold text-primary"><i class="fas fa-history me-2"></i>Lịch sử Tham gia Sự kiện</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Tên Sự kiện</th>
+                                    <th>Ngày đăng ký</th>
+                                    <th class="text-center">Trạng thái Đăng ký</th>
+                                    <th class="text-center">Trạng thái Điểm danh</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="reg : ${registrations}">
+                                    <td>
+                                        <a th:href="@{/events/{id}(id=${reg.event.event_id})}" class="fw-bold text-decoration-none text-dark">
+                                            <span th:text="${reg.event.title}">Tên sự kiện</span>
+                                        </a>
+                                        <br>
+                                        <small class="text-muted" th:text="${#temporals.format(reg.event.startTime, 'dd/MM/yyyy HH:mm')}"></small>
+                                    </td>
+
+                                    <td th:text="${#temporals.format(reg.registrationDate, 'dd/MM/yyyy')}"></td>
+
+                                    <td class="text-center">
+                                        <span th:if="${reg.status == 'Đã xác nhận đăng ký'}" class="badge bg-success">Đã duyệt</span>
+                                        <span th:if="${reg.status == 'Đã đăng ký'}" class="badge bg-warning text-dark">Chờ duyệt</span>
+                                        <span th:if="${reg.status == 'Đã hủy'}" class="badge bg-danger">Đã hủy</span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div th:if="${reg.status == 'Đã hủy'}">
+                                            <span class="text-muted small">--</span>
+                                        </div>
+
+                                        <div th:unless="${reg.status == 'Đã hủy'}">
+
+                                            <div th:if="${attendanceMap.containsKey(reg.event.event_id)}">
+                                                    <span th:if="${attendanceMap.get(reg.event.event_id) == true}" class="badge bg-success">
+                                                        <i class="fas fa-check-circle"></i> Có mặt
+                                                    </span>
+                                                <span th:if="${attendanceMap.get(reg.event.event_id) == false}" class="badge bg-danger">
+                                                        <i class="fas fa-times-circle"></i> Vắng mặt
+                                                    </span>
+                                            </div>
+
+                                            <div th:unless="${attendanceMap.containsKey(reg.event.event_id)}">
+                                                <span class="badge bg-secondary">Chưa điểm danh</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr th:if="${#lists.isEmpty(registrations)}">
+                                    <td colspan="4" class="text-center py-5 text-muted">
+                                        <i class="fas fa-inbox fa-3x mb-3"></i><br>
+                                        Bạn chưa đăng ký tham gia sự kiện nào.
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</html>

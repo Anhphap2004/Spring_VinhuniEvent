@@ -9,4 +9,6 @@ public interface AttendanceService {
     Optional<Boolean> getUserAttendanceStatus(Long eventId, Long userId);
     List<Attendance> getAttendancesByEventId(Long eventId);
     Optional<Attendance> getLatestAttendanceRecord(Long eventId, Long userId);
+
+    List<Attendance> getAttendancesByUserId(Long userId);
 }

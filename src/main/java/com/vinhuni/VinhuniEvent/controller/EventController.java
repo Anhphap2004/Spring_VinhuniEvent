@@ -34,20 +34,19 @@ public class EventController {
     }
 
     @GetMapping
-    public String listEvents(
-            @RequestParam(value = "category", required = false) Long categoryId,
-            Model model) {
-
+    public String listEvents(@RequestParam(value = "category", required = false) Long categoryId, Model model) {
         List<Event> events;
-        if (categoryId != null) {
-            events = eventService.getEventsByCategoryId(categoryId);
-        } else {
-            events = eventService.getAllEvents();
-        }
-        model.addAttribute("events", events);
-        model.addAttribute("eventCategories", eventCategoryService.getAllEventCategories());
-        model.addAttribute("selectedCategory", categoryId);
 
+        if (categoryId != null) {
+            // SỬA: Gọi hàm chỉ lấy active
+            events = eventService.getActiveEventsByCategoryId(categoryId);
+        } else {
+            // SỬA: Gọi hàm chỉ lấy active
+            events = eventService.getAllActiveEvents();
+        }
+
+        model.addAttribute("events", events);
+        // ... code khác ...
         return "main/event/index";
     }
 
