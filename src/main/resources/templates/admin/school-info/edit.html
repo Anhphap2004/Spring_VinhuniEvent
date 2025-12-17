@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <title th:text="${pageTitle}"></title>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid px-4">
+    <h1 class="mt-4" th:text="${pageTitle}"></h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/admin/school-info}">Thông tin trường</a></li>
+        <li class="breadcrumb-item active">Chỉnh sửa</li>
+    </ol>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i> <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i> <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <form th:action="@{/admin/school-info/save}" th:object="${school}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="card shadow mb-4">
+            <div class="card-header bg-dark text-white">
+                <i class="fas fa-edit me-1"></i> Cập nhật thông tin
+            </div>
+            <div class="card-body">
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Tên Trường / Tổ chức <span class="text-danger">*</span></label>
+                    <input type="text" th:field="*{schoolName}" class="form-control" placeholder="Ví dụ: Trường Đại học Vinh" required />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Sứ mạng</label>
+                        <textarea th:field="*{mission}" class="form-control" rows="4" placeholder="Nhập sứ mạng..."></textarea>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Tầm nhìn</label>
+                        <textarea th:field="*{vision}" class="form-control" rows="4" placeholder="Nhập tầm nhìn..."></textarea>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Mô tả giới thiệu chung</label>
+                    <textarea th:field="*{description}" class="form-control" rows="6" placeholder="Viết đoạn giới thiệu về lịch sử, quy mô..."></textarea>
+                    <div class="form-text">Bạn có thể nhập văn bản dài tại đây.</div>
+                </div>
+
+                <hr>
+                <h5 class="mb-3 text-secondary">Thông tin liên hệ</h5>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Địa chỉ trụ sở</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <input type="text" th:field="*{address}" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Website</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                            <input type="text" th:field="*{website}" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Số điện thoại / Hotline</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            <input type="text" th:field="*{phone}" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email liên hệ</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" th:field="*{email}" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-white d-flex justify-content-end gap-2">
+                <a th:href="@{/admin/school-info}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Hủy bỏ
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Lưu thay đổi
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

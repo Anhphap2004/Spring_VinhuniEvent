@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <title th:text="${pageTitle}"></title>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid px-4">
+    <h1 class="mt-4" th:text="${pageTitle}"></h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Thông tin trường học</li>
+    </ol>
+
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <span><i class="fas fa-university me-2"></i> Thông tin hiện tại</span>
+            <a th:href="@{/admin/school-info/edit}" class="btn btn-light btn-sm fw-bold">
+                <i class="fas fa-edit"></i> Chỉnh sửa
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-12 text-center">
+                    <h2 class="text-uppercase fw-bold text-primary" th:text="${school.schoolName}"></h2>
+                    <p class="text-muted"><i class="fas fa-globe me-1"></i> Website: <a th:href="${school.website}" target="_blank" th:text="${school.website}"></a></p>
+                </div>
+            </div>
+            <hr>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card h-100 border-start border-primary border-4 bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary"><i class="fas fa-bullseye"></i> Sứ mạng</h5>
+                            <p class="card-text" th:text="${school.mission}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 border-start border-success border-4 bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title text-success"><i class="fas fa-eye"></i> Tầm nhìn</h5>
+                            <p class="card-text" th:text="${school.vision}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="fw-bold"><i class="fas fa-info-circle"></i> Giới thiệu chung</h5>
+                <div class="p-3 bg-light rounded border">
+                    <p th:text="${school.description}" style="white-space: pre-line;"></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <strong><i class="fas fa-map-marker-alt text-danger"></i> Địa chỉ:</strong>
+                    <div th:text="${school.address}"></div>
+                </div>
+                <div class="col-md-4">
+                    <strong><i class="fas fa-phone text-success"></i> Hotline:</strong>
+                    <div th:text="${school.phone}"></div>
+                </div>
+                <div class="col-md-4">
+                    <strong><i class="fas fa-envelope text-warning"></i> Email:</strong>
+                    <div th:text="${school.email}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

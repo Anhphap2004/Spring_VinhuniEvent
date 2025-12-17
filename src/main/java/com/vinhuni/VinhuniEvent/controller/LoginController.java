@@ -35,20 +35,15 @@ public class LoginController {
     public String processLogin(@RequestParam String email, @RequestParam String password,
                                HttpSession session, RedirectAttributes ra) {
         try {
-            // Đẩy hết việc check cho Service, nếu sai nó tự ném RegistrationException
             User user = userService.authenticate(email, password);
-
-            // Lưu session
             session.setAttribute("loggedInUser", user);
 
-            // Phân quyền điều hướng
             if (user.getRole() != null && user.getRole().getRoleId() == 1) {
                 return "redirect:/admin";
             }
             return "redirect:/";
 
         } catch (RegistrationException e) {
-            // Bắt mọi thông điệp lỗi: "Email không tồn tại", "Mật khẩu sai", "Tài khoản bị khóa"
             ra.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/login";
         }
