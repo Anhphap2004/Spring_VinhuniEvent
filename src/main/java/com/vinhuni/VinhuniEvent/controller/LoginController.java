@@ -1,6 +1,7 @@
 package com.vinhuni.VinhuniEvent.controller;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.fasterxml.jackson.core.JsonPointer;
+import com.vinhuni.VinhuniEvent.exception.RegistrationException;
 import com.vinhuni.VinhuniEvent.model.User;
 import com.vinhuni.VinhuniEvent.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -31,29 +32,26 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String processLogin(
-            @RequestParam String email,
-            @RequestParam String password,
-            HttpSession session,
-            Model model) {
+    public String processLogin(@RequestParam String email, @RequestParam String password,
+                               HttpSession session, RedirectAttributes ra) {
+        try {
+            // Đẩy hết việc check cho Service, nếu sai nó tự ném RegistrationException
+            User user = userService.authenticate(email, password);
 
-        User user = userService.findByEmail(email);
+            // Lưu session
+            session.setAttribute("loggedInUser", user);
 
-        if (user == null) {
-            model.addAttribute("error", "Email không tồn tại!");
-            return "auth/login";
+            // Phân quyền điều hướng
+            if (user.getRole() != null && user.getRole().getRoleId() == 1) {
+                return "redirect:/admin";
+            }
+            return "redirect:/";
+
+        } catch (RegistrationException e) {
+            // Bắt mọi thông điệp lỗi: "Email không tồn tại", "Mật khẩu sai", "Tài khoản bị khóa"
+            ra.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/login";
         }
-
-
-        if (!passwordEncoder.matches(password, user.getPassword_hash())) {
-            model.addAttribute("error", "Mật khẩu sai rồi bạn iu ơi!");
-            return "auth/login";
-        }
-
-        // lưu user vào session
-        session.setAttribute("loggedInUser", user);
-
-        return "redirect:/"; // về trang chủ
     }
 
     @GetMapping("/logout")

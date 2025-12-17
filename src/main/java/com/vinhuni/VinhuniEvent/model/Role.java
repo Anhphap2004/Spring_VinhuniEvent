@@ -1,11 +1,7 @@
 package com.vinhuni.VinhuniEvent.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.ToString;
-
+import lombok.*;
 import java.util.List;
 
 @Entity
@@ -14,18 +10,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Role {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer role_id;
+    @Column(name = "role_id")
+    private Integer roleId;
 
     @Column(name = "role_name", length = 50, nullable = false)
-    private String role_name;
+    private String roleName;
 
     @Column(length = 200)
     private String description;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "role")
     @ToString.Exclude
     private List<User> users;
 }

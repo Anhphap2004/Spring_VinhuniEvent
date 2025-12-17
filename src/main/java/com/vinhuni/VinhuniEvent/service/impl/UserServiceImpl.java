@@ -1,12 +1,12 @@
 package com.vinhuni.VinhuniEvent.service.impl;
 
+import com.vinhuni.VinhuniEvent.exception.RegistrationException;
 import com.vinhuni.VinhuniEvent.model.User;
 import com.vinhuni.VinhuniEvent.repository.UserRepository;
 import com.vinhuni.VinhuniEvent.service.UserService;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,77 +15,97 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    @Autowired
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
     @Override
     public void registerUser(User user) {
         // mã hóa pass
-        user.setPassword_hash(passwordEncoder.encode(user.getPassword_hash()));
-        user.setIs_active(true);
-        user.setCreated_date(LocalDateTime.now());
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        user.setIsActive(true);
+        user.setCreatedDate(LocalDateTime.now());
         userRepository.save(user);
     }
-
-    @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    // Bổ sung: Lấy tất cả người dùng (Xem danh sách)
     @Override
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
-    // Bổ sung: Lấy người dùng theo ID (Xem chi tiết)
     @Override
     public Optional<User> findUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    // Bổ sung: Cập nhật người dùng
     @Override
-    public User updateUser(Long id, User userDetails) {
-        return userRepository.findById(id)
-                .map(existingUser -> {
-                    // Cập nhật thông tin cơ bản
-                    existingUser.setFull_name(userDetails.getFull_name());
-                    existingUser.setEmail(userDetails.getEmail());
-                    existingUser.setIs_active(userDetails.getIs_active());
-                    existingUser.setStudent_code(userDetails.getStudent_code());
-                    existingUser.setFaculty(userDetails.getFaculty());
-                    existingUser.setMajor(userDetails.getMajor());
-                    existingUser.setBirth_date(userDetails.getBirth_date());
-                    existingUser.setPhone_number(userDetails.getPhone_number());
-                    existingUser.setImageUrl(userDetails.getImageUrl());
+    @Transactional
+    public void saveUser(User user) {
+        // 1. Trường hợp Thêm mới (ID chưa có)
+        if (user.getUserId() == null) {
+            user.setCreatedDate(LocalDateTime.now());
+            user.setIsActive(true);
+            // Mã hóa mật khẩu
+            user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+            userRepository.save(user);
+        }
+        // 2. Trường hợp Cập nhật (Đã có ID)
+        else {
+            User existingUser = userRepository.findById(user.getUserId())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy User"));
 
-                    // Cập nhật Role (nếu cần)
-                    existingUser.setRole(userDetails.getRole());
+            // Cập nhật các trường thông tin chung
+            existingUser.setFullName(user.getFullName());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setPhoneNumber(user.getPhoneNumber());
+            existingUser.setStudentCode(user.getStudentCode());
+            existingUser.setFaculty(user.getFaculty());
+            existingUser.setMajor(user.getMajor());
+            existingUser.setRole(user.getRole());
+            existingUser.setIsActive(user.getIsActive());
+            // LOGIC MẬT KHẨU:
+            // Nếu form gửi lên mật khẩu mới (khác rỗng) -> Mã hóa và lưu
+            if (user.getPasswordHash() != null && !user.getPasswordHash().isEmpty()) {
+                existingUser.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+            }
+            // Nếu để trống -> Giữ nguyên mật khẩu cũ (không làm gì cả)
 
-                    // Nếu password_hash mới khác rỗng, tiến hành mã hóa và cập nhật
-                    // Lưu ý: Trong thực tế, bạn nên có một API riêng cho việc đổi mật khẩu.
-                    if (userDetails.getPassword_hash() != null && !userDetails.getPassword_hash().isEmpty()) {
-                        existingUser.setPassword_hash(passwordEncoder.encode(userDetails.getPassword_hash()));
-                    }
-
-                    // Lưu và trả về người dùng đã cập nhật
-                    return userRepository.save(existingUser);
-                }).orElseThrow(() -> new RuntimeException("User not found with id " + id)); // Xử lý khi không tìm thấy
+            userRepository.save(existingUser);
+        }
     }
-
-
 
     @Override
     public void deleteUser(Long id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("User not found with id " + id);
+        userRepository.deleteById(id);
+    }
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+    @Override
+    public User authenticate(String email, String password) {
+        // 1. Tìm user theo email
+        User user = userRepository.findByEmail(email);
+
+        // 2. Nếu không thấy -> Ném lỗi
+        if (user == null) {
+            throw new RegistrationException("Email không tồn tại!");
         }
+
+        // 3. Nếu thấy nhưng sai mật khẩu -> Ném lỗi
+        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
+            throw new RegistrationException("Mật khẩu không chính xác!");
+        }
+
+        // 4. Nếu bị khóa -> Ném lỗi
+        if (user.getIsActive() != null && !user.getIsActive()) {
+            throw new RegistrationException("Tài khoản đã bị khóa!");
+        }
+
+        // 5. Mọi thứ ok thì mới trả về user
+        return user;
     }
 }

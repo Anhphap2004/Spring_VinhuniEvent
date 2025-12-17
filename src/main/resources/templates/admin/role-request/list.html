@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <title th:text="${pageTitle}"></title>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid px-4">
+    <h1 class="mt-4" th:text="${pageTitle}"></h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Yêu cầu nâng quyền</li>
+    </ol>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i> <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i> <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <div><i class="fas fa-tasks me-1"></i> Danh sách yêu cầu</div>
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs mb-3" id="roleRequestTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fw-bold" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
+                        Chờ duyệt <span class="badge bg-warning text-dark ms-1" th:text="${pendingRequests.size()}">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button" role="tab">
+                        Đã duyệt <span class="badge bg-success ms-1" th:text="${approvedRequests.size()}">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected" type="button" role="tab">
+                        Đã từ chối <span class="badge bg-danger ms-1" th:text="${rejectedRequests.size()}">0</span>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="roleRequestTabsContent">
+
+                <div class="tab-pane fade show active" id="pending" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle">
+                            <thead class="table-light">
+                            <tr class="text-center">
+                                <th>Người gửi</th>
+                                <th>Lý do nâng quyền</th>
+                                <th>Ngày gửi</th>
+                                <th>Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="req : ${pendingRequests}">
+                                <td>
+                                    <div class="fw-bold" th:text="${req.user.fullName}"></div>
+                                    <small class="text-muted" th:text="${req.user.email}"></small>
+                                </td>
+                                <td th:text="${req.reason}"></td>
+                                <td th:text="${#temporals.format(req.createdAt, 'dd/MM/yyyy HH:mm')}" class="text-center"></td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <form th:action="@{/admin/role-requests/approve/{id}(id=${req.requestId})}" method="post">
+                                            <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Xác nhận cấp quyền Organizer?')">
+                                                <i class="fas fa-check"></i> Duyệt
+                                            </button>
+                                        </form>
+                                        <form th:action="@{/admin/role-requests/reject/{id}(id=${req.requestId})}" method="post">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Từ chối yêu cầu này?')">
+                                                <i class="fas fa-times"></i> Từ chối
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(pendingRequests)}">
+                                <td colspan="4" class="text-center text-muted p-4">Không có yêu cầu nào đang chờ xử lý.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="approved" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead class="table-success text-center">
+                            <tr>
+                                <th>Người gửi</th>
+                                <th>Lý do</th>
+                                <th>Ngày gửi</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="req : ${approvedRequests}">
+                                <td th:text="${req.user.fullName}"></td>
+                                <td th:text="${req.reason}"></td>
+                                <td th:text="${#temporals.format(req.createdAt, 'dd/MM/yyyy HH:mm')}" class="text-center"></td>
+                                <td class="text-center"><span class="badge bg-success">Đã phê duyệt</span></td>
+                                <td class="text-center text-muted small">N/A</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="rejected" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead class="table-danger text-center">
+                            <tr>
+                                <th>Người gửi</th>
+                                <th>Lý do</th>
+                                <th>Ngày gửi</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="req : ${rejectedRequests}">
+                                <td th:text="${req.user.fullName}"></td>
+                                <td th:text="${req.reason}"></td>
+                                <td th:text="${#temporals.format(req.createdAt, 'dd/MM/yyyy HH:mm')}" class="text-center"></td>
+                                <td class="text-center"><span class="badge bg-danger">Đã từ chối</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div> </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <title>Danh sách Role</title>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid px-4">
+    <h2 class="mt-4">Quản lý Quyền (Roles)</h2>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Roles</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Danh sách Role
+            <a th:href="@{/admin/roles/add}" class="btn btn-primary btn-sm float-end">
+                <i class="fas fa-plus"></i> Thêm Role Mới
+            </a>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th style="width: 10%">ID</th>
+                    <th style="width: 25%">Tên Role</th>
+                    <th>Mô tả</th>
+                    <th style="width: 15%">Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="r : ${roles}">
+                    <td th:text="${r.roleId}"></td>
+                    <td><span class="badge bg-info text-dark" th:text="${r.roleName}"></span></td>
+                    <td th:text="${r.description}"></td>
+                    <td>
+                        <a th:href="@{/admin/roles/edit/{id}(id=${r.roleId})}"
+                           class="btn btn-warning btn-sm" title="Sửa">
+                            <i class="fas fa-edit">Sửa</i>
+                        </a>
+                        <a th:href="@{/admin/roles/delete/{id}(id=${r.roleId})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn có chắc chắn muốn xóa quyền này?')" title="Xóa">
+                            <i class="fas fa-trash">Xoá</i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

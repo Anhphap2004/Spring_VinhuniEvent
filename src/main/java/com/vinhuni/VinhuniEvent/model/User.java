@@ -17,38 +17,37 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString // Sử dụng ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true) // Cấu hình EqualsAndHashCode an toàn
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include // BAO GỒM KHÓA CHÍNH
-    private Long user_id;
+    @Column(name = "user_id") // Map với cột user_id trong SQL
+    private Long userId;      // Tên biến chuẩn Java
 
     @Column(name = "full_name", length = 100, nullable = false)
-    private String full_name;
+    private String fullName;
 
     @Column(length = 100, unique = true, nullable = false)
     private String email;
 
     @Column(name = "password_hash", length = 200, nullable = false)
-    private String password_hash;
+    private String passwordHash;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private Role role;
 
     @Column(name = "is_active")
-    private Boolean is_active = true;
+    private Boolean isActive = true;
 
     @Column(name = "created_date")
-    private LocalDateTime created_date;
+    private LocalDateTime createdDate;
 
     @Column(name = "student_code", length = 20)
-    private String student_code;
+    private String studentCode;
 
     @Column(length = 100)
     private String faculty;
@@ -56,16 +55,17 @@ public class User {
     @Column(length = 100)
     private String major;
 
-    private LocalDate birth_date;
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 
     @Column(name = "phone_number", length = 20)
-    private String phone_number;
+    private String phoneNumber;
 
-    @Column(name = "image_url", length = 255)
+    @Column(name = "image_url")
     private String imageUrl;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude // LOẠI TRỪ
+    @EqualsAndHashCode.Exclude
     private Set<EventRegistration> eventRegistrations = new HashSet<>();
 }

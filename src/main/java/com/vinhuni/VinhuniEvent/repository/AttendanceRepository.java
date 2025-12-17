@@ -16,7 +16,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
      * JPQL: Tìm bản ghi điểm danh MỚI NHẤT (latest) cho một người dùng tại sự kiện.
      * Dùng để xác định trạng thái cuối cùng (Có mặt/Vắng mặt).
      */
-    @Query("SELECT a FROM Attendance a WHERE a.event.event_id = :eventId AND a.user.user_id = :userId ORDER BY a.attendanceTime DESC LIMIT 1")
+    @Query("SELECT a FROM Attendance a WHERE a.event.event_id = :eventId AND a.user.userId = :userId ORDER BY a.attendanceTime DESC LIMIT 1")
     Optional<Attendance> findTopByEventIdAndUserIdOrderByAttendanceTime(
             @Param("eventId") Long eventId,
             @Param("userId") Long userId
@@ -34,6 +34,6 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
      * Thay vì dùng tên hàm findByUser_UserId (gây lỗi tìm kiếm userId),
      * ta viết query tường minh trỏ thẳng vào a.user.user_id
      */
-    @Query("SELECT a FROM Attendance a WHERE a.user.user_id = :userId")
+    @Query("SELECT a FROM Attendance a WHERE a.user.userId = :userId")
     List<Attendance> findByUserId(@Param("userId") Long userId);
 }

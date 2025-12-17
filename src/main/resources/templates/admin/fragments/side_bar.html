@@ -22,23 +22,34 @@
                 </a>
             </li>
 
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-sign-in.html">
-                    <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Sign In</span>
-                </a>
-            </li>
+<!--            <li class="sidebar-item">-->
+<!--                <a class="sidebar-link" href="pages-sign-in.html">-->
+<!--                    <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Sign In</span>-->
+<!--                </a>-->
+<!--            </li>-->
+
+<!--            <li class="sidebar-item">-->
+<!--                <a class="sidebar-link" href="pages-sign-up.html">-->
+<!--                    <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Sign Up</span>-->
+<!--                </a>-->
+<!--            </li>-->
 
             <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-sign-up.html">
-                    <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Sign Up</span>
+                <a class="sidebar-link" th:href="@{/admin/roles}">
+                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Phân Quyền</span>
                 </a>
             </li>
-
+            <li class="sidebar-item">
+                <a class="sidebar-link" th:href="@{/admin/role-requests}">
+                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Nâng Quyền</span>
+                </a>
+            </li>
             <li class="sidebar-item">
                 <a class="sidebar-link" th:href="@{/admin/event_categories}">
                     <i class="align-middle" data-feather="book"></i> <span class="align-middle">Danh Mục Sự Kiện</span>
                 </a>
-            </li> <li class="sidebar-item">
+            </li>
+            <li class="sidebar-item">
                 <a class="sidebar-link" th:href="@{/admin/events}">
                     <i class="align-middle" data-feather="book"></i> <span class="align-middle">Quản Lý Sự Kiện</span>
                 </a>

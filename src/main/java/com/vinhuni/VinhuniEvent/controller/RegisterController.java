@@ -31,7 +31,7 @@ public class RegisterController {
             @RequestParam("confirmPassword") String confirmPassword,
             Model model
     ) {
-        String rawPassword = user.getPassword_hash();
+        String rawPassword = user.getPasswordHash();
         if (!rawPassword.equals(confirmPassword)) {
             model.addAttribute("error", "Mật khẩu xác nhận không khớp!");
             return "auth/register";

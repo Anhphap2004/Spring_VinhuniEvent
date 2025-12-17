@@ -126,7 +126,7 @@ public class EventRegisterController {
             Map<Long, Boolean> attendanceStatusMap = new HashMap<>();
 
             for (EventRegistration reg : registrations) {
-                Long userId = reg.getUser().getUser_id();
+                Long userId = reg.getUser().getUserId();
                 Optional<Boolean> status = attendanceService.getUserAttendanceStatus(eventId, userId);
 
                 if (status.isPresent()) {

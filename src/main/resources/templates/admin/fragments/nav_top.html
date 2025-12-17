@@ -147,14 +147,14 @@
                         <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
                             <img th:src="@{${user.imageUrl != null ? user.imageUrl : '/admin/img/avatars/avatar.jpg'}}"
                                  class="avatar img-fluid rounded me-1"
-                                 th:alt="${user.full_name}" />
+                                 th:alt="${user.fullName}" />
 
-                            <span class="text-dark" th:text="${user.full_name}">Tên Người Dùng</span>
+                            <span class="text-dark" th:text="${user.fullName}">Tên Người Dùng</span>
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-end">
 
-                            <a class="dropdown-item" th:href="@{/profile/{id}(id=${user.user_id})}">
+                            <a class="dropdown-item" th:href="@{/profile/{id}(id=${user.userId})}">
                                 <i class="align-middle me-1" data-feather="user"></i> Profile
                             </a>
 

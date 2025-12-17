@@ -136,13 +136,23 @@
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-christmas">
 
                             <div th:if="${loggedInUser != null}">
-            <span class="dropdown-item dropdown-item-christmas" style="font-style: italic; font-weight: bold; cursor: default;">
-                Xin chào, <span th:text="${loggedInUser.full_name}">User Name</span>
-            </span>
+    <span class="dropdown-item dropdown-item-christmas" style="font-style: italic; font-weight: bold; cursor: default;">
+        Xin chào, <span th:text="${loggedInUser.fullName}">User Name</span>
+    </span>
+
+                                <a th:if="${loggedInUser.role != null && (loggedInUser.role.roleId == 1 || loggedInUser.role.roleId == 3)}"
+                                   th:href="@{/admin/roles}"
+                                   class="dropdown-item dropdown-item-christmas text-danger fw-bold">
+                                    <i class="fa fa-user-shield"></i> Trang Quản Trị
+                                </a>
 
                                 <a th:href="@{/profile}" class="dropdown-item dropdown-item-christmas">
                                     <i class="fa fa-id-card"></i> Hồ sơ cá nhân
                                 </a>
+                                <a th:href="@{/profile/request}" class="dropdown-item dropdown-item-christmas">
+                                    <i class="fa fa-id-card"></i> Yêu cầu nâng quyền
+                                </a>
+
                                 <div class="dropdown-divider"></div>
 
                                 <a th:href="@{/logout}" class="dropdown-item dropdown-item-christmas">

@@ -14,16 +14,16 @@
             <div class="col-md-4 mb-4">
                 <div class="card shadow border-0 text-center p-4">
                     <div class="mb-3">
-                        <img th:src="${user.imageUrl != null ? user.imageUrl : 'https://ui-avatars.com/api/?name=' + user.full_name}"
+                        <img th:src="${user.imageUrl != null ? user.imageUrl : 'https://ui-avatars.com/api/?name=' + user.fullName}"
                              class="rounded-circle img-thumbnail" width="150" height="150">
                     </div>
-                    <h4 class="fw-bold text-primary" th:text="${user.full_name}">Tên Sinh Viên</h4>
-              <div>  Mã Sinh Viên:  <p class="text-muted" th:text="${user.student_code}">Mã SV</p> </div>
+                    <h4 class="fw-bold text-primary" th:text="${user.fullName}">Tên Sinh Viên</h4>
+              <div>  Mã Sinh Viên:  <p class="text-muted" th:text="${user.studentCode}">Mã SV</p> </div>
 
                     <hr>
                     <div class="text-start">
                         <p><i class="fas fa-envelope me-2 text-warning"></i> <span th:text="${user.email}"></span></p>
-                        <p><i class="fas fa-phone me-2 text-success"></i> <span th:text="${user.phone_number}"></span></p>
+                        <p><i class="fas fa-phone me-2 text-success"></i> <span th:text="${user.phoneNumber}"></span></p>
                         <p><i class="fas fa-university me-2 text-info"></i> <span th:text="${user.faculty} + ' - ' + ${user.major}"></span></p>
                     </div>
                 </div>

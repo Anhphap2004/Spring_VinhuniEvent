@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface EventRegistrationRepository extends JpaRepository<EventRegistration, Long> {
 
     // 1. Tìm bản ghi đăng ký dựa trên ID sự kiện và ID người dùng
-    @Query("SELECT r FROM EventRegistration r WHERE r.event.event_id = :eventId AND r.user.user_id = :userId")
+    @Query("SELECT r FROM EventRegistration r WHERE r.event.event_id = :eventId AND r.user.userId = :userId")
     Optional<EventRegistration> findByEventAndUserIds(
             @Param("eventId") Long eventId,
             @Param("userId") Long userId
@@ -25,6 +25,6 @@ public interface EventRegistrationRepository extends JpaRepository<EventRegistra
 
     // 3. SỬA LỖI TẠI ĐÂY: Lấy lịch sử đăng ký của User
     // Thay vì dùng tên hàm dài dòng dễ gây lỗi, ta dùng câu @Query trực tiếp trỏ vào 'r.user.user_id'
-    @Query("SELECT r FROM EventRegistration r WHERE r.user.user_id = :userId ORDER BY r.registrationDate DESC")
+    @Query("SELECT r FROM EventRegistration r WHERE r.user.userId = :userId ORDER BY r.registrationDate DESC")
     List<EventRegistration> findByUserId(@Param("userId") Long userId);
 }

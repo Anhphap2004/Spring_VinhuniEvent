@@ -69,7 +69,7 @@ public class EventController {
         String registrationStatus = "";
 
         if (loggedInUser != null) {
-            Long currentUserId = loggedInUser.getUser_id();
+            Long currentUserId = loggedInUser.getUserId();
             model.addAttribute("currentUserId", currentUserId);
 
             // LOGIC MỚI: Tìm bản ghi đăng ký để lấy trạng thái cụ thể
@@ -102,7 +102,7 @@ public class EventController {
             return "redirect:/login";
         }
 
-        Long currentUserId = loggedInUser.getUser_id();
+        Long currentUserId = loggedInUser.getUserId();
 
         try {
             registrationService.registerForEvent(eventId, currentUserId);

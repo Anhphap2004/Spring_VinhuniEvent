@@ -3,174 +3,82 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layout/base}">
 <head>
-    <meta charset="UTF-8">
     <title th:text="${pageTitle}"></title>
-    <style>
-        /* CSS tùy chỉnh cho form */
-        :root {
-            --primary-color: #007bff;
-        }
-
-        .main {
-            padding-top: 2rem !important;
-            padding-bottom: 2rem !important;
-            background-color: #f8f9fa; /* Nền nhẹ */
-        }
-
-        h1 {
-            color: #343a40;
-            margin-bottom: 1.5rem;
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .form-card {
-            max-width: 600px; /* Giới hạn chiều rộng cho form */
-            margin: 0 auto;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-            border: none; /* Bỏ viền cũ */
-        }
-
-        /* Tùy chỉnh input/select */
-        .form-control, .form-select {
-            border-radius: 0.25rem;
-        }
-
-        /* Nút */
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .btn-secondary-custom {
-            background-color: #6c757d;
-            border-color: #6c757d;
-            color: #fff;
-        }
-
-        .form-section-title {
-            color: var(--primary-color);
-            font-weight: bold;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
-            padding-bottom: 0.2rem;
-            border-bottom: 1px dashed #ced4da;
-        }
-
-        /* Cảnh báo mật khẩu */
-        .password-note {
-            font-size: 0.875rem;
-            color: #6c757d;
-        }
-    </style>
 </head>
 <body>
-<div layout:fragment="content" class="main container-fluid">
-    <h1 th:text="${pageTitle}">👤 Thêm/Chỉnh sửa Người dùng</h1>
+<div layout:fragment="content" class="container-fluid px-4">
+    <h2 class="mt-4" th:text="${pageTitle}"></h2>
 
-    <div class="card form-card">
+    <div class="card shadow mb-4 col-xl-8">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-user-edit me-1"></i> Thông tin chi tiết
+        </div>
         <div class="card-body">
-            <form th:action="@{/admin/users/save}" method="post" th:object="${user}">
+            <form th:action="@{/admin/users/save}" th:object="${user}" method="post">
 
-                <input type="hidden" th:field="*{user_id}" />
+                <input type="hidden" th:field="*{userId}" />
 
-                <div class="form-section-title">Thông tin tài khoản</div>
-
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email <span class="text-danger">*</span>:</label>
-                    <input type="email" id="email" th:field="*{email}" required
-                           class="form-control"
-                           th:readonly="${user.user_id != null}"
-                           placeholder="a.nguyen@vinhuni.edu.vn" />
-                    <div th:if="${user.user_id != null}" class="form-text text-muted">
-                        Email không thể thay đổi sau khi tạo.
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Họ và tên:</label>
+                        <input type="text" th:field="*{fullName}" class="form-control" required />
                     </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="fullName" class="form-label">Họ và Tên <span class="text-danger">*</span>:</label>
-                    <input type="text" id="fullName" th:field="*{full_name}" required class="form-control" />
-                </div>
-
-                <div class="mb-3">
-                    <label for="passwordHash" class="form-label">Mật khẩu mới:</label>
-                    <input type="password" id="passwordHash" th:field="*{password_hash}" value=""
-                           class="form-control"
-                           th:required="${user.user_id == null}" />
-                    <small th:if="${user.user_id != null}" class="password-note">
-                        * Để trống nếu không muốn thay đổi mật khẩu hiện tại.
-                    </small>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Email:</label>
+                        <input type="email" th:field="*{email}" class="form-control"
+                               th:readonly="${user.userId != null}" required />
+                    </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="role" class="form-label">Vai trò (Role) <span class="text-danger">*</span>:</label>
-                        <select id="role" th:field="*{role}" class="form-select">
-                            <option th:each="role : ${roles}"
-                                    th:value="${role.role_id}"
-                                    th:text="${role.role_name}"
-                                    th:selected="${user.role != null and user.role.role_id == role.role_id}">
-                                Tên Role
-                            </option>
-                        </select>
+                        <label class="form-label fw-bold">Mật khẩu:</label>
+                        <input type="password" th:field="*{passwordHash}" class="form-control"
+                               th:required="${user.userId == null}"
+                               placeholder="Để trống nếu không muốn đổi mật khẩu" />
                     </div>
-
                     <div class="col-md-6 mb-3">
-                        <label for="isActive" class="form-label">Trạng thái Active:</label>
-                        <select id="isActive" th:field="*{is_active}" class="form-select">
-                            <option value="true">✅ Active</option>
-                            <option value="false">❌ Inactive</option>
+                        <label class="form-label fw-bold">Vai trò:</label>
+                        <select th:field="*{role}" class="form-select" required>
+                            <option value="">-- Chọn quyền --</option>
+                            <option th:each="r : ${roles}"
+                                    th:value="${r.roleId}"
+                                    th:text="${r.roleName}"></option>
                         </select>
                     </div>
                 </div>
-
-
-                <div class="form-section-title">Thông tin cá nhân & Học thuật</div>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="studentCode" class="form-label">Mã Sinh viên:</label>
-                        <input type="text" id="studentCode" th:field="*{student_code}" class="form-control" placeholder="SVXXXXXX" />
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Mã sinh viên:</label>
+                        <input type="text" th:field="*{studentCode}" class="form-control" />
                     </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label for="phoneNumber" class="form-label">Số điện thoại:</label>
-                        <input type="tel" id="phoneNumber" th:field="*{phone_number}" class="form-control" placeholder="090-123-4567" />
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Khoa:</label>
+                        <input type="text" th:field="*{faculty}" class="form-control" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Ngành:</label>
+                        <input type="text" th:field="*{major}" class="form-control" />
                     </div>
                 </div>
-
-                <div class="mb-3">
-                    <label for="birthDate" class="form-label">Ngày sinh:</label>
-                    <input type="date" id="birthDate" th:field="*{birth_date}" class="form-control" />
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Trạng thái tài khoản:</label>
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="isActiveSwitch">
+                            <label class="form-check-label" for="isActiveSwitch">Hoạt động (Active)</label>
+                        </div>
+                        <div class="form-text">Nếu tắt, người dùng này sẽ không thể đăng nhập vào hệ thống.</div>
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label for="faculty" class="form-label">Khoa:</label>
-                    <input type="text" id="faculty" th:field="*{faculty}" class="form-control" />
-                </div>
-
-                <div class="mb-3">
-                    <label for="major" class="form-label">Chuyên ngành:</label>
-                    <input type="text" id="major" th:field="*{major}" class="form-control" />
-                </div>
-
-                <div class="mb-3">
-                    <label for="imageUrl" class="form-label">URL Ảnh đại diện:</label>
-                    <input type="text" id="imageUrl" th:field="*{imageUrl}" class="form-control" placeholder="http://example.com/avatar.jpg" />
-                </div>
-
-
-                <div class="pt-3 border-top mt-4 d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary me-2">
-                        <i class="bi bi-save-fill"></i> 💾 Lưu Người dùng
+                <div class="mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Lưu lại
                     </button>
-                    <a th:href="@{/admin/users}">
-                        <button type="button" class="btn btn-secondary-custom">
-                            <i class="bi bi-x-circle-fill"></i> ✖️ Hủy bỏ
-                        </button>
-                    </a>
+                    <a th:href="@{/admin/users}" class="btn btn-secondary">Quay lại</a>
                 </div>
+
             </form>
         </div>
     </div>

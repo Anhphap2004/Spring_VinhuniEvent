@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <title th:text="${pageTitle}"></title>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid px-4">
+    <h2 class="mt-4" th:text="${pageTitle}"></h2>
+
+    <div class="row mt-4">
+        <div class="col-xl-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-edit me-1"></i> Thông tin chi tiết
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/admin/roles/save}" th:object="${role}" method="post">
+
+                        <input type="hidden" th:field="*{roleId}" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên Role:</label>
+                            <input type="text" th:field="*{roleName}" class="form-control"
+                                   placeholder="Ví dụ: ROLE_ADMIN" required
+                                   th:readonly="${role.roleId != null}"/>
+                            <div class="form-text">Lưu ý: Tên quyền thường viết hoa và bắt đầu bằng ROLE_</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mô tả:</label>
+                            <textarea th:field="*{description}" class="form-control"
+                                      rows="4" placeholder="Nhập nhiệm vụ của quyền này..."></textarea>
+                        </div>
+
+                        <div class="mt-4 border-top pt-3 text-end">
+                            <a th:href="@{/admin/roles}" class="btn btn-secondary me-2">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="fas fa-save"></i> Lưu thông tin
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

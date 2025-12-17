@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main/layout/base}">
+<head>
+    <title th:text="${pageTitle}"></title>
+</head>
+<body>
+<div layout:fragment="content" class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div th:if="${requestStatus == 'APPROVED'}" class="card border-success shadow text-center p-5">
+                <div class="mb-3 text-success"><i class="fas fa-check-circle fa-4x"></i></div>
+                <h2 class="text-success">Quyền hạn Organizer</h2>
+                <p class="fs-5 mt-3">Tài khoản của bạn đã trở thành <b>Organizer</b>. Bạn hiện có quyền tạo và quản lý các sự kiện.</p>
+                <a th:href="@{/profile}" class="btn btn-success mt-3">Quay lại hồ sơ</a>
+            </div>
+
+            <div th:if="${requestStatus == 'PENDING'}" class="card border-warning shadow text-center p-5">
+                <div class="mb-3 text-warning"><i class="fas fa-hourglass-half fa-4x"></i></div>
+                <h2 class="text-warning">Yêu cầu đang chờ duyệt</h2>
+                <p class="fs-5 mt-3">Bạn đã gửi yêu cầu nâng quyền. Vui lòng đợi quản trị viên kiểm tra hồ sơ của bạn.</p>
+                <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+                <a th:href="@{/profile}" class="btn btn-outline-secondary mt-3">Quay lại hồ sơ</a>
+            </div>
+
+            <div th:if="${requestStatus == 'NEW'}" class="card shadow">
+                <div class="card-header bg-primary text-white p-3">
+                    <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i> Đăng ký làm Organizer</h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted">Gửi yêu cầu để có quyền tổ chức sự kiện tại Vinhuni Event.</p>
+
+                    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+                    <form th:action="@{/profile/submit}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Lý do nâng quyền:</label>
+                            <textarea name="reason" class="form-control" rows="5"
+                                      placeholder="Mô tả kinh nghiệm hoặc mục đích tổ chức sự kiện của bạn..." required></textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4">Gửi yêu cầu</button>
+                            <a th:href="@{/profile}" class="btn btn-light px-4">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

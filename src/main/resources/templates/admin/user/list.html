@@ -155,26 +155,26 @@
                     </thead>
                     <tbody>
                     <tr th:each="user : ${users}">
-                        <td th:text="${user.user_id}">1</td>
-                        <td th:text="${user.student_code}">SV001</td>
-                        <td th:text="${user.full_name}">Nguyễn Văn A</td>
+                        <td th:text="${user.userId}">1</td>
+                        <td th:text="${user.studentCode}">SV001</td>
+                        <td th:text="${user.fullName}">Nguyễn Văn A</td>
                         <td th:text="${user.email}">a.nguyen@example.com</td>
-                        <td th:text="${user.role != null ? user.role.role_name : 'N/A'}">STUDENT</td>
+                        <td th:text="${user.role != null ? user.role.roleName : 'N/A'}">STUDENT</td>
                         <td class="text-center">
-                            <span th:classappend="${user.is_active ? 'active-true' : 'active-false'}"
+                            <span th:classappend="${user.isActive ? 'active-true' : 'active-false'}"
                                   class="badge badge-active"
-                                  th:text="${user.is_active ? 'Có' : 'Không'}">Có</span>
+                                  th:text="${user.isActive ? 'Có' : 'Không'}">Có</span>
                         </td>
                         <td class="text-center action-links">
-                            <a th:href="@{/admin/users/view/{id}(id=${user.user_id})}" title="Xem chi tiết">
+                            <a th:href="@{/admin/users/view/{id}(id=${user.userId})}" title="Xem chi tiết">
                                 <i class="bi bi-eye-fill"></i> Xem
                             </a>
                             |
-                            <a th:href="@{/admin/users/edit/{id}(id=${user.user_id})}" title="Chỉnh sửa">
+                            <a th:href="@{/admin/users/edit/{id}(id=${user.userId})}" title="Chỉnh sửa">
                                 <i class="bi bi-pencil-square"></i> Sửa
                             </a>
                             |
-                            <a th:href="@{/admin/users/delete/{id}(id=${user.user_id})}"
+                            <a th:href="@{/admin/users/delete/{id}(id=${user.userId})}"
                                onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng ' + '[[${user.full_name}]]' + ' này không?');"
                                class="delete-link" title="Xóa người dùng">
                                 <i class="bi bi-trash-fill"></i> Xóa
