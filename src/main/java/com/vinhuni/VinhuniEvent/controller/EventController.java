@@ -38,15 +38,15 @@ public class EventController {
         List<Event> events;
 
         if (categoryId != null) {
-
+            // SỬA: Gọi hàm chỉ lấy active
             events = eventService.getActiveEventsByCategoryId(categoryId);
         } else {
-
+            // SỬA: Gọi hàm chỉ lấy active
             events = eventService.getAllActiveEvents();
         }
 
         model.addAttribute("events", events);
-
+        // ... code khác ...
         return "main/event/index";
     }
 

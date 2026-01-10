@@ -25,11 +25,11 @@
     <table class="detail-table">
         <tr>
             <th>ID</th>
-            <td th:text="*{user_id}"></td>
+            <td th:text="*{userId}"></td>
         </tr>
         <tr>
             <th>Họ và Tên</th>
-            <td th:text="*{full_name}"></td>
+            <td th:text="*{fullName}"></td>
         </tr>
         <tr>
             <th>Email</th>
@@ -37,11 +37,11 @@
         </tr>
         <tr>
             <th>Vai trò (Role)</th>
-            <td th:text="*{role != null ? role.role_name : 'Chưa gán'}"></td>
+            <td th:text="${user.role != null ? user.role.roleName : 'Chưa gán'}"></td>
         </tr>
         <tr>
             <th>Mã Sinh viên</th>
-            <td th:text="*{student_code}"></td>
+            <td th:text="*{studentCode}"></td>
         </tr>
         <tr>
             <th>Khoa</th>
@@ -53,24 +53,24 @@
         </tr>
         <tr>
             <th>Ngày sinh</th>
-            <td th:text="*{#temporals.format(birth_date, 'dd-MM-yyyy')}"></td>
+            <td th:text="*{#temporals.format(birthDate, 'dd-MM-yyyy')}"></td>
         </tr>
         <tr>
             <th>Số điện thoại</th>
-            <td th:text="*{phone_number}"></td>
+            <td th:text="*{phoneNumber}"></td>
         </tr>
         <tr>
             <th>Trạng thái Active</th>
-            <td th:text="*{is_active ? 'Có' : 'Không'}"></td>
+            <td th:text="*{isActive ? 'Có' : 'Không'}"></td>
         </tr>
         <tr>
             <th>Ngày tạo</th>
-            <td th:text="*{#temporals.format(created_date, 'HH:mm:ss dd-MM-yyyy')}"></td>
+            <td th:text="*{#temporals.format(createdDate, 'HH:mm:ss dd-MM-yyyy')}"></td>
         </tr>
     </table>
 
     <div style="margin-top: 20px;">
-        <a th:href="@{/admin/users/edit/{id}(id=*{user_id})}"><button>✏️ Chỉnh sửa</button></a>
+        <a th:href="@{/admin/users/edit/{id}(id=*{userId})}"><button>✏️ Chỉnh sửa</button></a>
         <a th:href="@{/admin/users}"><button>↩️ Quay lại Danh sách</button></a>
     </div>
 </div>
