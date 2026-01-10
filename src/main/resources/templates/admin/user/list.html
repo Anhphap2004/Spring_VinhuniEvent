@@ -126,7 +126,7 @@
 <div layout:fragment="content" class="main container-fluid">
     <div class="card shadow-sm">
         <div class="card-header bg-white">
-            <h1 class="h3 mb-0">📋 Quản lý Người dùng</h1>
+            <h1 class="h3 mb-0"> Quản lý Người dùng</h1>
         </div>
         <div class="card-body">
 
@@ -136,7 +136,7 @@
 
             <p>
                 <a th:href="@{/admin/users/new}" class="btn btn-primary btn-add-new">
-                    <i class="bi bi-plus-circle-fill"></i> ➕ Thêm Người dùng mới
+                    <i class="bi bi-plus-circle-fill"></i>  Thêm Người dùng mới
                 </a>
             </p>
 
@@ -175,10 +175,11 @@
                             </a>
                             |
                             <a th:href="@{/admin/users/delete/{id}(id=${user.userId})}"
-                               onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng ' + '[[${user.fullName}]]' + ' này không?');"
-                               class="delete-link" title="Xóa người dùng">
+                               th:onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');"
+                               class="delete-link">
                                 <i class="bi bi-trash-fill"></i> Xóa
                             </a>
+
                         </td>
                     </tr>
                     </tbody>

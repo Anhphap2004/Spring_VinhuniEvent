@@ -33,17 +33,19 @@ public interface StatisticalRepository extends JpaRepository<Event, Integer> {
     List<Event> findLatestEvents(Pageable pageable);
 
     @Query("""
-        SELECT new com.vinhuni.VinhuniEvent.model.TopEventDto(
-            e.title,
-            COUNT(r),
-            e.startTime
-        )
-        FROM Event e
-        LEFT JOIN EventRegistration r ON r.event = e
-        GROUP BY e.id, e.title, e.startTime
-        ORDER BY COUNT(r) DESC, e.startTime DESC
-    """)
+    SELECT new com.vinhuni.VinhuniEvent.model.TopEventDto(
+        e.title,
+        COUNT(r),
+        e.startTime
+    )
+    FROM Event e
+    JOIN EventRegistration r ON r.event = e
+    GROUP BY e.id, e.title, e.startTime
+    ORDER BY COUNT(r) DESC, e.startTime DESC
+""")
     List<TopEventDto> findTopEvents(Pageable pageable);
+
+
 
     @Query("SELECT COUNT(r) FROM EventRegistration r")
     long countTotalRegistrations();

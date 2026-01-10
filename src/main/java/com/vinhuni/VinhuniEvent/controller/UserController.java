@@ -22,14 +22,14 @@ public class UserController {
         this.roleService = roleService;
     }
 
-    // Hiển thị danh sách
+
     @GetMapping
     public String listUsers(Model model) {
         model.addAttribute("users", userService.findAllUsers());
         return "admin/user/list";
     }
 
-    // Xem chi tiết người dùng
+
     @GetMapping("/view/{id}")
     public String viewUser(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<User> userOptional = userService.findUserById(id);
@@ -37,13 +37,13 @@ public class UserController {
         if (userOptional.isPresent()) {
             model.addAttribute("user", userOptional.get());
             model.addAttribute("pageTitle", "Chi tiết người dùng: " + userOptional.get().getFullName());
-            return "admin/user/detail"; // Trả về file view.html trong thư mục admin/user/
+            return "admin/user/detail";
         } else {
             redirectAttributes.addFlashAttribute("message", "Không tìm thấy người dùng có ID: " + id);
             return "redirect:/admin/users";
         }
     }
-    // Form chung cho Thêm mới và Sửa
+
     @GetMapping({"/new", "/edit/{id}"})
     public String showUserForm(@PathVariable(required = false) Long id, Model model, RedirectAttributes redirectAttributes) {
         User user = new User();
@@ -53,7 +53,7 @@ public class UserController {
             Optional<User> userOptional = userService.findUserById(id);
             if (userOptional.isPresent()) {
                 user = userOptional.get();
-                user.setPasswordHash(""); // Xóa hash để form hiện trống cho an toàn
+                user.setPasswordHash("");
                 pageTitle = "Chỉnh sửa Người dùng (ID: " + id + ")";
             } else {
                 redirectAttributes.addFlashAttribute("message", "Không tìm thấy User ID " + id);
@@ -68,7 +68,7 @@ public class UserController {
         return "admin/user/form";
     }
 
-    // Xử lý lưu (Create/Update)
+
     @PostMapping("/save")
     public String saveUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
         try {

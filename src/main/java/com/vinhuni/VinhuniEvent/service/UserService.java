@@ -8,7 +8,7 @@ public interface UserService {
     void registerUser(User user);
     List<User> findAllUsers();
     Optional<User> findUserById(Long id);
-    void saveUser(User user); // Gộp cả Add và Update
+    void saveUser(User user);
     void deleteUser(Long id);
     User findByEmail(String email);
 
