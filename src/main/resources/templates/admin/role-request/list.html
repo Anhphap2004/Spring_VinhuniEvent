@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <title th:text="${pageTitle}"></title>
+    <style>
+        :root {
+            --border-color: #e0e0e0;
+            --bg-gray: #f5f5f5;
+            --text-dark: #333;
+            --text-gray: #666;
+            --text-light: #999;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #fff;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .container-fluid {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0 0 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* BREADCRUMB */
+        .breadcrumb {
+            background: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            font-size: 13px;
+            list-style: none;
+            display: flex;
+            gap: 5px;
+        }
+
+        .breadcrumb-item {
+            color: var(--text-gray);
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "/";
+            padding-right: 5px;
+            color: var(--text-light);
+        }
+
+        .breadcrumb-item a {
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-light);
+        }
+
+        /* ALERTS */
+        .alert {
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-gray);
+            font-size: 14px;
+            position: relative;
+        }
+
+        .alert i {
+            display: none;
+        }
+
+        .alert-success {
+            background: var(--bg-gray);
+            border-color: var(--border-color);
+            color: var(--text-dark);
+        }
+
+        .alert-danger {
+            background: var(--bg-gray);
+            border-color: var(--border-color);
+            color: var(--text-dark);
+        }
+
+        .btn-close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+
+        .btn-close::before {
+            content: "×";
+        }
+
+        /* CARD */
+        .card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .card.shadow {
+            box-shadow: none;
+        }
+
+        .card-header {
+            background: var(--bg-gray);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 15px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .card-header i {
+            display: none;
+        }
+
+        .card-header.bg-dark {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        /* TABS */
+        .nav-tabs {
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            display: flex;
+            gap: 0;
+        }
+
+        .nav-item {
+            list-style: none;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-gray);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text-dark);
+            background: var(--bg-gray);
+        }
+
+        .nav-link.active {
+            color: var(--text-dark);
+            border-bottom-color: var(--text-dark);
+            background: none;
+        }
+
+        .nav-link.fw-bold {
+            font-weight: 500;
+        }
+
+        /* BADGE */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 500;
+            background: var(--bg-gray);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            margin-left: 5px;
+        }
+
+        .bg-warning,
+        .bg-success,
+        .bg-danger {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        /* TAB CONTENT */
+        .tab-content {
+            padding: 0;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* TABLE */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        .table thead {
+            background: var(--bg-gray);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table thead th {
+            padding: 10px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+        }
+
+        .table-light,
+        .table-success,
+        .table-danger {
+            background: var(--bg-gray);
+        }
+
+        .table-hover tbody tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #fafafa;
+        }
+
+        .table tbody td {
+            padding: 12px 15px;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .table-bordered {
+            border: none;
+        }
+
+        .table-bordered td,
+        .table-bordered th {
+            border: none;
+        }
+
+        .table-striped tbody tr:nth-child(odd) {
+            background-color: #fafafa;
+        }
+
+        /* TEXT UTILITIES */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-muted {
+            color: var(--text-gray);
+        }
+
+        .fw-bold {
+            font-weight: 600;
+        }
+
+        .small {
+            font-size: 12px;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            background: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+        }
+
+        .btn i {
+            display: none;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-success {
+            background: #fff;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-success:hover {
+            background: var(--bg-gray);
+        }
+
+        .btn-danger {
+            background: #fff;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-danger:hover {
+            background: var(--bg-gray);
+        }
+
+        /* FLEX UTILITIES */
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .justify-content-center {
+            justify-content: center;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .align-middle td {
+            vertical-align: middle;
+        }
+
+        .gap-2 {
+            gap: 8px;
+        }
+
+        /* FORMS */
+        form {
+            display: inline-block;
+            margin: 0;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 16px;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-link {
+                border-bottom: 1px solid var(--border-color);
+                border-left: 2px solid transparent;
+            }
+
+            .nav-link.active {
+                border-bottom: 1px solid var(--border-color);
+                border-left-color: var(--text-dark);
+            }
+
+            .table thead th,
+            .table tbody td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .d-flex.gap-2 {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid px-4">
+    <h1 class="mt-4" th:text="${pageTitle}"></h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Yêu cầu nâng quyền</li>
+    </ol>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i> <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i> <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <div><i class="fas fa-tasks me-1"></i> Danh sách yêu cầu</div>
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs mb-3" id="roleRequestTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fw-bold" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
+                        Chờ duyệt <span class="badge bg-warning text-dark ms-1" th:text="${pendingRequests.size()}">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button" role="tab">
+                        Đã duyệt <span class="badge bg-success ms-1" th:text="${approvedRequests.size()}">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected" type="button" role="tab">
+                        Đã từ chối <span class="badge bg-danger ms-1" th:text="${rejectedRequests.size()}">0</span>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="roleRequestTabsContent">
+
+                <div class="tab-pane fade show active" id="pending" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle">
+                            <thead class="table-light">
+                            <tr class="text-center">
+                                <th>Người gửi</th>
+                                <th>Lý do nâng quyền</th>
+                                <th>Ngày gửi</th>
+                                <th>Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="req : ${pendingRequests}">
+                                <td>
+                                    <div class="fw-bold" th:text="${req.user.full_name}"></div>
+                                    <small class="text-muted" th:text="${req.user.email}"></small>
+                                </td>
+                                <td th:text="${req.reason}"></td>
+                                <td th:text="${#temporals.format(req.createdAt, 'dd/MM/yyyy HH:mm')}" class="text-center"></td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <form th:action="@{/admin/role-requests/approve/{id}(id=${req.requestId})}" method="post">
+                                            <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Xác nhận cấp quyền Organizer?')">
+                                                <i class="fas fa-check"></i> Duyệt
+                                            </button>
+                                        </form>
+                                        <form th:action="@{/admin/role-requests/reject/{id}(id=${req.requestId})}" method="post">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Từ chối yêu cầu này?')">
+                                                <i class="fas fa-times"></i> Từ chối
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(pendingRequests)}">
+                                <td colspan="4" class="text-center text-muted p-4">Không có yêu cầu nào đang chờ xử lý.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="approved" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead class="table-success text-center">
+                            <tr>
+                                <th>Người gửi</th>
+                                <th>Lý do</th>
+                                <th>Ngày gửi</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="req : ${approvedRequests}">
+                                <td th:text="${req.user.full_name}"></td>
+                                <td th:text="${req.reason}"></td>
+                                <td th:text="${#temporals.format(req.createdAt, 'dd/MM/yyyy HH:mm')}" class="text-center"></td>
+                                <td class="text-center"><span class="badge bg-success">Đã phê duyệt</span></td>
+                                <td class="text-center text-muted small">N/A</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="rejected" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead class="table-danger text-center">
+                            <tr>
+                                <th>Người gửi</th>
+                                <th>Lý do</th>
+                                <th>Ngày gửi</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="req : ${rejectedRequests}">
+                                <td th:text="${req.user.full_name}"></td>
+                                <td th:text="${req.reason}"></td>
+                                <td th:text="${#temporals.format(req.createdAt, 'dd/MM/yyyy HH:mm')}" class="text-center"></td>
+                                <td class="text-center"><span class="badge bg-danger">Đã từ chối</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

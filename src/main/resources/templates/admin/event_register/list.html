@@ -3,74 +3,406 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layout/base}">
 <head>
+    <meta charset="UTF-8">
     <title>Quản lý Đăng ký Sự kiện</title>
-</head>
-<div layout:fragment="content">
+    <style>
+        :root {
+            --border-color: #e0e0e0;
+            --bg-gray: #f5f5f5;
+            --text-dark: #333;
+            --text-gray: #666;
+            --text-light: #999;
+            --success-bg: #d4edda;
+            --success-border: #c3e6cb;
+            --success-text: #155724;
+            --error-bg: #f8d7da;
+            --error-border: #f5c6cb;
+            --error-text: #721c24;
+            --primary-color: #007bff;
+        }
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h3 mb-0 text-gray-800">
-            <i class="fas fa-clipboard-list me-2 text-primary"></i> Quản lý Người đăng ký Sự kiện
+        /* CONTAINER */
+        .min-main {
+            padding: 20px 40px;
+            max-width: 100%;
+            margin: 0;
+        }
+
+        /* HEADER */
+        .min-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .min-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .min-title i {
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+
+        /* ALERT MESSAGE */
+        .min-alert {
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid;
+            font-size: 14px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .min-alert i {
+            font-size: 16px;
+        }
+
+        .min-alert-success {
+            background: var(--success-bg);
+            border-color: var(--success-border);
+            color: var(--success-text);
+        }
+
+        .min-alert-error {
+            background: var(--error-bg);
+            border-color: var(--error-border);
+            color: var(--error-text);
+        }
+
+        /* BUTTONS */
+        .min-btn {
+            display: inline-block;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .min-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .min-btn i {
+            margin-right: 4px;
+            font-size: 11px;
+        }
+
+        .min-btn-info {
+            background: #17a2b8;
+            color: #fff;
+            border-color: #17a2b8;
+            margin-right: 6px;
+        }
+
+        .min-btn-info:hover {
+            background: #138496;
+            border-color: #138496;
+            color: #fff;
+        }
+
+        .min-btn-warning {
+            background: #ffc107;
+            color: var(--text-dark);
+            border-color: #ffc107;
+        }
+
+        .min-btn-warning:hover {
+            background: #e0a800;
+            border-color: #e0a800;
+        }
+
+        /* CARD */
+        .min-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .min-card-body {
+            padding: 0;
+        }
+
+        /* TABLE */
+        .min-table-wrapper {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        .min-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            margin: 0;
+        }
+
+        .min-table thead {
+            background: var(--bg-gray);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .min-table thead th {
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            border: none;
+            white-space: nowrap;
+        }
+
+        .min-table thead th i {
+            margin-right: 5px;
+            color: var(--primary-color);
+        }
+
+        .min-table tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+
+        .min-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .min-table tbody tr:hover {
+            background-color: #fafafa;
+        }
+
+        .min-table tbody td {
+            padding: 12px 15px;
+            font-size: 14px;
+            color: var(--text-dark);
+            vertical-align: middle;
+            border: none;
+        }
+
+        /* TABLE COLUMNS */
+        .min-col-stt {
+            width: 60px;
+            text-align: center;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .min-col-title {
+            min-width: 250px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .min-col-datetime {
+            width: 150px;
+            white-space: nowrap;
+        }
+
+        .min-col-location {
+            width: 180px;
+        }
+
+        .min-col-count {
+            width: 120px;
+            text-align: center;
+        }
+
+        .min-col-actions {
+            width: 220px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .min-table thead th.min-col-stt,
+        .min-table thead th.min-col-count,
+        .min-table thead th.min-col-actions {
+            text-align: center;
+        }
+
+        /* BADGE */
+        .min-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 12px;
+            background: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid var(--success-border);
+        }
+
+        /* EMPTY STATE */
+        .min-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .min-main {
+                padding: 20px 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .min-main {
+                padding: 15px;
+            }
+
+            .min-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .min-title {
+                font-size: 16px;
+            }
+
+            .min-table thead th,
+            .min-table tbody td {
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+
+            /* Hide less important columns on mobile */
+            .min-table thead th:nth-child(4),
+            .min-table tbody td:nth-child(4) {
+                display: none;
+            }
+
+            .min-btn {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+
+            .min-btn-info {
+                margin-bottom: 5px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .min-table thead th:nth-child(3),
+            .min-table tbody td:nth-child(3) {
+                display: none;
+            }
+
+            .min-col-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .min-btn {
+                width: 100%;
+                margin-right: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="min-main">
+
+    <!-- HEADER -->
+    <div class="min-header">
+        <h2 class="min-title">
+            <i class="fas fa-clipboard-list"></i>
+            Quản lý Người đăng ký Sự kiện
         </h2>
     </div>
 
-    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <!-- SUCCESS MESSAGE -->
+    <div th:if="${successMessage}" class="min-alert min-alert-success" role="alert">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${successMessage}"></span>
     </div>
 
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle" width="100%" cellspacing="0">
-                    <thead class="table-light">
+    <!-- ERROR MESSAGE -->
+    <div th:if="${errorMessage}" class="min-alert min-alert-error" role="alert">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- CARD TABLE -->
+    <div class="min-card">
+        <div class="min-card-body">
+            <div class="min-table-wrapper">
+                <table class="min-table">
+                    <thead>
                     <tr>
-                        <th class="text-center">STT</th>
-                        <th><i class="fas fa-bullhorn me-1"></i> Tên Sự kiện</th>
-                        <th><i class="far fa-clock me-1"></i> Thời gian Bắt đầu</th>
-                        <th><i class="fas fa-map-marker-alt me-1"></i> Địa điểm</th>
-                        <th><i class="fas fa-map-marker-alt me-1"></i> Số Lượng Đăng Kí</th>
-                        <th class="text-center">Thao tác</th>
+                        <th scope="col" class="min-col-stt">STT</th>
+                        <th scope="col" class="min-col-title">
+                            <i class="fas fa-bullhorn"></i> Tên Sự kiện
+                        </th>
+                        <th scope="col" class="min-col-datetime">
+                            <i class="far fa-clock"></i> Thời gian Bắt đầu
+                        </th>
+                        <th scope="col" class="min-col-location">
+                            <i class="fas fa-map-marker-alt"></i> Địa điểm
+                        </th>
+                        <th scope="col" class="min-col-count">
+                            <i class="fas fa-users"></i> Số Lượng Đăng Ký
+                        </th>
+                        <th scope="col" class="min-col-actions">Thao tác</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="event, stat : ${events}">
-                        <td class="text-center" th:text="${stat.count}">1</td>
-
-                        <td class="fw-bold text-primary" th:text="${event.title}">Tên Sự kiện</td>
-
-                        <td th:text="${#temporals.format(event.startTime, 'dd/MM/yyyy HH:mm')}">01/01/2025 08:00</td>
-                        <td th:text="${event.location}">Hội trường A</td>
-                        <td class="text-center">
-
-<span class="badge bg-success"
-
-      th:text="${event.eventRegistrations.size()}">50</span>
-
-                        </td>
-                        <td class="text-center">
-                            <a th:href="@{/admin/event_register/{id}(id=${event.event_id})}"
-                               class="btn btn-info btn-sm me-1 text-white" title="Xem danh sách người đăng ký">
-                                <i class="fas fa-list-alt me-1"></i>DS Đăng ký
-                            </a>
-
-                            <a th:href="@{/admin/event_register/{id}/attendance(id=${event.event_id})}"
-                               class="btn btn-warning btn-sm text-dark" title="Quản lý điểm danh">
-                                <i class="fas fa-user-check me-1"></i>Điểm danh
-                            </a>
+                    <!-- EMPTY STATE -->
+                    <tr th:if="${#lists.isEmpty(events)}">
+                        <td colspan="6" class="min-empty">
+                            Hiện chưa có sự kiện nào.
                         </td>
                     </tr>
 
-                    <tr th:if="${#lists.isEmpty(events)}">
-                        <td colspan="5" class="text-center text-muted py-3">Hiện chưa có sự kiện nào.</td>
+                    <!-- EVENT ROWS -->
+                    <tr th:each="event, stat : ${events}">
+                        <td class="min-col-stt" th:text="${stat.count}">1</td>
+                        <td class="min-col-title" th:text="${event.title}">Tên Sự kiện</td>
+                        <td class="min-col-datetime"
+                            th:text="${#temporals.format(event.startTime, 'dd/MM/yyyy HH:mm')}">
+                            01/01/2025 08:00
+                        </td>
+                        <td class="min-col-location" th:text="${event.location}">Hội trường A</td>
+                        <td class="min-col-count">
+                            <span class="min-badge" th:text="${event.eventRegistrations.size()}">50</span>
+                        </td>
+                        <td class="min-col-actions">
+                            <a th:href="@{/admin/event_register/{id}(id=${event.event_id})}"
+                               class="min-btn min-btn-info"
+                               th:title="'Xem danh sách người đăng ký ' + ${event.title}">
+                                <i class="fas fa-list-alt"></i> DS Đăng ký
+                            </a>
+                            <a th:href="@{/admin/event_register/{id}/attendance(id=${event.event_id})}"
+                               class="min-btn min-btn-warning"
+                               th:title="'Quản lý điểm danh ' + ${event.title}">
+                                <i class="fas fa-user-check"></i> Điểm danh
+                            </a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
 </div>
+</body>
 </html>

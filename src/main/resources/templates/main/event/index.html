@@ -5,175 +5,390 @@
 <head>
     <title>Danh Sách Sự Kiện</title>
     <style>
-        /* CSS cho thẻ sự kiện */
-        .event-card-link {
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .page-header {
+            background-color: #ffffff;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .events-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .sidebar {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border: 1px solid #e0e0e0;
+            position: sticky;
+            top: 20px;
+        }
+
+        .info-box {
+            background-color: #f9f9f9;
+            padding: 1.25rem;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .info-box-content {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .info-box-content p {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9e9e9;
+            font-size: 0.85rem;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #666;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .category-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .category-item {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .category-link {
             display: block;
+            padding: 0.75rem 0;
+            color: #555;
             text-decoration: none;
-            color: inherit;
-            height: 100%;
+            font-size: 0.95rem;
+        }
+
+        .category-link.active {
+            color: #000;
+            font-weight: 600;
+        }
+
+        .event-count {
+            float: right;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            background-color: #ffffff;
+            padding: 2rem;
+            border: 1px solid #e0e0e0;
         }
 
         .event-card {
-            border: 1px solid #e9ecef;
             background-color: #ffffff;
-            transition: transform 0.3s, box-shadow 0.3s;
-            height: 100%;
-            border-radius: 0.5rem !important;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .event-image-wrapper {
+            width: 100%;
+            aspect-ratio: 1;
             overflow: hidden;
-        }
-
-        /* Hiệu ứng Hover */
-        .event-card-link:hover .event-card {
-            transform: translateY(-5px); /* Hiệu ứng nhấc lên */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
-        }
-
-        .event-card:hover .event-image {
-            transform: scale(1.05); /* Phóng to ảnh nhẹ */
-        }
-
-        /* Ảnh */
-        .event-img-container {
-            height: 200px; /* Chiều cao cố định cho ảnh */
+            background-color: #f0f0f0;
         }
 
         .event-image {
+            width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s;
         }
 
-        .event-date-label {
-            position: absolute;
-            top: 10px;
-            right: 10px;
+        .event-content {
+            padding: 1.25rem;
+        }
+
+        .event-date {
+            color: #999;
             font-size: 0.85rem;
-            z-index: 10;
-            background-color: #007bff; /* Đảm bảo màu nền cho nhãn */
+            margin-bottom: 0.5rem;
         }
 
-        /* Truncate text 2 dòng */
-        .text-truncate-2 {
+        .event-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            text-overflow: ellipsis;
+        }
+
+        .event-description {
+            color: #666;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .event-meta {
+            border-top: 1px solid #f0f0f0;
+            padding-top: 0.75rem;
+        }
+
+        .event-meta-item {
+            color: #777;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
             line-height: 1.4;
-            max-height: 2.8em;
         }
 
-        /* CSS Sidebar */
-        .sidebar-card {
-            border: 1px solid #e9ecef;
-            border-radius: 0.5rem;
-            margin-bottom: 1.5rem;
+        .event-meta-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .event-meta-label {
+            color: #999;
+            display: inline-block;
+            min-width: 80px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
             background-color: #ffffff;
+            border: 1px solid #e0e0e0;
         }
 
-        .sidebar-card .list-group-item {
-            border: none;
-            padding: 0.75rem 1rem;
-            transition: background-color 0.2s, color 0.2s;
-            border-radius: 0;
+        .empty-state-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
         }
 
-        .sidebar-card .list-group-item:hover {
-            background-color: #f8f9fa;
-            color: #007bff;
+        .empty-state-text {
+            color: #666;
+            margin-bottom: 2rem;
         }
 
-        .sidebar-card .list-group-item.active {
-            background-color: #007bff;
+        .btn-create {
+            display: inline-block;
+            background-color: #333;
             color: white;
-            border-radius: 0;
+            padding: 0.75rem 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid #333;
+        }
+
+        @media (max-width: 1200px) {
+            .events-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .events-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="container-fluid py-6">
-        <div class="container">
-
-            <div class="text-center wow bounceInUp" data-wow-delay="0.1s">
-                <small class="d-inline-block fw-bold text-primary text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
-                    Vinhuni Events
-                </small>
-                <h1 class="display-5 mb-5">Danh Sách Sự Kiện</h1>
-            </div>
-
-            <div class="row g-4">
-
-                <div class="col-lg-3">
-                    <div class="sidebar-card shadow-sm p-0 wow fadeInUp" data-wow-delay="0.1s">
-                        <h5 class="p-3 mb-0 border-bottom bg-light rounded-top fw-bold text-dark">
-                            <i class="fas fa-list me-2 text-primary"></i>Danh Mục Sự Kiện
-                        </h5>
-
-                        <div class="list-group list-group-flush">
+    <div class="events-container" style="padding-top: 2rem;">
+        <div class="row">
+            <div class="col-lg-3 mb-4">
+                <div class="sidebar">
+                    <h2 class="sidebar-title">Danh Mục</h2>
+                    <ul class="category-list">
+                        <li class="category-item">
                             <a th:href="@{/events}"
                                th:classappend="${selectedCategory == null} ? 'active'"
-                               class="list-group-item list-group-item-action">
+                               class="category-link">
                                 Tất Cả Sự Kiện
+                                <span class="event-count" th:text="${totalEvents != null ? totalEvents : '0'}">24</span>
                             </a>
-
-                            <a th:each="cat : ${eventCategories}"
-                               th:href="@{'/events?category=' + ${cat.category_id}}"
+                        </li>
+                        <li class="category-item" th:each="cat : ${categories}">
+                            <a th:href="@{'/events?category=' + ${cat.category_id}}"
                                th:classappend="${selectedCategory != null and selectedCategory.equals(cat.category_id)} ? 'active'"
-                               class="list-group-item list-group-item-action">
-                                <span th:text="${cat.category_name}">Tên Danh Mục</span>
-                                <span th:if="${cat.events != null}" th:text="' (' + ${cat.events.size()} + ')'"> (12)</span>
+                               class="category-link">
+                                <span th:text="${cat.category_name}">Danh Mục</span>
+                                <span class="event-count" th:text="${cat.events != null ? cat.events.size() : '0'}">8</span>
                             </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3 class="info-box-title">Thông Tin Sự Kiện</h3>
+                    <div class="info-box-content">
+                        <div class="stat-item">
+                            <span class="stat-label">Tổng sự kiện:</span>
+                            <span class="stat-value">24</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Sắp diễn ra:</span>
+                            <span class="stat-value">8</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Đang diễn ra:</span>
+                            <span class="stat-value">3</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Đã kết thúc:</span>
+                            <span class="stat-value">13</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-9">
 
-                    <div th:if="${events.isEmpty()}" class="col-12 text-center py-5">
-                        <p class="lead">Hiện tại không có sự kiện nào được tìm thấy trong danh mục này.</p>
-                        <a th:href="@{/events/create}" class="btn btn-primary">Tạo Sự Kiện Mới</a>
+                <div class="info-box">
+                    <h3 class="info-box-title">Liên Hệ & Hỗ Trợ</h3>
+                    <div class="info-box-content">
+                        <p><strong>Email:</strong> events@vinhuni.edu.vn</p>
+                        <p><strong>Điện thoại:</strong> (038) 383 5390</p>
+                        <p><strong>Địa chỉ:</strong> 182 Lê Duẩn, TP Vinh, Nghệ An</p>
+                        <p style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #ddd;">
+                            Liên hệ để đăng ký tham gia hoặc tổ chức sự kiện tại Đại học Vinh.
+                        </p>
                     </div>
+                </div>
 
-                    <div class="row g-4">
+                <div class="info-box">
+                    <h3 class="info-box-title">Hướng Dẫn Đăng Ký</h3>
+                    <div class="info-box-content">
+                        <p>1. Chọn sự kiện bạn quan tâm</p>
+                        <p>2. Nhấn vào để xem chi tiết</p>
+                        <p>3. Điền form đăng ký tham gia</p>
+                        <p>4. Nhận email xác nhận</p>
+                        <p style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #ddd; color: #999;">
+                            Lưu ý: Đăng ký trước 3 ngày để đảm bảo có chỗ.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="col-md-6 col-xl-4 wow fadeInUp"
-                             th:each="e, i : ${events}"
-                             th:attr="data-wow-delay=${0.1 + i.index * 0.2} + 's'">
+            <div class="col-lg-9">
+                <div th:if="${events.isEmpty()}" class="empty-state">
+                    <h2 class="empty-state-title">Không có sự kiện nào</h2>
+                    <p class="empty-state-text">Hiện tại không có sự kiện nào trong danh mục này.</p>
+                    <a th:href="@{/events/create}" class="btn-create">Tạo Sự Kiện Mới</a>
+                </div>
 
-                            <a th:href="@{'/events/' + ${e.event_id}}" class="event-card-link">
-                                <div class="event-card shadow-sm">
-
-                                    <div class="event-img-container overflow-hidden position-relative">
-                                        <img class="img-fluid w-100 event-image"
-                                             th:src="@{${e.image}}"
-                                             alt="Event Image">
-
-                                        <div class="event-date-label text-white text-center rounded-pill py-1 px-3">
-                                            <span th:text="${#temporals.format(e.startTime, 'dd MMM')}" class="fw-bold">01 Jan</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="p-3">
-                                        <h5 class="text-dark mb-2 fw-bold text-truncate-2" th:text="${e.title}">Event Title</h5>
-
-                                        <div class="text-muted small">
-                                            <p class="mb-1"><i class="far fa-clock me-2" style="color: #007bff;"></i>
-                                                <span th:text="${#temporals.format(e.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(e.endTime, 'HH:mm')}">10:00 - 12:00</span>
-                                            </p>
-                                            <p class="mb-0 text-truncate"><i class="fas fa-map-marker-alt me-2" style="color: #007bff;"></i>
-                                                <span th:text="${e.location != null ? e.location : 'Online / TBA'}">Location Detail</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
+                <div th:if="${!events.isEmpty()}" class="events-grid">
+                    <a th:each="e : ${events}"
+                       th:href="@{'/events/' + ${e.event_id}}"
+                       class="event-card">
+                        <div class="event-image-wrapper">
+                            <img class="event-image"
+                                 th:src="@{${e.image != null ? e.image : '/images/default-event.jpg'}}"
+                                 th:alt="${e.title}"
+                                 alt="Event Image">
                         </div>
-                    </div>
+
+                        <div class="event-content">
+                            <div class="event-date" th:text="${#temporals.format(e.startTime, 'dd/MM/yyyy')}">
+                                15/12/2024
+                            </div>
+
+                            <h3 class="event-title" th:text="${e.title}">
+                                Hội Thảo Khoa Học Công Nghệ Thông Tin 2024
+                            </h3>
+
+                            <p class="event-description" th:text="${e.description != null ? e.description : 'Sự kiện quan trọng dành cho sinh viên và giảng viên. Tham gia để có thêm kinh nghiệm và kiến thức bổ ích cho bản thân.'}">
+                                Sự kiện quy tụ các chuyên gia hàng đầu trong lĩnh vực công nghệ thông tin, chia sẻ những xu hướng mới nhất và cơ hội nghề nghiệp cho sinh viên.
+                            </p>
+
+                            <div class="event-meta">
+                                <div class="event-meta-item">
+                                    <span class="event-meta-label">Thời gian:</span>
+                                    <span th:text="${#temporals.format(e.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(e.endTime, 'HH:mm')}">09:00 - 17:00</span>
+                                </div>
+                                <div class="event-meta-item">
+                                    <span class="event-meta-label">Địa điểm:</span>
+                                    <span th:text="${e.location != null ? e.location : 'Sẽ thông báo sau'}">Hội trường A, Đại học Vinh</span>
+                                </div>
+                                <div class="event-meta-item">
+                                    <span class="event-meta-label">Danh mục:</span>
+                                    <span th:text="${e.category != null ? e.category.category_name : 'Chung'}">Học thuật</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 </body>
 </html>

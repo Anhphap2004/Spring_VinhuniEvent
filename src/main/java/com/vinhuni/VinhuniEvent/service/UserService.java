@@ -19,7 +19,7 @@ public interface UserService {
 
     // Bổ sung: Cập nhật người dùng (dùng chung với registerUser nhưng nên đặt tên rõ ràng hơn cho thao tác Admin)
     User updateUser(Long id, User userDetails);
-
+    User authenticate(String email, String password);
     // Bổ sung: Xóa người dùng theo ID
     void deleteUser(Long id);
 }

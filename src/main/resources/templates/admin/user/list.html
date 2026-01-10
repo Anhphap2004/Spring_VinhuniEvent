@@ -5,184 +5,444 @@
 <head>
     <meta charset="UTF-8">
     <title>Quản lý Người dùng</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        /* CSS tùy chỉnh */
         :root {
-            --primary-color: #007bff; /* Màu xanh dương chủ đạo */
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --info-color: #17a2b8;
-            --warning-color: #ffc107;
-            --light-bg: #f8f9fa;
+            --border-color: #e0e0e0;
+            --bg-gray: #f5f5f5;
+            --text-dark: #333;
+            --text-gray: #666;
+            --text-light: #999;
         }
 
-        /* Định dạng chung */
-        .main {
-            padding-top: 2rem !important;
-            padding-bottom: 2rem !important;
-            background-color: var(--light-bg);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Tiêu đề */
-        h1 {
-            color: #343a40;
-            margin-bottom: 1.5rem;
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        /* Thông báo */
-        .message-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            padding: 15px;
-            margin-bottom: 1.5rem;
-            border-radius: 0.25rem;
-            font-weight: 500;
-        }
-
-        /* Nút thêm mới */
-        .btn-add-new {
-            margin-bottom: 1rem;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-        }
-
-        /* Bảng */
-        .table-custom {
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
             background-color: #fff;
-            border-radius: 0.5rem;
-            overflow: hidden; /* Quan trọng để bo góc bảng */
+            color: var(--text-dark);
+            line-height: 1.5;
         }
 
-        .table-custom thead th {
-            background-color: var(--primary-color);
-            color: #fff;
-            vertical-align: middle;
-            border-bottom: none;
-            padding: 1rem 0.75rem;
+        .user-main {
+            padding: 20px;
+            max-width: 100%;
+            margin: 0;
+        }
+
+        /* HEADER */
+        .user-page-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .user-page-header h1 {
+            font-size: 18px;
             font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
         }
 
-        .table-custom tbody tr:nth-child(even) {
-            background-color: #f2f2f2;
+        .user-page-header h1 i {
+            display: none;
         }
 
-        .table-custom tbody tr:hover {
-            background-color: #e9ecef;
-            cursor: pointer;
+        .user-page-header p {
+            display: none;
         }
 
-        .table-custom tbody td {
-            vertical-align: middle;
-            padding: 0.75rem;
+        /* CARD */
+        .user-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
         }
 
-        /* Trạng thái Active */
-        .badge-active {
-            display: inline-block;
-            padding: 0.35em 0.65em;
-            font-size: 0.75em;
-            font-weight: 700;
-            line-height: 1;
-            color: #fff;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: baseline;
-            border-radius: 0.25rem;
+        .user-card-body {
+            padding: 0;
         }
 
-        .active-true {
-            background-color: var(--success-color);
+        /* MESSAGE */
+        .user-message-success {
+            background-color: var(--bg-gray);
+            border: 1px solid var(--border-color);
+            color: var(--text-dark);
+            padding: 10px 15px;
+            margin: 15px;
+            font-size: 14px;
         }
 
-        .active-false {
-            background-color: var(--danger-color);
+        .user-message-success i {
+            display: none;
         }
 
-        /* Hành động */
-        .action-links a {
-            color: var(--info-color);
-            text-decoration: none;
-            margin-right: 0.5rem;
+        /* ACTION BAR */
+        .user-action-bar {
+            margin: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-btn-add-new {
+            background: var(--text-dark);
+            color: #fff !important;
+            border: none;
+            padding: 8px 16px;
+            font-size: 13px;
             font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: opacity 0.2s;
         }
 
-        .action-links a:hover {
-            color: var(--primary-color);
-            text-decoration: underline;
+        .user-btn-add-new:hover {
+            opacity: 0.8;
+            color: #fff !important;
         }
 
-        .action-links .delete-link {
-            color: var(--danger-color);
+        .user-btn-add-new i {
+            display: none;
         }
 
+        .user-stats-info {
+            color: var(--text-gray);
+            font-size: 13px;
+        }
+
+        .user-stats-info i {
+            display: none;
+        }
+
+        /* TABLE */
+        .user-table-container {
+            overflow-x: auto;
+        }
+
+        .user-table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        .user-table-custom thead {
+            background: var(--bg-gray);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-table-custom thead th {
+            padding: 10px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+        }
+
+        .user-table-custom tbody tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-table-custom tbody tr:hover {
+            background-color: #fafafa;
+        }
+
+        .user-table-custom tbody td {
+            padding: 12px 15px;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        /* COLUMNS */
+        .user-table-custom td:first-child {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .user-student-code {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .user-email {
+            color: var(--text-gray);
+            font-size: 13px;
+        }
+
+        /* ROLE BADGE */
+        .user-role-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            background: var(--bg-gray);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .user-role-admin,
+        .user-role-student,
+        .user-role-organizer {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        /* STATUS BADGE */
+        .user-badge-active {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .user-active-true {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .user-active-true::before {
+            display: none;
+        }
+
+        .user-active-false {
+            background: var(--bg-gray);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .user-active-false::before {
+            display: none;
+        }
+
+        /* ACTION BUTTONS */
+        .user-action-links {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .user-action-btn {
+            display: inline-block;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            background: #fff;
+            transition: background 0.2s;
+        }
+
+        .user-action-btn:hover {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+        }
+
+        .user-action-btn i {
+            display: none;
+        }
+
+        .user-btn-view,
+        .user-btn-edit,
+        .user-btn-delete {
+            background: #fff;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .user-btn-view:hover,
+        .user-btn-edit:hover,
+        .user-btn-delete:hover {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+        }
+
+        /* TEXT CENTER */
+        .user-text-center {
+            text-align: center;
+        }
+
+        /* EMPTY STATE */
+        .user-empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+
+        .user-empty-state i {
+            display: none;
+        }
+
+        .user-empty-state p {
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .user-main {
+                padding: 15px;
+            }
+
+            .user-page-header h1 {
+                font-size: 16px;
+            }
+
+            .user-action-bar {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+
+            .user-btn-add-new {
+                width: 100%;
+                text-align: center;
+            }
+
+            .user-stats-info {
+                text-align: center;
+            }
+
+            .user-table-custom thead th,
+            .user-table-custom tbody td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .user-action-links {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .user-action-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
-<div layout:fragment="content" class="main container-fluid">
-    <div class="card shadow-sm">
-        <div class="card-header bg-white">
-            <h1 class="h3 mb-0">📋 Quản lý Người dùng</h1>
-        </div>
-        <div class="card-body">
+<div layout:fragment="content" class="user-main container-fluid">
 
-            <div th:if="${message}" class="message-success" role="alert">
-                <i class="bi bi-check-circle-fill"></i> <span th:text="${message}">Thông báo sẽ hiển thị ở đây.</span>
+    <!-- PHẦN TIÊU ĐỀ VÀ MÔ TẢ -->
+    <div class="user-page-header">
+        <h1>
+            <i class="bi bi-people-fill"></i>
+            Quản lý Người dùng
+        </h1>
+        <p>Quản lý thông tin tất cả người dùng trong hệ thống, bao gồm sinh viên, ban tổ chức và quản trị viên</p>
+    </div>
+
+    <!-- CARD CHỨA NỘI DUNG CHÍNH -->
+    <div class="user-card">
+        <div class="user-card-body">
+
+            <!-- THÔNG BÁO THÀNH CÔNG -->
+            <div th:if="${message}" class="user-message-success" role="alert">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${message}">Thao tác thành công! Thông tin đã được cập nhật.</span>
             </div>
 
-            <p>
-                <a th:href="@{/admin/users/new}" class="btn btn-primary btn-add-new">
-                    <i class="bi bi-plus-circle-fill"></i> ➕ Thêm Người dùng mới
+            <!-- THANH HÀNH ĐỘNG -->
+            <div class="user-action-bar">
+                <a th:href="@{/admin/users/new}" class="user-btn-add-new">
+                    <i class="bi bi-person-plus-fill"></i>
+                    Thêm Người dùng mới
                 </a>
-            </p>
+                <div class="user-stats-info">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <span>Tổng số: <strong th:text="${#lists.size(users)}">0</strong> người dùng</span>
+                </div>
+            </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover table-custom">
+            <!-- BẢNG DANH SÁCH NGƯỜI DÙNG -->
+            <div class="user-table-container">
+                <table class="user-table-custom">
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Mã SV</th>
-                        <th>Họ và Tên</th>
-                        <th>Email</th>
-                        <th>Vai trò (Role)</th>
-                        <th class="text-center">Active</th>
-                        <th class="text-center">Hành động</th>
+                        <th style="width: 60px;">ID</th>
+                        <th style="width: 130px;">Mã Sinh viên</th>
+                        <th style="width: 200px;">Họ và Tên</th>
+                        <th style="width: 220px;">Địa chỉ Email</th>
+                        <th style="width: 150px;">Vai trò</th>
+                        <th class="user-text-center" style="width: 120px;">Trạng thái</th>
+                        <th class="user-text-center" style="width: 240px;">Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="user : ${users}">
-                        <td th:text="${user.user_id}">1</td>
-                        <td th:text="${user.student_code}">SV001</td>
-                        <td th:text="${user.full_name}">Nguyễn Văn A</td>
-                        <td th:text="${user.email}">a.nguyen@example.com</td>
-                        <td th:text="${user.role != null ? user.role.role_name : 'N/A'}">STUDENT</td>
-                        <td class="text-center">
-                            <span th:classappend="${user.is_active ? 'active-true' : 'active-false'}"
-                                  class="badge badge-active"
-                                  th:text="${user.is_active ? 'Có' : 'Không'}">Có</span>
+                        <td th:text="${user.user_id}">001</td>
+                        <td>
+                            <span class="user-student-code" th:text="${user.student_code}">SV2024001</span>
                         </td>
-                        <td class="text-center action-links">
-                            <a th:href="@{/admin/users/view/{id}(id=${user.user_id})}" title="Xem chi tiết">
-                                <i class="bi bi-eye-fill"></i> Xem
-                            </a>
-                            |
-                            <a th:href="@{/admin/users/edit/{id}(id=${user.user_id})}" title="Chỉnh sửa">
-                                <i class="bi bi-pencil-square"></i> Sửa
-                            </a>
-                            |
-                            <a th:href="@{/admin/users/delete/{id}(id=${user.user_id})}"
-                               onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng ' + '[[${user.full_name}]]' + ' này không?');"
-                               class="delete-link" title="Xóa người dùng">
-                                <i class="bi bi-trash-fill"></i> Xóa
-                            </a>
+                        <td>
+                            <span class="user-name" th:text="${user.full_name}">Nguyễn Văn An</span>
+                        </td>
+                        <td>
+                            <span class="user-email" th:text="${user.email}">nguyen.van.an@vinhuni.edu.vn</span>
+                        </td>
+                        <td>
+                                <span th:class="${'user-role-badge user-role-' + (user.role != null ? user.role.role_name.toLowerCase() : 'student')}"
+                                      th:text="${user.role != null ? user.role.role_name : 'STUDENT'}">STUDENT</span>
+                        </td>
+                        <td class="user-text-center">
+                                <span th:class="${'user-badge-active ' + (user.is_active ? 'user-active-true' : 'user-active-false')}"
+                                      th:text="${user.is_active ? 'Hoạt động' : 'Đã khóa'}">Hoạt động</span>
+                        </td>
+                        <td class="user-text-center">
+                            <div class="user-action-links">
+                                <a th:href="@{/admin/users/view/{id}(id=${user.user_id})}"
+                                   class="user-action-btn user-btn-view"
+                                   title="Xem chi tiết thông tin người dùng">
+                                    <i class="bi bi-eye-fill"></i>
+                                    Xem
+                                </a>
+                                <a th:href="@{/admin/users/edit/{id}(id=${user.user_id})}"
+                                   class="user-action-btn user-btn-edit"
+                                   title="Chỉnh sửa thông tin người dùng">
+                                    <i class="bi bi-pencil-square"></i>
+                                    Sửa
+                                </a>
+                                <a th:href="@{/admin/users/delete/{id}(id=${user.user_id})}"
+                                   onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng ' + '[[${user.full_name}]]' + ' này không? Hành động này không thể hoàn tác!');"
+                                   class="user-action-btn user-btn-delete"
+                                   title="Xóa người dùng khỏi hệ thống">
+                                    <i class="bi bi-trash-fill"></i>
+                                    Xóa
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-            </div> </div> </div> </div>
+            </div>
+
+            <!-- TRẠNG THÁI KHÔNG CÓ DỮ LIỆU -->
+            <div th:if="${#lists.isEmpty(users)}" class="user-empty-state">
+                <i class="bi bi-inbox"></i>
+                <p>Chưa có người dùng nào trong hệ thống</p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

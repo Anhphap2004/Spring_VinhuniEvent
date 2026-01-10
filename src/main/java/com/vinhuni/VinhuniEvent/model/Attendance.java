@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Attendance {
 
-    // Trong Model Attendance.java
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "attendance_id")
@@ -35,9 +35,9 @@ public class Attendance {
     @EqualsAndHashCode.Exclude
     private User user;
 
-    // attendance_time không còn là CreationTimestamp nữa, nó chỉ là thời điểm cập nhật cuối cùng
+
     @Column(name = "attendance_time", nullable = false)
-    private LocalDateTime attendanceTime; // GIỮ LẠI ĐỂ GHI NHẬN THỜI ĐIỂM CẬP NHẬT
+    private LocalDateTime attendanceTime;
 
     @Column(name = "is_present", nullable = false)
     private Boolean isPresent = true;

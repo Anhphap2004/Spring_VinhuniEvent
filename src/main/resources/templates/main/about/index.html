@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main/layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giới thiệu - VinhUni Event</title>
+    <style>
+        /* Reset và Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #ffffff;
+        }
+
+        /* Page Wrapper */
+        .page-wrapper {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .page-header {
+            background-color: #1a4d8f;
+            color: white;
+            padding: 40px 0;
+            border-bottom: 3px solid #0d3a6f;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .header-content h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .header-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 40px 60px 40px;
+        }
+
+        /* Event Section */
+        .event-section {
+            background-color: #ffffff;
+            margin-bottom: 40px;
+        }
+
+        /* Event Header */
+        .event-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e5e5e5;
+        }
+
+        .event-title {
+            font-size: 2.2rem;
+            color: #1a1a1a;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .event-date {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        /* Event Intro */
+        .event-intro {
+            margin-bottom: 35px;
+        }
+
+        .lead-text {
+            font-size: 1.15rem;
+            color: #444;
+            line-height: 1.8;
+        }
+
+        /* Event Banner */
+        .event-banner {
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .event-banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border: 1px solid #ddd;
+        }
+
+        /* Event Info Box */
+        .event-info-box {
+            background-color: #f8f9fa;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-left: 4px solid #1a4d8f;
+        }
+
+        .event-info-box h2 {
+            font-size: 1.3rem;
+            color: #1a4d8f;
+            margin-bottom: 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .info-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-wrap: wrap;
+            line-height: 1.6;
+        }
+
+        .info-item strong {
+            min-width: 150px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .info-item span {
+            flex: 1;
+            color: #444;
+        }
+
+        /* Event Content */
+        .event-content {
+            font-size: 1.05rem;
+            color: #333;
+            line-height: 1.9;
+        }
+
+        .event-content h2 {
+            font-size: 1.6rem;
+            color: #1a4d8f;
+            margin-top: 45px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e5e5;
+        }
+
+        .event-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .event-content h3 {
+            font-size: 1.3rem;
+            color: #2c5aa0;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .event-content p {
+            margin-bottom: 18px;
+            text-align: justify;
+        }
+
+        .event-content ul,
+        .event-content ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .event-content li {
+            margin-bottom: 10px;
+        }
+
+        .event-content strong {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        /* Event CTA */
+        .event-cta {
+            background-color: #f0f4f8;
+            padding: 35px;
+            margin-top: 50px;
+            text-align: center;
+            border-top: 3px solid #1a4d8f;
+        }
+
+        .event-cta h3 {
+            font-size: 1.5rem;
+            color: #1a4d8f;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .event-cta p {
+            font-size: 1.1rem;
+            color: #444;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* No Events */
+        .no-events {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666;
+        }
+
+        .no-events h2 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .no-events p {
+            font-size: 1.05rem;
+        }
+
+        /* Footer */
+        .page-footer {
+            background-color: #f5f5f5;
+            padding: 25px 0;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            margin-top: auto;
+        }
+
+        .page-footer p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content,
+            .main-content {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .header-content h1 {
+                font-size: 1.5rem;
+            }
+
+            .event-title {
+                font-size: 1.6rem;
+            }
+
+            .lead-text {
+                font-size: 1.05rem;
+            }
+
+            .event-info-box {
+                padding: 20px;
+            }
+
+            .info-item {
+                flex-direction: column;
+            }
+
+            .info-item strong {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+
+            .event-content {
+                font-size: 1rem;
+            }
+
+            .event-content h2 {
+                font-size: 1.4rem;
+                margin-top: 35px;
+            }
+
+            .event-content h3 {
+                font-size: 1.2rem;
+                margin-top: 25px;
+            }
+
+            .event-cta {
+                padding: 25px 20px;
+            }
+
+            .event-cta h3 {
+                font-size: 1.3rem;
+            }
+
+            .event-cta p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .main-content {
+                max-width: 1600px;
+            }
+
+            .header-content {
+                max-width: 1600px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="page-wrapper">
+        <!-- Header -->
+        <header class="page-header">
+            <div class="header-content">
+                <h1>GIỚI THIỆU SỰ KIỆN</h1>
+                <p>Trường Đại học Vinh</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section th:each="about : ${aboutList}" class="event-section">
+
+                <!-- Tiêu đề sự kiện -->
+                <div class="event-header">
+                    <h1 class="event-title" th:text="${about.title}">
+                        Giới thiệu sự kiện Trường Đại học Vinh
+                    </h1>
+                    <p class="event-date">
+                        Ngày đăng: <span th:text="${#temporals.format(about.startTime, 'dd/MM/yyyy')}">01/01/2024</span>
+                    </p>
+                </div>
+
+                <!-- Mô tả ngắn -->
+                <div class="event-intro">
+                    <p class="lead-text" th:text="${about.shortDescription}">
+                        Đây là mô tả ngắn về sự kiện, giới thiệu tổng quan những gì sẽ diễn ra trong sự kiện này tại Trường Đại học Vinh. Sự kiện hứa hẹn mang đến nhiều hoạt động bổ ích và ý nghĩa cho cộng đồng sinh viên.
+                    </p>
+                </div>
+
+                <!-- Banner chính -->
+                <img th:src="@{/assets/img/{img}(img=${about.bannerUrl})}"
+                     th:alt="${about.title}">
+
+
+                <!-- Thông tin cơ bản -->
+                <div class="event-info-box">
+                    <h2>THÔNG TIN SỰ KIỆN</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>Thời gian:</strong>
+                            <span>
+                                <span th:text="${#temporals.format(about.startTime, 'HH:mm - dd/MM/yyyy')}">08:00 - 01/01/2024</span>
+                                đến
+                                <span th:text="${#temporals.format(about.endTime, 'HH:mm - dd/MM/yyyy')}">17:00 - 01/01/2024</span>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Địa điểm:</strong>
+                            <span th:text="${about.location}">Hội trường A, Trường Đại học Vinh</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Đơn vị tổ chức:</strong>
+                            <span th:text="${about.organizer}">Đoàn Thanh niên - Hội Sinh viên Trường Đại học Vinh</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nội dung chi tiết -->
+                <div class="event-content" th:utext="${about.content}">
+                    <h2>VỀ SỰ KIỆN</h2>
+                    <p>
+                        Sự kiện này được tổ chức nhằm tạo ra một sân chơi bổ ích, lành mạnh cho sinh viên Trường Đại học Vinh. Với quy mô lớn và nhiều hoạt động đa dạng, sự kiện hứa hẹn sẽ mang lại những trải nghiệm đáng nhớ cho tất cả các bạn tham gia.
+                    </p>
+                    <p>
+                        Trong suốt thời gian diễn ra sự kiện, các bạn sinh viên sẽ có cơ hội tham gia vào nhiều hoạt động thú vị, giao lưu, học hỏi kinh nghiệm từ các diễn giả, các anh chị đi trước và kết nối với bạn bè từ nhiều khoa, ngành khác nhau trong trường.
+                    </p>
+
+                    <h2>MỤC ĐÍCH VÀ Ý NGHĨA</h2>
+                    <p>
+                        Sự kiện được tổ chức với nhiều mục đích quan trọng, góp phần vào sự phát triển toàn diện của sinh viên:
+                    </p>
+                    <ul>
+                        <li>Tạo sân chơi bổ ích, lành mạnh cho sinh viên rèn luyện kỹ năng và phát triển bản thân</li>
+                        <li>Kết nối cộng đồng sinh viên trong và ngoài trường, tạo mạng lưới quan hệ rộng rãi</li>
+                        <li>Nâng cao nhận thức và trách nhiệm của thế hệ trẻ đối với xã hội và cộng đồng</li>
+                        <li>Phát triển kỹ năng mềm như làm việc nhóm, giao tiếp, tư duy sáng tạo và giải quyết vấn đề</li>
+                        <li>Tạo cơ hội để sinh viên thể hiện tài năng, sở trường của bản thân</li>
+                        <li>Góp phần xây dựng môi trường học tập năng động, sáng tạo tại trường</li>
+                    </ul>
+
+                    <h2>NỘI DUNG CHƯƠNG TRÌNH</h2>
+                    <p>
+                        Chương trình sự kiện được thiết kế đa dạng với nhiều hoạt động phong phú, phù hợp với mọi đối tượng sinh viên:
+                    </p>
+                    <h3>Các hoạt động chính</h3>
+                    <ul>
+                        <li>Tọa đàm và hội thảo chuyên đề với sự tham gia của các chuyên gia, doanh nhân thành đạt</li>
+                        <li>Workshop và buổi đào tạo kỹ năng thực hành</li>
+                        <li>Các trò chơi tập thể, hoạt động teambuilding</li>
+                        <li>Triển lãm và giới thiệu các hoạt động, dự án của sinh viên</li>
+                        <li>Các hoạt động văn hóa, văn nghệ sôi động</li>
+                        <li>Phần thi tài năng và trao giải thưởng</li>
+                    </ul>
+
+                    <h3>Lịch trình dự kiến</h3>
+                    <p>
+                        Sự kiện diễn ra trong nhiều ngày với lịch trình chi tiết, được bố trí khoa học để đảm bảo sinh viên có thể tham gia đầy đủ các hoạt động mà vẫn cân bằng với lịch học tập.
+                    </p>
+
+                    <h2>ĐỐI TƯỢNG THAM GIA</h2>
+                    <p>
+                        Sự kiện hướng đến đông đảo các đối tượng trong và ngoài nhà trường:
+                    </p>
+                    <ul>
+                        <li>Toàn thể sinh viên các khoa, ngành của Trường Đại học Vinh</li>
+                        <li>Giảng viên, cán bộ nhà trường</li>
+                        <li>Sinh viên các trường đại học khác trong khu vực</li>
+                        <li>Các đối tác, doanh nghiệp quan tâm</li>
+                        <li>Cựu sinh viên của trường</li>
+                    </ul>
+
+                    <h2>ĐĂNG KÝ THAM GIA</h2>
+                    <p>
+                        Sinh viên có thể đăng ký tham gia sự kiện thông qua các kênh chính thức của nhà trường. Việc đăng ký sớm sẽ giúp ban tổ chức có thể chuẩn bị tốt hơn và đảm bảo quyền lợi cho người tham gia.
+                    </p>
+                    <p>
+                        Mọi thông tin chi tiết về cách thức đăng ký, các điều kiện tham gia và lịch trình cụ thể sẽ được cập nhật liên tục trên các kênh thông tin chính thức của trường.
+                    </p>
+
+                    <h2>THÔNG TIN LIÊN HỆ</h2>
+                    <p>
+                        Để biết thêm chi tiết về sự kiện hoặc có bất kỳ thắc mắc nào, sinh viên có thể liên hệ trực tiếp với ban tổ chức thông qua các kênh hỗ trợ chính thức của nhà trường.
+                    </p>
+                </div>
+
+                <!-- Kêu gọi hành động -->
+                <div class="event-cta">
+                    <h3>THAM GIA CÙNG CHÚNG TÔI</h3>
+                    <p>
+                        Đừng bỏ lỡ cơ hội tham gia vào sự kiện ý nghĩa này. Hãy đăng ký ngay để trải nghiệm những hoạt động thú vị và kết nối với cộng đồng sinh viên Trường Đại học Vinh!
+                    </p>
+                </div>
+
+            </section>
+
+            <!-- Hiển thị khi không có sự kiện -->
+            <div th:if="${#lists.isEmpty(aboutList)}" class="no-events">
+                <h2>Hiện chưa có thông tin sự kiện</h2>
+                <p>Vui lòng quay lại sau để cập nhật thông tin mới nhất về các sự kiện tại Trường Đại học Vinh.</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="page-footer">
+            <p>© 2024 Trường Đại học Vinh. All rights reserved.</p>
+        </footer>
+    </div>
+</div>
+</body>
+</html>

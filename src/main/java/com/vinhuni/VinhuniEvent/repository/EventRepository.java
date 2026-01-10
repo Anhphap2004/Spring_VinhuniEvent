@@ -18,13 +18,16 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findEventsByCategoryId(@Param("categoryId") Long categoryId);
 
 
-    // --- DÀNH CHO CLIENT/USER (Chỉ lấy is_active = true) ---
 
-    // 1. Lấy tất cả sự kiện đang hoạt động
     @Query("SELECT DISTINCT e FROM Event e LEFT JOIN FETCH e.eventRegistrations LEFT JOIN FETCH e.created_by WHERE e.is_active = true")
     List<Event> findAllActiveEvents();
 
-    // 2. Lấy sự kiện theo danh mục nhưng phải đang hoạt động
+
     @Query("SELECT e FROM Event e WHERE e.category.category_id = :categoryId AND e.is_active = true")
     List<Event> findActiveEventsByCategoryId(@Param("categoryId") Long categoryId);
+
+    @Query("SELECT a FROM Event a WHERE " +
+            "LOWER(a.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(a.title) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Event> searchByKeyword(String keyword);
 }

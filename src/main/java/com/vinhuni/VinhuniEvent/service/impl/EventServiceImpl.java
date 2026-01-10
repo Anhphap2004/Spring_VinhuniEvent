@@ -59,4 +59,14 @@ public class EventServiceImpl implements EventService {
     public void deleteEvent(Long id) {
         repo.deleteById(id);
     }
+
+    @Override
+    public List<Event> searchEvents(String keyword) {
+        if (keyword != null) {
+            return repo.searchByKeyword(keyword);
+        }
+        return repo.findAll();
+    }
+
+
 }

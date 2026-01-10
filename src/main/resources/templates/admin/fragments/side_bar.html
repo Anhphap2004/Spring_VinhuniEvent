@@ -1,51 +1,57 @@
 <div th:fragment="admin_side_bar">
 <nav id="sidebar" class="sidebar js-sidebar">
     <div class="sidebar-content js-simplebar">
-        <a class="sidebar-brand" href="/admin">
-            <span class="align-middle">VinhuniEvent</span>
+        <a class="sidebar-brand" href="/admin" style="display: flex !important; align-items: center !important; gap: 12px; text-decoration: none;">
+            <img src="https://login.vinhuni.edu.vn/assets/images/logo-dh-vinh.png"
+                 alt="VinhUni Logo"
+                 style="width: 45px; height: 45px; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; line-height: 1.3;">
+                <span style="color: #B8C5D6; font-weight: 500; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px;">Trường Đại Học Vinh</span>
+                <span style="color: #4A9EFF; font-weight: 700; font-size: 16px; letter-spacing: 0.5px;">VINH EVENTS</span>
+            </div>
         </a>
 
         <ul class="sidebar-nav">
             <li class="sidebar-header">
-                Pages
+                HỆ THỐNG QUẢN LÝ
             </li>
 
             <li class="sidebar-item active">
                 <a class="sidebar-link" th:href="@{/admin}">
-                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Trang chủ</span>
                 </a>
             </li>
 
             <li class="sidebar-item">
                 <a class="sidebar-link" th:href="@{/admin/users}">
-                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Quản Lý Người Dùng</span>
+                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Quản lý người dùng</span>
                 </a>
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-sign-in.html">
-                    <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Sign In</span>
+                <a class="sidebar-link" th:href="@{/admin/role}">
+                    <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Quản lý phân quyền</span>
                 </a>
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" href="pages-sign-up.html">
-                    <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Sign Up</span>
+                <a class="sidebar-link" th:href="@{/admin/role-requests}">
+                    <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Quản lý nâng quyền</span>
                 </a>
             </li>
 
             <li class="sidebar-item">
                 <a class="sidebar-link" th:href="@{/admin/event_categories}">
-                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Danh Mục Sự Kiện</span>
+                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Danh mục sự kiện</span>
                 </a>
             </li> <li class="sidebar-item">
                 <a class="sidebar-link" th:href="@{/admin/events}">
-                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Quản Lý Sự Kiện</span>
+                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Quản lý sự kiện</span>
                 </a>
             </li>
             <li class="sidebar-item">
                 <a class="sidebar-link" th:href="@{/admin/event_register}">
-                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">QL Đăng Ký Sự Kiện</span>
+                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Đăng ký tham gia</span>
                 </a>
             </li>
 
@@ -55,13 +61,13 @@
 
             <li class="sidebar-item">
                 <a class="sidebar-link" href="ui-buttons.html">
-                    <i class="align-middle" data-feather="square"></i> <span class="align-middle">Buttons</span>
+                    <i class="align-middle" data-feather="square"></i> <span class="align-middle">Nhà tài trợ</span>
                 </a>
             </li>
 
             <li class="sidebar-item">
                 <a class="sidebar-link" href="ui-forms.html">
-                    <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Forms</span>
+                    <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Quản lý thống kê</span>
                 </a>
             </li>
 

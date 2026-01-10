@@ -12,7 +12,7 @@ public interface EventService {
     // MỚI: Dùng cho Client (User)
     List<Event> getAllActiveEvents();
     List<Event> getActiveEventsByCategoryId(Long categoryId);
-
+    List<Event> searchEvents(String keyword);
     // Dùng chung
     Optional<Event> getEventById(Long id);
     void saveEvent(Event event);

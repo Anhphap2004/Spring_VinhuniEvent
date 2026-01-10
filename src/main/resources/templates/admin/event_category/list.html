@@ -5,26 +5,210 @@
 <head>
     <meta charset="UTF-8">
     <title>Danh sách Danh mục Sự kiện</title>
+    <style>
+        :root {
+            --border-color: #e0e0e0;
+            --bg-gray: #f5f5f5;
+            --text-dark: #333;
+            --text-gray: #666;
+            --text-light: #999;
+        }
+
+        /* CONTAINER */
+        .min-main {
+            padding: 20px;
+            max-width: 100%;
+            margin: 0;
+        }
+
+        /* HEADER */
+        .min-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0 0 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* ALERT MESSAGE */
+        .min-alert {
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-gray);
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        /* BUTTON SECTION */
+        .min-action-bar {
+            margin-bottom: 15px;
+        }
+
+        .min-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            background: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .min-btn:hover {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+        }
+
+        .min-btn i {
+            display: none;
+        }
+
+        .min-btn-add {
+            background: var(--text-dark);
+            color: #fff !important;
+            border-color: var(--text-dark);
+        }
+
+        .min-btn-add:hover {
+            opacity: 0.8;
+            color: #fff !important;
+            background: var(--text-dark);
+        }
+
+        .min-btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+
+        .min-btn-edit,
+        .min-btn-delete {
+            background: #fff;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .min-btn-edit:hover,
+        .min-btn-delete:hover {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+        }
+
+        /* TABLE */
+        .min-table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            max-width: 100%;
+        }
+
+        .min-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            margin: 0;
+        }
+
+        .min-table thead {
+            background: var(--bg-gray);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .min-table thead th {
+            padding: 10px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            border: none;
+        }
+
+        .min-table tbody tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .min-table tbody tr:hover {
+            background-color: #fafafa;
+        }
+
+        .min-table tbody td {
+            padding: 12px 15px;
+            font-size: 14px;
+            color: var(--text-dark);
+            vertical-align: middle;
+            border: none;
+        }
+
+        /* TABLE COLUMNS */
+        .min-table tbody td:first-child {
+            color: var(--text-light);
+            font-size: 13px;
+            width: 80px;
+        }
+
+        .min-table tbody td:last-child {
+            width: 180px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .min-main {
+                padding: 15px;
+            }
+
+            .min-title {
+                font-size: 16px;
+            }
+
+            .min-table thead th,
+            .min-table tbody td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .min-table tbody td:last-child {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .min-btn-small {
+                width: 100%;
+                text-align: center;
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+
+            .min-btn-small:last-child {
+                margin-bottom: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-<div layout:fragment="content" class="main container-fluid py-5 px-4">
+<div layout:fragment="content" class="min-main">
 
-    <h1 class="mb-4 text-primary">Danh sách Danh mục Sự kiện</h1>
+    <h1 class="min-title">Danh sách Danh mục Sự kiện</h1>
 
     <!-- Message thông báo -->
-    <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
+    <div th:if="${message}" class="min-alert" role="alert" th:text="${message}"></div>
 
     <!-- Nút thêm mới -->
-    <div class="mb-3">
-        <a th:href="@{/admin/event_categories/new}" class="btn btn-success">
+    <div class="min-action-bar">
+        <a th:href="@{/admin/event_categories/new}" class="min-btn min-btn-add">
             <i class="bi bi-plus-circle"></i> Thêm Danh mục mới
         </a>
     </div>
 
     <!-- Bảng danh mục -->
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-primary">
+    <div class="min-table-wrapper">
+        <table class="min-table">
+            <thead>
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Tên Danh mục</th>
@@ -37,11 +221,11 @@
                 <td th:text="${category.category_name}">Thể thao</td>
                 <td>
                     <a th:href="@{/admin/event_categories/edit/{id}(id=${category.category_id})}"
-                       class="btn btn-sm btn-warning me-2">
+                       class="min-btn min-btn-small min-btn-edit">
                         <i class="bi bi-pencil-square"></i> Sửa
                     </a>
                     <a th:href="@{/admin/event_categories/delete/{id}(id=${category.category_id})}"
-                       class="btn btn-sm btn-danger"
+                       class="min-btn min-btn-small min-btn-delete"
                        onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
                         <i class="bi bi-trash"></i> Xóa
                     </a>
@@ -52,7 +236,5 @@
     </div>
 
 </div>
-
-
 </body>
 </html>

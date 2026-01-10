@@ -21,7 +21,7 @@ public class EventRegisterController {
     private final EventRegistrationService registrationService;
     private final AttendanceService attendanceService;
 
-    // Constructor Injection
+
     public EventRegisterController(
             EventService eventService,
             EventRegistrationService registrationService,
@@ -31,14 +31,7 @@ public class EventRegisterController {
         this.attendanceService = attendanceService;
     }
 
-    // ========================================================================
-    // CHỨC NĂNG QUẢN LÝ ĐĂNG KÝ (LIST & DETAIL)
-    // ========================================================================
 
-    /**
-     * 1. HIỂN THỊ DANH SÁCH SỰ KIỆN
-     * GET /admin/event_register
-     */
     @GetMapping
     public String listRegisteredEvents(Model model) {
         List<Event> events = eventService.getAllEvents();
@@ -46,17 +39,14 @@ public class EventRegisterController {
         return "admin/event_register/list";
     }
 
-    /**
-     * 2. XEM CHI TIẾT DANH SÁCH NGƯỜI DÙNG ĐÃ ĐĂNG KÝ
-     * GET /admin/event_register/{eventId}
-     */
+
     @GetMapping("/{eventId}")
     public String detailRegistrations(@PathVariable Long eventId, Model model, RedirectAttributes redirectAttributes) {
         try {
             Event event = eventService.getEventById(eventId)
                     .orElseThrow(() -> new NoSuchElementException("Sự kiện không tồn tại."));
 
-            // Lấy danh sách đăng ký hiện có trong DB
+
             List<EventRegistration> registrations = registrationService.getRegistrationsByEventId(eventId);
 
             model.addAttribute("event", event);
@@ -69,11 +59,7 @@ public class EventRegisterController {
         }
     }
 
-    /**
-     * 3. XỬ LÝ HÀNH ĐỘNG: XÁC NHẬN HOẶC HỦY (XÓA)
-     * POST /admin/event_register/update/{registrationId}
-     * * @param action: Nhận giá trị "confirm" hoặc "cancel" từ nút bấm ở View
-     */
+
     @PostMapping("/update/{registrationId}")
     public String updateRegistrationStatus(@PathVariable Long registrationId,
                                            @RequestParam("action") String action,
@@ -81,13 +67,13 @@ public class EventRegisterController {
                                            RedirectAttributes redirectAttributes) {
         try {
             if ("confirm".equals(action)) {
-                // LOGIC 1: Xác nhận -> Đổi status thành "Đã xác nhận đăng ký"
+
                 registrationService.updateRegistrationStatus(registrationId, "Đã xác nhận đăng ký");
                 redirectAttributes.addFlashAttribute("successMessage",
                         "Đã xác nhận đăng ký thành công.");
             }
             else if ("cancel".equals(action)) {
-                // LOGIC 2: Hủy -> Xóa bản ghi khỏi Database
+
                 registrationService.deleteRegistration(registrationId);
                 redirectAttributes.addFlashAttribute("successMessage",
                         "Đã hủy và xóa bản ghi đăng ký thành công.");
@@ -97,18 +83,11 @@ public class EventRegisterController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
 
-        // Quay lại trang chi tiết sự kiện
+
         return (eventId != null) ? "redirect:/admin/event_register/" + eventId : "redirect:/admin/event_register";
     }
 
-    // ========================================================================
-    // CHỨC NĂNG ĐIỂM DANH (ATTENDANCE)
-    // ========================================================================
 
-    /**
-     * 4. TRANG QUẢN LÝ ĐIỂM DANH (THỐNG KÊ & DANH SÁCH)
-     * GET /admin/event_register/{eventId}/attendance
-     */
     @GetMapping("/{eventId}/attendance")
     public String showAttendancePage(@PathVariable Long eventId, Model model, RedirectAttributes redirectAttributes) {
         try {
@@ -117,10 +96,10 @@ public class EventRegisterController {
 
             List<EventRegistration> registrations = registrationService.getRegistrationsByEventId(eventId);
 
-            // --- KHỐI THỐNG KÊ ---
+
             long totalPresent = 0;
             long totalAbsent = 0;
-            // Lưu ý: Vì Hủy là Xóa, nên danh sách registrations chỉ chứa những người còn hiệu lực (Đã đăng ký/Đã xác nhận)
+
             long validRegistrationsCount = registrations.size();
 
             Map<Long, Boolean> attendanceStatusMap = new HashMap<>();
@@ -139,7 +118,7 @@ public class EventRegisterController {
                 }
             }
 
-            // Những người chưa được điểm danh
+
             long totalPendingAttendance = validRegistrationsCount - totalPresent - totalAbsent;
 
             model.addAttribute("totalRegistrations", validRegistrationsCount);
@@ -159,10 +138,7 @@ public class EventRegisterController {
         }
     }
 
-    /**
-     * 5. GHI NHẬN ĐIỂM DANH
-     * POST /admin/event_register/attendance/record
-     */
+
     @PostMapping("/attendance/record")
     public String recordStudentAttendance(
             @RequestParam("eventId") Long eventId,

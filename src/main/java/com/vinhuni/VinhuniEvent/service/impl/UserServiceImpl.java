@@ -1,5 +1,6 @@
 package com.vinhuni.VinhuniEvent.service.impl;
 
+import com.vinhuni.VinhuniEvent.exception.RegistrationException;
 import com.vinhuni.VinhuniEvent.model.User;
 import com.vinhuni.VinhuniEvent.repository.UserRepository;
 import com.vinhuni.VinhuniEvent.service.UserService;
@@ -24,7 +25,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public void registerUser(User user) {
-        // mã hóa pass
+
         user.setPassword_hash(passwordEncoder.encode(user.getPassword_hash()));
         user.setIs_active(true);
         user.setCreated_date(LocalDateTime.now());
@@ -36,24 +37,24 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
-    // Bổ sung: Lấy tất cả người dùng (Xem danh sách)
+
     @Override
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
-    // Bổ sung: Lấy người dùng theo ID (Xem chi tiết)
+
     @Override
     public Optional<User> findUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    // Bổ sung: Cập nhật người dùng
+
     @Override
     public User updateUser(Long id, User userDetails) {
         return userRepository.findById(id)
                 .map(existingUser -> {
-                    // Cập nhật thông tin cơ bản
+
                     existingUser.setFull_name(userDetails.getFull_name());
                     existingUser.setEmail(userDetails.getEmail());
                     existingUser.setIs_active(userDetails.getIs_active());
@@ -64,21 +65,42 @@ public class UserServiceImpl implements UserService {
                     existingUser.setPhone_number(userDetails.getPhone_number());
                     existingUser.setImageUrl(userDetails.getImageUrl());
 
-                    // Cập nhật Role (nếu cần)
+
                     existingUser.setRole(userDetails.getRole());
 
-                    // Nếu password_hash mới khác rỗng, tiến hành mã hóa và cập nhật
-                    // Lưu ý: Trong thực tế, bạn nên có một API riêng cho việc đổi mật khẩu.
+
                     if (userDetails.getPassword_hash() != null && !userDetails.getPassword_hash().isEmpty()) {
                         existingUser.setPassword_hash(passwordEncoder.encode(userDetails.getPassword_hash()));
                     }
 
-                    // Lưu và trả về người dùng đã cập nhật
+
                     return userRepository.save(existingUser);
                 }).orElseThrow(() -> new RuntimeException("User not found with id " + id)); // Xử lý khi không tìm thấy
     }
 
+    @Override
+    public User authenticate(String email, String password) {
 
+        User user = userRepository.findByEmail(email);
+
+
+        if (user == null) {
+            throw new RegistrationException("Email không tồn tại!");
+        }
+
+
+        if (!passwordEncoder.matches(password, user.getPassword_hash())) {
+            throw new RegistrationException("Mật khẩu không chính xác!");
+        }
+
+
+        if (user.getIs_active() != null && !user.getIs_active()) {
+            throw new RegistrationException("Tài khoản đã bị khóa!");
+        }
+
+
+        return user;
+    }
 
     @Override
     public void deleteUser(Long id) {

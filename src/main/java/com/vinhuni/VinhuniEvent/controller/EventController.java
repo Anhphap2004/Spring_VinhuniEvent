@@ -38,15 +38,16 @@ public class EventController {
         List<Event> events;
 
         if (categoryId != null) {
-            // SỬA: Gọi hàm chỉ lấy active
+
             events = eventService.getActiveEventsByCategoryId(categoryId);
         } else {
-            // SỬA: Gọi hàm chỉ lấy active
+
             events = eventService.getAllActiveEvents();
         }
-
+        model.addAttribute("categories", eventCategoryService.getAllEventCategories());
         model.addAttribute("events", events);
-        // ... code khác ...
+
+
         return "main/event/index";
     }
 
@@ -64,7 +65,7 @@ public class EventController {
         Event event = eventOptional.get();
         model.addAttribute("event", event);
 
-        // Mặc định là chưa đăng ký
+
         boolean isRegistered = false;
         String registrationStatus = "";
 
@@ -72,18 +73,18 @@ public class EventController {
             Long currentUserId = loggedInUser.getUser_id();
             model.addAttribute("currentUserId", currentUserId);
 
-            // LOGIC MỚI: Tìm bản ghi đăng ký để lấy trạng thái cụ thể
+
             Optional<EventRegistration> registrationOpt = registrationService.findRegistration(id, currentUserId);
 
             if (registrationOpt.isPresent()) {
                 isRegistered = true;
-                registrationStatus = registrationOpt.get().getStatus(); // Lấy "Đã đăng ký" hoặc "Đã xác nhận đăng ký"
+                registrationStatus = registrationOpt.get().getStatus();
             }
         } else {
             model.addAttribute("currentUserId", null);
         }
 
-        // Truyền biến sang View
+
         model.addAttribute("isRegistered", isRegistered);
         model.addAttribute("registrationStatus", registrationStatus);
 
@@ -107,7 +108,7 @@ public class EventController {
         try {
             registrationService.registerForEvent(eventId, currentUserId);
 
-            // Thông báo hiển thị ngay sau khi bấm nút
+
             redirectAttributes.addFlashAttribute("successMessage",
                     "Đã đăng ký thành công, vui lòng chờ duyệt!");
 
@@ -118,7 +119,7 @@ public class EventController {
         return "redirect:/events/" + eventId;
     }
 
-    // Các method khác giữ nguyên
+
     @PostMapping("/create")
     public String save(@ModelAttribute Event event) {
         eventService.saveEvent(event);
@@ -130,4 +131,7 @@ public class EventController {
         eventService.deleteEvent(id);
         return "redirect:/events";
     }
-}
+
+    }
+
+

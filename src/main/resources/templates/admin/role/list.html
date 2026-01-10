@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/base}">
+<head>
+    <title>Danh sách Role</title>
+    <style>
+        :root {
+            --border-color: #e0e0e0;
+            --bg-gray: #f5f5f5;
+            --text-dark: #333;
+            --text-gray: #666;
+            --text-light: #999;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #fff;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .container-fluid {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0 0 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* BREADCRUMB */
+        .breadcrumb {
+            background: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            font-size: 13px;
+            list-style: none;
+            display: flex;
+            gap: 5px;
+        }
+
+        .breadcrumb-item {
+            color: var(--text-gray);
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "/";
+            padding-right: 5px;
+            color: var(--text-light);
+        }
+
+        .breadcrumb-item a {
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-light);
+        }
+
+        /* CARD */
+        .card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background: var(--bg-gray);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 15px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header i {
+            display: none;
+        }
+
+        .card-body {
+            padding: 0;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            background: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+        }
+
+        .btn i {
+            display: none;
+        }
+
+        .btn-primary {
+            background: var(--text-dark);
+            color: #fff;
+            border-color: var(--text-dark);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.8;
+            color: #fff;
+            background: var(--text-dark);
+        }
+
+        .btn-warning,
+        .btn-danger {
+            background: #fff;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-warning:hover,
+        .btn-danger:hover {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .float-end {
+            float: right;
+        }
+
+        /* TABLE */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        .table thead {
+            background: var(--bg-gray);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table thead th {
+            padding: 10px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+        }
+
+        .table-dark {
+            background: var(--bg-gray);
+        }
+
+        .table-hover tbody tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #fafafa;
+        }
+
+        .table tbody td {
+            padding: 12px 15px;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .table-bordered {
+            border: none;
+        }
+
+        .table-bordered td,
+        .table-bordered th {
+            border: none;
+        }
+
+        /* BADGE */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            background: var(--bg-gray);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .bg-info {
+            background: var(--bg-gray);
+            color: var(--text-dark);
+        }
+
+        .text-dark {
+            color: var(--text-dark);
+        }
+
+        /* ACTION COLUMN */
+        td:last-child {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 16px;
+            }
+
+            .card-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+
+            .float-end {
+                float: none;
+                width: 100%;
+                text-align: center;
+            }
+
+            .table thead th,
+            .table tbody td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            td:last-child {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid px-4">
+    <h2 class="mt-4">Quản lý Quyền (Roles)</h2>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Roles</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <span>Danh sách Role</span>
+            <a th:href="@{/admin/role/add}" class="btn btn-primary btn-sm float-end">
+                <i class="fas fa-plus"></i> Thêm Role Mới
+            </a>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th style="width: 10%">ID</th>
+                    <th style="width: 25%">Tên Role</th>
+                    <th>Mô tả</th>
+                    <th style="width: 15%">Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="r : ${roles}">
+                    <td th:text="${r.role_id}"></td>
+                    <td><span class="badge bg-info text-dark" th:text="${r.role_name}"></span></td>
+                    <td th:text="${r.description}"></td>
+                    <td>
+                        <a th:href="@{'/admin/role/edit/' + ${r.role_id}}"
+                           class="btn btn-warning btn-sm"
+                           title="Sửa">
+                            <i class="fas fa-edit"></i> Sửa
+                        </a>
+
+                        <a th:href="@{'/admin/role/delete/' + ${r.role_id}}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn có chắc chắn muốn xóa quyền này?')"
+                           title="Xóa">
+                            <i class="fas fa-trash"></i> Xóa
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

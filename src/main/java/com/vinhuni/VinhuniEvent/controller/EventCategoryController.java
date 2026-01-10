@@ -24,7 +24,7 @@ public class EventCategoryController {
     }
     @GetMapping("/new")
     public String showAddForm(Model model) {
-        // Cần một đối tượng EventCategory rỗng để form Thymeleaf ánh xạ (th:object)
+
         model.addAttribute("category", new EventCategory());
         model.addAttribute("pageTitle", "Thêm mới Danh mục Sự kiện");
         return "admin/event_category/form";
@@ -47,7 +47,7 @@ public class EventCategoryController {
             model.addAttribute("pageTitle", "Chỉnh sửa Danh mục Sự kiện (ID: " + id + ")");
             return "admin/event_category/form";
         } else {
-            // Trường hợp không tìm thấy ID, chuyển hướng và thông báo lỗi
+
             redirectAttributes.addFlashAttribute("message", "Lỗi: Không tìm thấy Danh mục có ID " + id);
             return "redirect:/event_categories";
         }
