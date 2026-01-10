@@ -31,8 +31,8 @@
                         Tổng số đăng ký hiện tại:
                         <span class="badge bg-success fs-6" th:text="${registrations.size()}">0</span>
                     </h5>
-                    <small class="text-muted" th:if="${event.maxParticipants != null}">
-                        Giới hạn: <span th:text="${event.maxParticipants}"></span>
+                    <small class="text-muted" th:if="${event.max_participants != null}">
+                        Giới hạn: <span th:text="${event.max_participants}"></span>
                     </small>
                 </div>
             </div>
@@ -78,11 +78,11 @@
                     <tr th:each="reg, stat : ${registrations}" th:data-status="${reg.status}">
                         <td class="text-center" th:text="${stat.count}">1</td>
 
-                        <td class="fw-bold" th:text="${reg.user.fullName}">Nguyễn Văn A</td>
+                        <td class="fw-bold" th:text="${reg.user.full_name}">Nguyễn Văn A</td>
 
                         <td>
                             <div class="small text-muted"><i class="fas fa-envelope me-1"></i><span th:text="${reg.user.email}"></span></div>
-                            <div class="small text-muted" th:if="${reg.user.studentCode}"><i class="fas fa-id-card me-1"></i><span th:text="${reg.user.studentCode}"></span></div>
+                            <div class="small text-muted" th:if="${reg.user.student_code}"><i class="fas fa-id-card me-1"></i><span th:text="${reg.user.student_code}"></span></div>
                         </td>
 
                         <td class="text-center">
@@ -97,7 +97,7 @@
                         <td class="text-center">
                             <form th:action="@{/admin/event_register/update/{id}(id=${reg.registrationId})}" method="post" class="d-inline-block">
 
-                                <input type="hidden" name="eventId" th:value="${event.eventId}" />
+                                <input type="hidden" name="eventId" th:value="${event.event_id}" />
 
                                 <button type="submit" name="action" value="confirm"
                                         th:if="${reg.status != 'Đã xác nhận đăng ký'}"
