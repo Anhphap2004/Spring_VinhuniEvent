@@ -1,284 +1,1079 @@
-<!doctype html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{admin/layout/base}">
+      layout:decorate="~{main/layout/base}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
+    <title>VinhUni Events - Cổng Thông Tin Sự Kiện Đại Học Vinh</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --vinh-primary: #c41e3a;
+            --vinh-secondary: #003366;
+            --vinh-gold: #d4af37;
+            --vinh-light: #f8f9fa;
+            --vinh-dark: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section with School Image */
+        .hero-header {
+            position: relative;
+            background: linear-gradient(135deg, rgba(0, 51, 102, 0.88) 0%, rgba(196, 30, 58, 0.85) 100%),
+                        url('https://i.postimg.cc/jSd2QxFz/vinhuni.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            padding: 100px 0 80px;
+            overflow: hidden;
+        }
+
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            pointer-events: none;
+        }
+
+        .hero-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 150px;
+            background: linear-gradient(to top, white, transparent);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50px;
+            padding: 14px 32px;
+            margin-bottom: 28px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 24px;
+            color: white;
+            text-shadow: 3px 3px 12px rgba(0, 0, 0, 0.5);
+            line-height: 1.15;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .hero-title .highlight {
+            color: #ffd700;
+            display: inline-block;
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 400;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .hero-description {
+            font-size: 1.15rem;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.92);
+            line-height: 1.8;
+            max-width: 700px;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .btn-hero {
+            padding: 16px 42px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 50px;
+            border: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+
+        .btn-hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-hero:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary-hero {
+            background: linear-gradient(135deg, var(--vinh-primary) 0%, #a01829 100%);
+            color: white;
+            box-shadow: 0 8px 30px rgba(196, 30, 58, 0.4);
+        }
+
+        .btn-primary-hero:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(196, 30, 58, 0.5);
+        }
+
+        .btn-outline-hero {
+            background: transparent;
+            color: white;
+            border: 3px solid white;
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-outline-hero:hover {
+            background: white;
+            color: var(--vinh-secondary);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Hero Image */
+        .hero-image {
+            position: relative;
+            animation: fadeInRight 1.2s ease-out;
+        }
+
+        .hero-image img {
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Section Commons */
+        .section-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #fff1f1, #ffe8e8);
+            border: 2px solid var(--vinh-primary);
+            border-radius: 50px;
+            padding: 10px 28px;
+            margin-bottom: 24px;
+            color: var(--vinh-primary);
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.15);
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 28px;
+            color: var(--vinh-secondary);
+            line-height: 1.2;
+        }
+
+        .section-title span {
+            color: var(--vinh-primary);
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 120px 0;
+            background: linear-gradient(180deg, white 0%, var(--vinh-light) 100%);
+            position: relative;
+        }
+
+        .about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), white);
+            pointer-events: none;
+        }
+
+        /* Image Gallery */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            position: relative;
+        }
+
+        .gallery-item {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(196, 30, 58, 0.3), rgba(0, 51, 102, 0.3));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .gallery-item:hover::before {
+            opacity: 1;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-item:nth-child(1) {
+            margin-top: 40px;
+        }
+
+        .gallery-item:nth-child(4) {
+            margin-top: 40px;
+        }
+
+        /* Feature Items */
+        .feature-list {
+            display: grid;
+            gap: 18px;
+            margin-bottom: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            border-left: 5px solid var(--vinh-primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: linear-gradient(135deg, #fff5f5, white);
+            transform: translateX(12px);
+            box-shadow: 0 8px 25px rgba(196, 30, 58, 0.15);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--vinh-primary), var(--vinh-secondary));
+            color: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 5px 20px rgba(196, 30, 58, 0.3);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, var(--vinh-secondary) 0%, var(--vinh-primary) 100%);
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .stats-section::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 45px 30px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-15px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: white;
+            opacity: 0.95;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-label {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 120px 0;
+            background: var(--vinh-light);
+            position: relative;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            padding: 45px 35px;
+            text-align: center;
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--vinh-primary), var(--vinh-secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-color: var(--vinh-primary);
+        }
+
+        .service-icon-wrapper {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 28px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .service-icon-wrapper::after {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 3px solid var(--vinh-primary);
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .service-card:hover .service-icon-wrapper::after {
+            opacity: 0.5;
+            transform: scale(1.1);
+        }
+
+        .service-card:hover .service-icon-wrapper {
+            background: linear-gradient(135deg, var(--vinh-primary), var(--vinh-secondary));
+            transform: rotate(360deg);
+        }
+
+        .service-icon {
+            font-size: 2.8rem;
+            color: var(--vinh-primary);
+            transition: all 0.5s ease;
+        }
+
+        .service-card:hover .service-icon {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 18px;
+            color: var(--vinh-secondary);
+        }
+
+        .service-description {
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .service-link {
+            color: var(--vinh-primary);
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .service-link:hover {
+            color: var(--vinh-secondary);
+            transform: translateX(5px);
+        }
+
+        /* Events Section */
+        .events-section {
+            padding: 120px 0;
+            background: linear-gradient(180deg, white 0%, #f8f9fa 100%);
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            height: 100%;
+            display: flex;
+            border-left: 6px solid var(--vinh-primary);
+            position: relative;
+        }
+
+        .event-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(196, 30, 58, 0.03), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.18);
+        }
+
+        .event-card:hover::after {
+            opacity: 1;
+        }
+
+        .event-date {
+            flex-shrink: 0;
+            width: 110px;
+            background: linear-gradient(135deg, var(--vinh-primary), var(--vinh-secondary));
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .event-day {
+            font-size: 2.8rem;
+            font-weight: 900;
+            line-height: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .event-month {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 8px;
+        }
+
+        .event-content {
+            flex: 1;
+            padding: 28px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .event-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--vinh-secondary);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .event-location {
+            color: #666;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .event-location i {
+            color: var(--vinh-primary);
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .event-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-hot {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: var(--vinh-primary);
+        }
+
+        .badge-open {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
+        }
+
+        .badge-free {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1565c0;
+        }
+
+        /* Video Section */
+        .video-section {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-thumb {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .play-button:hover {
+            transform: translate(-50%, -50%) scale(1.15);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .play-button i {
+            color: var(--vinh-primary);
+            font-size: 2rem;
+            margin-left: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .image-gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-item:nth-child(1),
+            .gallery-item:nth-child(4) {
+                margin-top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-header {
+                min-height: 600px;
+                padding: 80px 0 60px;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .event-card {
+                flex-direction: column;
+            }
+
+            .event-date {
+                width: 100%;
+                flex-direction: row;
+                justify-content: center;
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .btn-hero {
+                padding: 14px 32px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<div layout:fragment="content">
-    <main class="content">
-        <div class="container-fluid p-0">
-            <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
-            <div class="row">
-                <div class="col-xl-6 col-xxl-5 d-flex">
-                    <div class="w-100">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col mt-0">
-                                                <h5 class="card-title">Sales</h5>
-                                            </div>
 
-                                            <div class="col-auto">
-                                                <div class="stat text-primary">
-                                                    <i class="align-middle" data-feather="truck"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h1 class="mt-1 mb-3">2.382</h1>
-                                        <div class="mb-0">
-                                            <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span>
-                                            <span class="text-muted">Since last week</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col mt-0">
-                                                <h5 class="card-title">Visitors</h5>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="stat text-primary">
-                                                    <i class="align-middle" data-feather="users"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h1 class="mt-1 mb-3">14.212</h1>
-                                        <div class="mb-0">
-                                            <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
-                                            <span class="text-muted">Since last week</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col mt-0">
-                                                <h5 class="card-title">Earnings</h5>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="stat text-primary">
-                                                    <i class="align-middle" data-feather="dollar-sign"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h1 class="mt-1 mb-3">$21.300</h1>
-                                        <div class="mb-0">
-                                            <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
-                                            <span class="text-muted">Since last week</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col mt-0">
-                                                <h5 class="card-title">Orders</h5>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="stat text-primary">
-                                                    <i class="align-middle" data-feather="shopping-cart"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h1 class="mt-1 mb-3">64</h1>
-                                        <div class="mb-0">
-                                            <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -2.25% </span>
-                                            <span class="text-muted">Since last week</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<main layout:fragment="content">
+    <!-- Hero Section -->
+    <div class="container-fluid py-5 mb-5 hero-header">
+        <div class="container py-5">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-7 col-md-12 hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-university me-2"></i>Cổng thông tin chính thức
+                    </div>
+                    <h1 class="hero-title">
+                        Sự Kiện <span class="highlight">Đại Học Vinh</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Nơi Tri Thức Hội Tụ - Bản Lĩnh Sinh Viên Tỏa Sáng
+                    </p>
+                    <p class="hero-description">
+                        Cập nhật nhanh nhất các hoạt động Đoàn - Hội, Hội thảo khoa học, Workshop kỹ năng và các sân chơi văn hóa nghệ thuật tại trường Đại học Vinh.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="/events" class="btn-hero btn-primary-hero">
+                            Tham Gia Ngay <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        <a href="/calendar" class="btn-hero btn-outline-hero">
+                            Xem Lịch Trình
+                        </a>
                     </div>
                 </div>
-
-                <div class="col-xl-6 col-xxl-7">
-                    <div class="card flex-fill w-100">
-                        <div class="card-header">
-
-                            <h5 class="card-title mb-0">Recent Movement</h5>
-                        </div>
-                        <div class="card-body py-3">
-                            <div class="chart chart-sm">
-                                <canvas id="chartjs-dashboard-line"></canvas>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-lg-5 col-md-12 text-center hero-image">
+                    <img src="/assets/img/event-1.jpg" class="img-fluid" alt="Vinh Uni Student" style="max-height: 500px;">
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-12 col-md-6 col-xxl-3 d-flex order-2 order-xxl-3">
-                    <div class="card flex-fill w-100">
-                        <div class="card-header">
-
-                            <h5 class="card-title mb-0">Browser Usage</h5>
-                        </div>
-                        <div class="card-body d-flex">
-                            <div class="align-self-center w-100">
-                                <div class="py-3">
-                                    <div class="chart chart-xs">
-                                        <canvas id="chartjs-dashboard-pie"></canvas>
-                                    </div>
-                                </div>
-
-                                <table class="table mb-0">
-                                    <tbody>
-                                    <tr>
-                                        <td>Chrome</td>
-                                        <td class="text-end">4306</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Firefox</td>
-                                        <td class="text-end">3801</td>
-                                    </tr>
-                                    <tr>
-                                        <td>IE</td>
-                                        <td class="text-end">1689</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
-                    <div class="card flex-fill w-100">
-                        <div class="card-header">
-
-                            <h5 class="card-title mb-0">Real-Time</h5>
-                        </div>
-                        <div class="card-body px-4">
-                            <div id="world_map" style="height:350px;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-xxl-3 d-flex order-1 order-xxl-1">
-                    <div class="card flex-fill">
-                        <div class="card-header">
-
-                            <h5 class="card-title mb-0">Calendar</h5>
-                        </div>
-                        <div class="card-body d-flex">
-                            <div class="align-self-center w-100">
-                                <div class="chart">
-                                    <div id="datetimepicker-dashboard"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 col-lg-8 col-xxl-9 d-flex">
-                    <div class="card flex-fill">
-                        <div class="card-header">
-
-                            <h5 class="card-title mb-0">Latest Projects</h5>
-                        </div>
-                        <table class="table table-hover my-0">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th class="d-none d-xl-table-cell">Start Date</th>
-                                <th class="d-none d-xl-table-cell">End Date</th>
-                                <th>Status</th>
-                                <th class="d-none d-md-table-cell">Assignee</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>Project Apollo</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-success">Done</span></td>
-                                <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                            </tr>
-                            <tr>
-                                <td>Project Fireball</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-danger">Cancelled</span></td>
-                                <td class="d-none d-md-table-cell">William Harris</td>
-                            </tr>
-                            <tr>
-                                <td>Project Hades</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-success">Done</span></td>
-                                <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                            </tr>
-                            <tr>
-                                <td>Project Nitro</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-warning">In progress</span></td>
-                                <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                            </tr>
-                            <tr>
-                                <td>Project Phoenix</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-success">Done</span></td>
-                                <td class="d-none d-md-table-cell">William Harris</td>
-                            </tr>
-                            <tr>
-                                <td>Project X</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-success">Done</span></td>
-                                <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                            </tr>
-                            <tr>
-                                <td>Project Romeo</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-success">Done</span></td>
-                                <td class="d-none d-md-table-cell">Christina Mason</td>
-                            </tr>
-                            <tr>
-                                <td>Project Wombat</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-warning">In progress</span></td>
-                                <td class="d-none d-md-table-cell">William Harris</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-4 col-xxl-3 d-flex">
-                    <div class="card flex-fill w-100">
-                        <div class="card-header">
-
-                            <h5 class="card-title mb-0">Monthly Sales</h5>
-                        </div>
-                        <div class="card-body d-flex w-100">
-                            <div class="align-self-center chart chart-lg">
-                                <canvas id="chartjs-dashboard-bar"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
-    </main>
+    </div>
 
-</div>
+    <!-- Stats Section -->
+    <div class="container-fluid stats-section">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 wow bounceInUp" data-wow-delay="0.1s">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="stat-number" data-toggle="counter-up">25,000+</div>
+                        <div class="stat-label">Sinh Viên</div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow bounceInUp" data-wow-delay="0.3s">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-number" data-toggle="counter-up">150+</div>
+                        <div class="stat-label">Sự Kiện / Năm</div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow bounceInUp" data-wow-delay="0.5s">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <div class="stat-number" data-toggle="counter-up">45+</div>
+                        <div class="stat-label">CLB & Đội Nhóm</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="container-fluid about-section">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.1s">
+                    <div class="image-gallery">
+                        <div class="gallery-item">
+                            <img src="/assets/img/event-1.jpg" alt="Sự kiện 1">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="/assets/img/event-2.jpg" alt="Sự kiện 2">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="/assets/img/event-3.jpg" alt="Sự kiện 3">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="/assets/img/event-4.jpg" alt="Sự kiện 4">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.3s">
+                    <span class="section-badge">Về Chúng Tôi</span>
+                    <h2 class="section-title">Kết Nối <span>Tri Thức</span> - Lan Tỏa <span>Đam Mê</span></h2>
+                    <p class="mb-4 text-secondary fs-5">
+                        Hệ thống quản lý sự kiện Đại học Vinh không chỉ là nơi đăng ký tham gia, mà là cầu nối giúp sinh viên tiếp cận với môi trường năng động, sáng tạo và hội nhập.
+                    </p>
+
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-qrcode"></i>
+                            </div>
+                            <span class="fw-bold fs-5">Check-in tự động bằng QR Code</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <span class="fw-bold fs-5">Cấp chứng nhận Online</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <span class="fw-bold fs-5">Cộng đồng sinh viên năng động</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="fw-bold fs-5">Tích lũy điểm rèn luyện</span>
+                        </div>
+                    </div>
+                    <a href="/about" class="btn-hero btn-primary-hero">Tìm Hiểu Thêm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <div class="container-fluid services-section">
+        <div class="container">
+            <div class="text-center wow bounceInUp" data-wow-delay="0.1s">
+                <span class="section-badge">Lĩnh Vực Hoạt Động</span>
+                <h2 class="section-title">Các Loại Hình <span>Sự Kiện</span></h2>
+            </div>
+            <div class="row g-4 mt-3">
+                <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.1s">
+                    <div class="service-card">
+                        <div class="service-icon-wrapper">
+                            <i class="fas fa-graduation-cap service-icon"></i>
+                        </div>
+                        <h4 class="service-title">Học Thuật</h4>
+                        <p class="service-description">
+                            Các hội thảo khoa học, workshop kỹ năng, cuộc thi Olympic và nghiên cứu khoa học.
+                        </p>
+                        <a href="#" class="service-link">
+                            Xem chi tiết <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.3s">
+                    <div class="service-card">
+                        <div class="service-icon-wrapper">
+                            <i class="fas fa-hands-helping service-icon"></i>
+                        </div>
+                        <h4 class="service-title">Tình Nguyện</h4>
+                        <p class="service-description">
+                            Mùa hè xanh, Tiếp sức mùa thi, Hiến máu nhân đạo và các hoạt động cộng đồng.
+                        </p>
+                        <a href="#" class="service-link">
+                            Xem chi tiết <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.5s">
+                    <div class="service-card">
+                        <div class="service-icon-wrapper">
+                            <i class="fas fa-guitar service-icon"></i>
+                        </div>
+                        <h4 class="service-title">Văn Hóa - Nghệ Thuật</h4>
+                        <p class="service-description">
+                            Gala chào tân sinh viên, Hội diễn văn nghệ, Cuộc thi tài năng sinh viên.
+                        </p>
+                        <a href="#" class="service-link">
+                            Xem chi tiết <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.7s">
+                    <div class="service-card">
+                        <div class="service-icon-wrapper">
+                            <i class="fas fa-futbol service-icon"></i>
+                        </div>
+                        <h4 class="service-title">Thể Thao</h4>
+                        <p class="service-description">
+                            Giải bóng đá sinh viên, Hội thao quốc phòng, Các giải đấu mở rộng.
+                        </p>
+                        <a href="#" class="service-link">
+                            Xem chi tiết <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Fragment Section -->
+    <section class="bg-light py-5">
+        <div th:replace="fragments/event-section :: mainEventSection"></div>
+    </section>
+
+    <!-- Events Schedule Section -->
+    <div class="container-fluid events-section">
+        <div class="container">
+            <div class="text-center wow bounceInUp" data-wow-delay="0.1s">
+                <span class="section-badge">Lịch Trình</span>
+                <h2 class="section-title">Sự Kiện <span>Nổi Bật</span> Sắp Tới</h2>
+            </div>
+
+            <div class="row g-4 mt-3">
+                <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.1s">
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="event-day">12</span>
+                            <span class="event-month">Th1</span>
+                        </div>
+                        <div class="event-content">
+                            <h5 class="event-title">Workshop: Kỹ năng mềm SV</h5>
+                            <div class="event-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Hội trường A, Đại học Vinh
+                            </div>
+                            <span class="event-badge badge-hot">
+                                <i class="fas fa-fire me-1"></i>Sắp diễn ra
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.2s">
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="event-day">14</span>
+                            <span class="event-month">Th1</span>
+                        </div>
+                        <div class="event-content">
+                            <h5 class="event-title">Đại hội Thể dục Thể thao</h5>
+                            <div class="event-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Sân vận động trường
+                            </div>
+                            <span class="event-badge badge-open">
+                                <i class="fas fa-check-circle me-1"></i>Đang mở
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.3s">
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="event-day">15</span>
+                            <span class="event-month">Th1</span>
+                        </div>
+                        <div class="event-content">
+                            <h5 class="event-title">Đêm nhạc: Acoustic Night</h5>
+                            <div class="event-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Khu A - Sảnh Thư viện
+                            </div>
+                            <span class="event-badge badge-free">
+                                <i class="fas fa-ticket-alt me-1"></i>Vé miễn phí
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.4s">
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="event-day">18</span>
+                            <span class="event-month">Th1</span>
+                        </div>
+                        <div class="event-content">
+                            <h5 class="event-title">Job Fair: Ngày hội việc làm</h5>
+                            <div class="event-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Trung tâm Hỗ trợ SV
+                            </div>
+                            <span class="event-badge badge-hot">
+                                <i class="fas fa-star me-1"></i>Hot
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="/events" class="btn-hero btn-primary-hero">
+                    Xem Tất Cả Sự Kiện <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
 
 </body>
 </html>

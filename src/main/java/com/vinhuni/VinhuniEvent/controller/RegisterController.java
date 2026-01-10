@@ -32,6 +32,10 @@ public class RegisterController {
             Model model
     ) {
         String rawPassword = user.getPasswordHash();
+        if (rawPassword == null || rawPassword.isBlank()) {
+            model.addAttribute("error", "Mật khẩu không được để trống!");
+            return "auth/register";
+        }
         if (!rawPassword.equals(confirmPassword)) {
             model.addAttribute("error", "Mật khẩu xác nhận không khớp!");
             return "auth/register";
