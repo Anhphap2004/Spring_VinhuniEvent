@@ -16,7 +16,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
      * JPQL: Tìm bản ghi điểm danh MỚI NHẤT (latest) cho một người dùng tại sự kiện.
      * Dùng để xác định trạng thái cuối cùng (Có mặt/Vắng mặt).
      */
-    @Query("SELECT a FROM Attendance a WHERE a.event.event_id = :eventId AND a.user.userId = :userId ORDER BY a.attendanceTime DESC LIMIT 1")
+    @Query("SELECT a FROM Attendance a WHERE a.event.eventId = :eventId AND a.user.userId = :userId ORDER BY a.attendanceTime DESC LIMIT 1")
     Optional<Attendance> findTopByEventIdAndUserIdOrderByAttendanceTime(
             @Param("eventId") Long eventId,
             @Param("userId") Long userId
@@ -26,13 +26,13 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
      * JPQL: Lấy tất cả các bản ghi điểm danh của một sự kiện (cho Admin).
      * JOIN FETCH User để tránh lỗi Lazy Loading khi hiển thị chi tiết người dùng.
      */
-    @Query("SELECT a FROM Attendance a JOIN FETCH a.user WHERE a.event.event_id = :eventId ORDER BY a.attendanceTime DESC")
+    @Query("SELECT a FROM Attendance a JOIN FETCH a.user WHERE a.event.eventId = :eventId ORDER BY a.attendanceTime DESC")
     List<Attendance> findByEventIdFetchingUser(@Param("eventId") Long eventId);
 
     /**
      * SỬA LỖI TẠI ĐÂY:
      * Thay vì dùng tên hàm findByUser_UserId (gây lỗi tìm kiếm userId),
-     * ta viết query tường minh trỏ thẳng vào a.user.user_id
+     * ta viết query tường minh trỏ thẳng vào a.user.userId
      */
     @Query("SELECT a FROM Attendance a WHERE a.user.userId = :userId")
     List<Attendance> findByUserId(@Param("userId") Long userId);

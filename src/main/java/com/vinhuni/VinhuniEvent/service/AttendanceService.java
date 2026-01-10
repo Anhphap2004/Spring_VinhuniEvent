@@ -9,6 +9,9 @@ public interface AttendanceService {
     Optional<Boolean> getUserAttendanceStatus(Long eventId, Long userId);
     List<Attendance> getAttendancesByEventId(Long eventId);
     Optional<Attendance> getLatestAttendanceRecord(Long eventId, Long userId);
-
     List<Attendance> getAttendancesByUserId(Long userId);
+
+    // Thêm mới cho QR attendance
+    void saveAttendance(Attendance attendance);
+    Optional<Attendance> getAttendanceByEventAndUser(Long eventId, Long userId);
 }

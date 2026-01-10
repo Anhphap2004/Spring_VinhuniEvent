@@ -118,10 +118,10 @@
                             </a>
 
                             <a th:each="cat : ${eventCategories}"
-                               th:href="@{'/events?category=' + ${cat.category_id}}"
-                               th:classappend="${selectedCategory != null and selectedCategory.equals(cat.category_id)} ? 'active'"
+                               th:href="@{'/events?category=' + ${cat.categoryId}}"
+                               th:classappend="${selectedCategory != null and selectedCategory.equals(cat.categoryId)} ? 'active'"
                                class="list-group-item list-group-item-action">
-                                <span th:text="${cat.category_name}">Tên Danh Mục</span>
+                                <span th:text="${cat.categoryName}">Tên Danh Mục</span>
                                 <span th:if="${cat.events != null}" th:text="' (' + ${cat.events.size()} + ')'"> (12)</span>
                             </a>
                         </div>
@@ -140,7 +140,7 @@
                              th:each="e, i : ${events}"
                              th:attr="data-wow-delay=${0.1 + i.index * 0.2} + 's'">
 
-                            <a th:href="@{'/events/' + ${e.event_id}}" class="event-card-link">
+                            <a th:href="@{'/events/' + ${e.eventId}}" class="event-card-link">
                                 <div class="event-card shadow-sm">
 
                                     <div class="event-img-container overflow-hidden position-relative">

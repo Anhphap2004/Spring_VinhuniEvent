@@ -87,9 +87,9 @@
 
                         <div class="category-item" th:each="c : ${eventCategories}">
                             <a href="javascript:void(0)"
-                               th:onclick="|loadEvents(${c.category_id})|"
-                               th:id="'cat-' + ${c.category_id}">
-                                <span th:text="${c.category_name}"></span>
+                               th:onclick="|loadEvents(${c.categoryId})|"
+                               th:id="'cat-' + ${c.categoryId}">
+                                <span th:text="${c.categoryName}"></span>
                             </a>
                         </div>
                     </div>

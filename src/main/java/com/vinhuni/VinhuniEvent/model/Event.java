@@ -16,17 +16,18 @@ import java.util.Set;
 @Entity
 @Table(name = "events")
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true) // Cấu hình an toàn
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include // BAO GỒM KHÓA CHÍNH
-    private Long event_id;
+    @Column(name = "event_id")
+    @EqualsAndHashCode.Include
+    private Long eventId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.SET_NULL)
-    @EqualsAndHashCode.Exclude // LOẠI TRỪ
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @EqualsAndHashCode.Exclude
     private EventCategory category;
 
     @Column(length = 200, nullable = false)
@@ -41,8 +42,8 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", referencedColumnName = "user_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
-    @EqualsAndHashCode.Exclude // LOẠI TRỪ
-    private User created_by;
+    @EqualsAndHashCode.Exclude
+    private User createdBy;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -53,21 +54,23 @@ public class Event {
     @Column(length = 200)
     private String location;
 
-    private Integer max_participants;
+    @Column(name = "max_participants")
+    private Integer maxParticipants;
 
     @Column(length = 255)
     private String image;
 
-    private Boolean is_active = true;
+    @Column(name = "is_active")
+    private Boolean isActive = true;
 
     @Column(name = "created_date")
-    private LocalDateTime created_date;
+    private LocalDateTime createdDate;
 
     @Column(length = 100)
     private String slug;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude // LOẠI TRỪ
+    @EqualsAndHashCode.Exclude
     private Set<EventRegistration> eventRegistrations = new HashSet<>();
 }

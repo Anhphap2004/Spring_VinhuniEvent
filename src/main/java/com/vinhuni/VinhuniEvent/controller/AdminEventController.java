@@ -45,29 +45,29 @@ public class AdminEventController {
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("event", new Event());
-        model.addAttribute("categories", categoryService.getAllEventCategories()); // Load danh mục để chọn
+        model.addAttribute("categories", categoryService.getAllEventCategories());
         return "admin/event/form";
     }
 
     // 3. XỬ LÝ LƯU SỰ KIỆN (CREATE/UPDATE POST)
     @PostMapping("/save")
     public String saveEvent(@ModelAttribute("event") Event event,
-                            @RequestParam("imageFile") MultipartFile imageFile, // Nhận file từ form
+                            @RequestParam("imageFile") MultipartFile imageFile,
                             HttpSession session,
                             RedirectAttributes redirectAttributes) {
         try {
             User currentUser = (User) session.getAttribute("loggedInUser");
 
             // 1. Xử lý Logic Create/Update cơ bản (Ngày tạo, người tạo)
-            if (event.getEvent_id() == null) {
-                event.setCreated_date(LocalDateTime.now());
-                if (currentUser != null) event.setCreated_by(currentUser);
+            if (event.getEventId() == null) {
+                event.setCreatedDate(LocalDateTime.now());
+                if (currentUser != null) event.setCreatedBy(currentUser);
             } else {
                 // Nếu là Edit: Lấy thông tin cũ để giữ lại những thứ không có trong form
-                Optional<Event> existingEvent = eventService.getEventById(event.getEvent_id());
+                Optional<Event> existingEvent = eventService.getEventById(event.getEventId());
                 if(existingEvent.isPresent()){
-                    event.setCreated_date(existingEvent.get().getCreated_date());
-                    event.setCreated_by(existingEvent.get().getCreated_by());
+                    event.setCreatedDate(existingEvent.get().getCreatedDate());
+                    event.setCreatedBy(existingEvent.get().getCreatedBy());
 
                     // Nếu người dùng KHÔNG upload ảnh mới, giữ lại ảnh cũ
                     if (imageFile.isEmpty()) {

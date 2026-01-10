@@ -1,8 +1,10 @@
 package com.vinhuni.VinhuniEvent.service.impl;
 
 import com.vinhuni.VinhuniEvent.exception.RegistrationException;
+import com.vinhuni.VinhuniEvent.model.Role;
 import com.vinhuni.VinhuniEvent.model.User;
 import com.vinhuni.VinhuniEvent.repository.UserRepository;
+import com.vinhuni.VinhuniEvent.service.RoleService;
 import com.vinhuni.VinhuniEvent.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
     }
 
     @Override
@@ -50,6 +54,13 @@ public class UserServiceImpl implements UserService {
             user.setIsActive(true);
             // Mã hóa mật khẩu
             user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+
+            // Xử lý Role: nếu có roleId, fetch Role entity
+            if (user.getRole() != null && user.getRole().getRoleId() != null) {
+                Role role = roleService.getRoleById(user.getRole().getRoleId());
+                user.setRole(role);
+            }
+
             userRepository.save(user);
         }
         // 2. Trường hợp Cập nhật (Đã có ID)
@@ -64,8 +75,14 @@ public class UserServiceImpl implements UserService {
             existingUser.setStudentCode(user.getStudentCode());
             existingUser.setFaculty(user.getFaculty());
             existingUser.setMajor(user.getMajor());
-            existingUser.setRole(user.getRole());
             existingUser.setIsActive(user.getIsActive());
+
+            // Xử lý Role: fetch Role entity từ roleId
+            if (user.getRole() != null && user.getRole().getRoleId() != null) {
+                Role role = roleService.getRoleById(user.getRole().getRoleId());
+                existingUser.setRole(role);
+            }
+
             // LOGIC MẬT KHẨU:
             // Nếu form gửi lên mật khẩu mới (khác rỗng) -> Mã hóa và lưu
             if (user.getPasswordHash() != null && !user.getPasswordHash().isEmpty()) {
@@ -87,25 +104,22 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public User authenticate(String email, String password) {
-        // 1. Tìm user theo email
         User user = userRepository.findByEmail(email);
-
-        // 2. Nếu không thấy -> Ném lỗi
         if (user == null) {
             throw new RegistrationException("Email không tồn tại!");
         }
-
-        // 3. Nếu thấy nhưng sai mật khẩu -> Ném lỗi
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new RegistrationException("Mật khẩu không chính xác!");
         }
-
-        // 4. Nếu bị khóa -> Ném lỗi
         if (user.getIsActive() != null && !user.getIsActive()) {
             throw new RegistrationException("Tài khoản đã bị khóa!");
         }
-
-        // 5. Mọi thứ ok thì mới trả về user
         return user;
+    }
+
+    @Override
+    public List<User> searchUsers(Integer roleId, String keyword) {
+        String keywordParam = (keyword == null || keyword.isBlank()) ? null : keyword.trim();
+        return userRepository.searchUsers(roleId, keywordParam);
     }
 }

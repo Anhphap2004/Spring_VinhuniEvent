@@ -4,18 +4,18 @@
       layout:decorate="~{admin/layout/base}">
 
 <head>
-    <title th:text="${event.event_id == null ? 'Thêm mới Sự kiện' : 'Cập nhật Sự kiện'}"></title>
+    <title th:text="${event.eventId == null ? 'Thêm mới Sự kiện' : 'Cập nhật Sự kiện'}"></title>
 </head>
 
 <div layout:fragment="content">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary"
-                th:text="${event.event_id == null ? 'Thêm mới Sự kiện' : 'Cập nhật Sự kiện'}"></h6>
+                th:text="${event.eventId == null ? 'Thêm mới Sự kiện' : 'Cập nhật Sự kiện'}"></h6>
         </div>
         <div class="card-body">
             <form th:action="@{/admin/events/save}" th:object="${event}" method="post" enctype="multipart/form-data">
-                <input type="hidden" th:field="*{event_id}">
+                <input type="hidden" th:field="*{eventId}">
                 <input type="hidden" th:field="*{image}">
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -28,8 +28,8 @@
                         <select class="form-control" th:field="*{category}" required>
                             <option value="">-- Chọn danh mục --</option>
                             <option th:each="cat : ${categories}"
-                                    th:value="${cat.category_id}"
-                                    th:text="${cat.category_name}"></option>
+                                    th:value="${cat.categoryId}"
+                                    th:text="${cat.categoryName}"></option>
                         </select>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
 
                 <div class="mb-3">
                     <label>Số lượng tối đa</label>
-                    <input type="number" class="form-control" th:field="*{max_participants}">
+                    <input type="number" class="form-control" th:field="*{maxParticipants}">
                 </div>
                 <div class="mb-3">
                     <label>Hình ảnh sự kiện</label>
@@ -86,7 +86,7 @@
                 </div>
 
                 <div class="form-check mb-4">
-                    <input type="checkbox" class="form-check-input" th:field="*{is_active}" id="isActive">
+                    <input type="checkbox" class="form-check-input" th:field="*{isActive}" id="isActive">
                     <label class="form-check-label" for="isActive">Kích hoạt hiển thị ngay</label>
                 </div>
 

@@ -144,13 +144,18 @@
                     </a>
 
                     <th:block th:if="${session.loggedInUser != null}" th:with="user=${session.loggedInUser}">
-                        <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                            <img th:src="@{${user.imageUrl != null ? user.imageUrl : '/admin/img/avatars/avatar.jpg'}}"
-                                 class="avatar img-fluid rounded me-1"
-                                 th:alt="${user.fullName}" />
+                        <a class="nav-link dropdown-toggle d-none d-sm-inline-flex align-items-center gap-2"
+                           href="#" data-bs-toggle="dropdown">
 
-                            <span class="text-dark" th:text="${user.fullName}">Tên Người Dùng</span>
+                            <img class="rounded-circle shadow-sm"
+                                 th:src="${#strings.isEmpty(user.imageUrl) ? '/admin/img/avatars/1.png' : user.imageUrl}"
+                                 th:alt="${user.fullName}"
+                                 style="width:35px;height:35px;object-fit:cover;">
+
+                            <span class="fw-semibold text-dark small"
+                                  th:text="${user.fullName}">Tên Người Dùng</span>
                         </a>
+
 
                         <div class="dropdown-menu dropdown-menu-end">
 

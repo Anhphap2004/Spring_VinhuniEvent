@@ -12,7 +12,7 @@
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Chi tiết Sự kiện</h6>
             <div>
-                <a th:href="@{/admin/events/edit/{id}(id=${event.event_id})}" class="btn btn-warning btn-sm">Sửa</a>
+                <a th:href="@{/admin/events/edit/{id}(id=${event.eventId})}" class="btn btn-warning btn-sm">Sửa</a>
                 <a th:href="@{/admin/events}" class="btn btn-secondary btn-sm">Quay lại</a>
             </div>
         </div>
@@ -23,16 +23,16 @@
                          class="img-fluid rounded shadow-sm mb-3" alt="Event Image">
 
                     <ul class="list-group">
-                        <li class="list-group-item"><strong>ID:</strong> <span th:text="${event.event_id}"></span></li>
-                        <li class="list-group-item"><strong>Người tạo:</strong> <span th:text="${event.created_by != null ? event.created_by.fullName : 'Admin'}"></span></li>
-                        <li class="list-group-item"><strong>Ngày tạo:</strong> <span th:text="${#temporals.format(event.created_date, 'dd/MM/yyyy')}"></span></li>
-                        <li class="list-group-item"><strong>Số lượng tối đa:</strong> <span th:text="${event.max_participants}"></span></li>
+                        <li class="list-group-item"><strong>ID:</strong> <span th:text="${event.eventId}"></span></li>
+                        <li class="list-group-item"><strong>Người tạo:</strong> <span th:text="${event.createdBy != null ? event.createdBy.fullName : 'Admin'}"></span></li>
+                        <li class="list-group-item"><strong>Ngày tạo:</strong> <span th:text="${#temporals.format(event.createdDate, 'dd/MM/yyyy')}"></span></li>
+                        <li class="list-group-item"><strong>Số lượng tối đa:</strong> <span th:text="${event.maxParticipants}"></span></li>
                     </ul>
                 </div>
                 <div class="col-md-8">
                     <h2 class="text-primary" th:text="${event.title}"></h2>
                     <p class="text-muted">
-                        <i class="fas fa-folder"></i> <span th:text="${event.category != null ? event.category.category_name : 'Chưa phân loại'}"></span>
+                        <i class="fas fa-folder"></i> <span th:text="${event.category != null ? event.category.categoryName : 'Chưa phân loại'}"></span>
                         |
                         <i class="fas fa-map-marker-alt"></i> <span th:text="${event.location}"></span>
                     </p>

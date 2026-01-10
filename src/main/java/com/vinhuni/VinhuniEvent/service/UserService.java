@@ -13,4 +13,7 @@ public interface UserService {
     User findByEmail(String email);
 
     User authenticate(String email, String password);
+
+    // New: search by roleId + keyword
+    List<User> searchUsers(Integer roleId, String keyword);
 }

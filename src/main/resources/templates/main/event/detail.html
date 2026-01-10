@@ -135,13 +135,13 @@
                         <li class="mb-3">
                             <span class="fw-bold d-block">Số lượng tối đa</span>
                             <i class="fas fa-users me-2 text-muted"></i>
-                            <span th:text="${event.max_participants != null ? event.max_participants : 'Không giới hạn'}"></span>
+                            <span th:text="${event.maxParticipants != null ? event.maxParticipants : 'Không giới hạn'}"></span>
                         </li>
 
                         <li>
                             <span class="fw-bold d-block">Được tạo bởi</span>
                             <i class="fas fa-user-tie me-2 text-muted"></i>
-                            <span th:text="${event.created_by != null ? event.created_by.full_name : 'Quản trị viên'}"></span>
+                            <span th:text="${event.createdBy != null ? event.createdBy.fullName : 'Quản trị viên'}"></span>
                         </li>
                     </ul>
                 </div>
@@ -164,7 +164,7 @@
                     </div>
 
                     <div th:unless="${isRegistered}">
-                        <form th:action="@{/events/{id}/register(id=${event.event_id})}" method="post">
+                        <form th:action="@{/events/{id}/register(id=${event.eventId})}" method="post">
                             <button type="submit"
                                     class="btn btn-primary btn-lg w-100 fw-bold shadow-sm"
                                     style="background-color: #dc3545; border-color: #dc3545; transition: all 0.3s;"

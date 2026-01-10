@@ -1,4 +1,4 @@
-package com.vinhuni.VinhuniEvent.impl;
+package com.vinhuni.VinhuniEvent.service.impl;
 
 import com.vinhuni.VinhuniEvent.model.Role;
 import com.vinhuni.VinhuniEvent.repository.RoleRepository;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -26,6 +27,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<Role> findAllRoles() {
         return roleRepository.findAll();
+    }
+
+    @Override
+    public Optional<Role> findByRoleName(String roleName) {
+        return roleRepository.findByRoleNameIgnoreCase(roleName);
     }
 
     @Override

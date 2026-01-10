@@ -2,12 +2,10 @@ package com.vinhuni.VinhuniEvent.controller;
 
 import com.vinhuni.VinhuniEvent.exception.RegistrationException;
 import com.vinhuni.VinhuniEvent.model.Attendance;
+import com.vinhuni.VinhuniEvent.model.Certificate;
 import com.vinhuni.VinhuniEvent.model.EventRegistration;
 import com.vinhuni.VinhuniEvent.model.User;
-import com.vinhuni.VinhuniEvent.service.AttendanceService;
-import com.vinhuni.VinhuniEvent.service.EventRegistrationService;
-import com.vinhuni.VinhuniEvent.service.RoleRequestService;
-import com.vinhuni.VinhuniEvent.service.UserService;
+import com.vinhuni.VinhuniEvent.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Controller
 @RequestMapping("/profile")
 public class UserProfileController {
@@ -27,16 +26,22 @@ public class UserProfileController {
     private final UserService userService;
     private final EventRegistrationService registrationService;
     private final AttendanceService attendanceService;
-    private final RoleRequestService roleRequestService; // Inject thêm service này
+    private final RoleRequestService roleRequestService;
+    private final QRCodeService qrCodeService;
+    private final CertificateService certificateService;
 
     public UserProfileController(UserService userService,
                                  EventRegistrationService registrationService,
                                  AttendanceService attendanceService,
-                                 RoleRequestService roleRequestService) {
+                                 RoleRequestService roleRequestService,
+                                 QRCodeService qrCodeService,
+                                 CertificateService certificateService) {
         this.userService = userService;
         this.registrationService = registrationService;
         this.attendanceService = attendanceService;
         this.roleRequestService = roleRequestService;
+        this.qrCodeService = qrCodeService;
+        this.certificateService = certificateService;
     }
 
     @GetMapping
@@ -50,12 +55,28 @@ public class UserProfileController {
         List<Attendance> attendances = attendanceService.getAttendancesByUserId(currentUser.getUserId());
         Map<Long, Boolean> attendanceMap = new HashMap<>();
         for (Attendance att : attendances) {
-            attendanceMap.put(att.getEvent().getEvent_id(), att.getIsPresent());
+            attendanceMap.put(att.getEvent().getEventId(), att.getIsPresent());
+        }
+
+        // Lấy mã QR cá nhân
+        String qrContent = qrCodeService.createUserQRContent(currentUser.getUserId(), currentUser.getStudentCode());
+        String qrCodeBase64 = qrCodeService.generateQRCodeBase64(qrContent, 250, 250);
+
+        // Lấy danh sách giấy chứng nhận
+        List<Certificate> certificates = certificateService.getCertificatesByUserId(currentUser.getUserId());
+
+        // Tạo map certificate theo eventId để hiển thị
+        Map<Long, Certificate> certificateMap = new HashMap<>();
+        for (Certificate cert : certificates) {
+            certificateMap.put(cert.getEvent().getEventId(), cert);
         }
 
         model.addAttribute("user", currentUser);
         model.addAttribute("registrations", registrations);
         model.addAttribute("attendanceMap", attendanceMap);
+        model.addAttribute("qrCode", "data:image/png;base64," + qrCodeBase64);
+        model.addAttribute("certificates", certificates);
+        model.addAttribute("certificateMap", certificateMap);
 
         return "client/profile/index";
     }

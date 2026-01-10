@@ -89,7 +89,20 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     // Lấy danh sách điểm danh của User để Map vào View
+    @Override
     public List<Attendance> getAttendancesByUserId(Long userId) {
         return attendanceRepository.findByUserId(userId);
+    }
+
+    @Override
+    @Transactional
+    public void saveAttendance(Attendance attendance) {
+        attendanceRepository.save(attendance);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Attendance> getAttendanceByEventAndUser(Long eventId, Long userId) {
+        return attendanceRepository.findTopByEventIdAndUserIdOrderByAttendanceTime(eventId, userId);
     }
 }

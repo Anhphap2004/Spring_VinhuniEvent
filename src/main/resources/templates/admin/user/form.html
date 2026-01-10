@@ -7,74 +7,109 @@
 </head>
 <body>
 <div layout:fragment="content" class="container-fluid px-4">
+
     <h2 class="mt-4" th:text="${pageTitle}"></h2>
 
-    <div class="card shadow mb-4 col-xl-8">
+    <div class="card shadow mb-4 col-xl-9">
         <div class="card-header bg-primary text-white">
-            <i class="fas fa-user-edit me-1"></i> Thông tin chi tiết
+            <i class="fas fa-user-edit me-1"></i> Thông tin người dùng
         </div>
+
         <div class="card-body">
             <form th:action="@{/admin/users/save}" th:object="${user}" method="post">
 
-                <input type="hidden" th:field="*{userId}" />
+                <input type="hidden" th:field="*{userId}"/>
 
+                <!-- Họ tên + Email -->
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Họ và tên:</label>
-                        <input type="text" th:field="*{fullName}" class="form-control" required />
+                        <label class="form-label fw-bold">Họ và tên</label>
+                        <input type="text" th:field="*{fullName}" class="form-control" required>
                     </div>
+
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Email:</label>
+                        <label class="form-label fw-bold">Email</label>
                         <input type="email" th:field="*{email}" class="form-control"
-                               th:readonly="${user.userId != null}" required />
+                               th:readonly="${user.userId != null}" required>
                     </div>
                 </div>
 
+                <!-- Password + Role -->
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Mật khẩu:</label>
+                        <label class="form-label fw-bold">Mật khẩu</label>
                         <input type="password" th:field="*{passwordHash}" class="form-control"
                                th:required="${user.userId == null}"
-                               placeholder="Để trống nếu không muốn đổi mật khẩu" />
+                               placeholder="Để trống nếu không đổi">
                     </div>
+
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Vai trò:</label>
-                        <select th:field="*{role}" class="form-select" required>
+                        <label class="form-label fw-bold">Vai trò</label>
+                        <select th:field="*{role.roleId}" class="form-select" required>
                             <option value="">-- Chọn quyền --</option>
                             <option th:each="r : ${roles}"
                                     th:value="${r.roleId}"
-                                    th:text="${r.roleName}"></option>
+                                    th:text="${r.roleName}">
+                            </option>
                         </select>
                     </div>
                 </div>
 
+                <!-- Thông tin sinh viên -->
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">Mã sinh viên:</label>
-                        <input type="text" th:field="*{studentCode}" class="form-control" />
+                        <label class="form-label">Mã sinh viên</label>
+                        <input type="text" th:field="*{studentCode}" class="form-control">
                     </div>
+
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">Khoa:</label>
-                        <input type="text" th:field="*{faculty}" class="form-control" />
+                        <label class="form-label">Khoa</label>
+                        <input type="text" th:field="*{faculty}" class="form-control">
                     </div>
+
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">Ngành:</label>
-                        <input type="text" th:field="*{major}" class="form-control" />
+                        <label class="form-label">Ngành</label>
+                        <input type="text" th:field="*{major}" class="form-control">
                     </div>
                 </div>
+
+                <!-- Ngày sinh + SĐT -->
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Trạng thái tài khoản:</label>
-                        <div class="form-check form-switch mt-2">
-                            <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="isActiveSwitch">
-                            <label class="form-check-label" for="isActiveSwitch">Hoạt động (Active)</label>
-                        </div>
-                        <div class="form-text">Nếu tắt, người dùng này sẽ không thể đăng nhập vào hệ thống.</div>
+                        <label class="form-label">Ngày sinh</label>
+                        <input type="date" th:field="*{birthDate}" class="form-control">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="text" th:field="*{phoneNumber}" class="form-control">
                     </div>
                 </div>
-                <div class="mt-4 pt-3 border-top">
+
+                <!-- Avatar -->
+                <div class="mb-3">
+                    <label class="form-label">Ảnh đại diện (URL)</label>
+                    <input type="text" th:field="*{imageUrl}" class="form-control">
+                </div>
+
+                <div th:if="${user.imageUrl != null}" class="mb-3">
+                    <img th:src="${user.imageUrl}" alt="avatar"
+                         style="max-width:120px;border-radius:50%;box-shadow:0 0 8px rgba(0,0,0,.2)">
+                </div>
+
+                <!-- Active -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Trạng thái</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" th:field="*{isActive}">
+                        <label class="form-check-label">Hoạt động</label>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="border-top pt-3">
                     <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save"></i> Lưu lại
+                        <i class="fas fa-save"></i> Lưu
                     </button>
                     <a th:href="@{/admin/users}" class="btn btn-secondary">Quay lại</a>
                 </div>

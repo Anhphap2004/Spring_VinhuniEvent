@@ -24,14 +24,52 @@ public class UserController {
 
     // Hiển thị danh sách
     @GetMapping
-    public String listUsers(Model model) {
-        model.addAttribute("users", userService.findAllUsers());
+    public String listUsers(
+            @RequestParam(name = "role", required = false) String roleName,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            Model model) {
+
+        // Xác định roleId dựa trên roleName
+        Integer roleId = null;
+        String filter = "all";
+        if (roleName != null && !roleName.isBlank()) {
+            filter = roleName.toLowerCase();
+            // Mapping tên role sang ID (theo database: Admin=1, Student=2, Organizer=3)
+            roleId = switch (roleName.toLowerCase()) {
+                case "admin" -> 1;
+                case "student" -> 2;
+                case "organizer" -> 3;
+                default -> null;
+            };
+        }
+
+        model.addAttribute("users", userService.searchUsers(roleId, keyword));
+        model.addAttribute("filter", filter);
+        model.addAttribute("keyword", keyword);
         return "admin/user/list";
     }
 
+    // Xem chi tiết người dùng
+    @GetMapping("/view/{id}")
+    public String viewUser(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        Optional<User> userOptional = userService.findUserById(id);
+
+        if (userOptional.isPresent()) {
+            model.addAttribute("user", userOptional.get());
+            model.addAttribute("pageTitle", "Chi tiết người dùng: " + userOptional.get().getFullName());
+            return "admin/user/detail"; // Trả về file view.html trong thư mục admin/user/
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Không tìm thấy người dùng có ID: " + id);
+            return "redirect:/admin/users";
+        }
+    }
     // Form chung cho Thêm mới và Sửa
     @GetMapping({"/new", "/edit/{id}"})
-    public String showUserForm(@PathVariable(required = false) Long id, Model model, RedirectAttributes redirectAttributes) {
+    public String showUserForm(
+            @PathVariable(required = false) Long id,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
         User user = new User();
         String pageTitle = "Thêm mới Người dùng";
 
@@ -39,10 +77,12 @@ public class UserController {
             Optional<User> userOptional = userService.findUserById(id);
             if (userOptional.isPresent()) {
                 user = userOptional.get();
-                user.setPasswordHash(""); // Xóa hash để form hiện trống cho an toàn
+                user.setPasswordHash(""); // ⭐ CỰC CHUẨN
                 pageTitle = "Chỉnh sửa Người dùng (ID: " + id + ")";
             } else {
-                redirectAttributes.addFlashAttribute("message", "Không tìm thấy User ID " + id);
+                redirectAttributes.addFlashAttribute(
+                        "message", "Không tìm thấy User ID " + id
+                );
                 return "redirect:/admin/users";
             }
         }
@@ -53,6 +93,7 @@ public class UserController {
 
         return "admin/user/form";
     }
+
 
     // Xử lý lưu (Create/Update)
     @PostMapping("/save")

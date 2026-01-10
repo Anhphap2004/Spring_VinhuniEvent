@@ -16,11 +16,11 @@
     <br><br>
 
     <label>Danh mục:</label><br>
-    <select th:field="*{category.category_id}" required>
+    <select th:field="*{category}" required>
         <option value="">-- Chọn danh mục --</option>
         <option th:each="c : ${eventCategories}"
-                th:value="${c.category_id}"
-                th:text="${c.category_name}">
+                th:value="${c.categoryId}"
+                th:text="${c.categoryName}">
         </option>
     </select>
     <br><br>
@@ -35,7 +35,10 @@
     <br><br>
 
     <label>Người tạo (created_by):</label><br>
-    <input type="number" th:field="*{created_by}" required>
+    <select th:field="*{created_by}">
+        <option value="">-- Chọn người tạo --</option>
+        <option th:each="u : ${users}" th:value="${u.userId}" th:text="${u.fullName}"></option>
+    </select>
     <br><br>
 
     <label>Địa điểm:</label><br>

@@ -196,13 +196,13 @@
                     <div class="input-pair">
                         <div>
                             <label class="form-label">Họ và tên</label>
-                            <input type="text" th:field="*{full_name}" class="form-control" required>
-                            <p th:errors="*{full_name}" class="text-danger small"></p>
+                            <input type="text" th:field="*{fullName}" class="form-control" required>
+                            <p th:errors="*{fullName}" class="text-danger small"></p>
                         </div>
                         <div>
                             <label class="form-label">Mã Sinh Viên</label>
-                            <input type="text" th:field="*{student_code}" class="form-control" required>
-                            <p th:errors="*{student_code}" class="text-danger small"></p>
+                            <input type="text" th:field="*{studentCode}" class="form-control" required>
+                            <p th:errors="*{studentCode}" class="text-danger small"></p>
                         </div>
                     </div>
 
@@ -214,15 +214,15 @@
                         </div>
                         <div>
                             <label class="form-label">Số điện thoại</label>
-                            <input type="text" th:field="*{phone_number}" class="form-control">
+                            <input type="text" th:field="*{phoneNumber}" class="form-control">
                         </div>
                     </div>
 
                     <div class="input-pair">
                         <div>
                             <label class="form-label">Mật khẩu</label>
-                            <input type="password" th:field="*{password_hash}" class="form-control" required>
-                            <p th:errors="*{password_hash}" class="text-danger small"></p>
+                            <input type="password" th:field="*{passwordHash}" class="form-control" required>
+                            <p th:errors="*{passwordHash}" class="text-danger small"></p>
                         </div>
                         <div>
                             <label class="form-label">Xác nhận mật khẩu</label>
@@ -244,7 +244,7 @@
                     <div class="input-pair">
                         <div style="flex: 1 1 100%;">
                             <label class="form-label">Ngày sinh</label>
-                            <input type="date" th:field="*{birth_date}" class="form-control">
+                            <input type="date" th:field="*{birthDate}" class="form-control">
                         </div>
                     </div>
 

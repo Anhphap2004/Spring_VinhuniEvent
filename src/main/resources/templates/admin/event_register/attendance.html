@@ -4,6 +4,34 @@
       layout:decorate="~{admin/layout/base}">
 <head>
     <title th:text="${event.title} + ' | Quản lý Điểm danh'"></title>
+    <!-- Thư viện HTML5 QR Code Scanner -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <style>
+        .qr-scanner-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+        }
+        #qr-reader {
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #qr-reader video {
+            border-radius: 10px;
+        }
+        .scan-result {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .certificate-issued {
+            background-color: #d4edda !important;
+        }
+    </style>
 </head>
 <div layout:fragment="content">
 
@@ -11,9 +39,73 @@
         <h2 class="h3 mb-0 text-gray-800">
             <i class="fas fa-user-check me-2 text-warning"></i> Điểm danh Sự kiện: <span th:text="${event.title}"></span>
         </h2>
-        <a th:href="@{/admin/event_register}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-arrow-left me-1"></i> Quay lại DS Sự kiện
-        </a>
+        <div>
+            <button class="btn btn-primary btn-sm me-2" onclick="toggleQRScanner()">
+                <i class="fas fa-qrcode me-1"></i> Quét mã QR
+            </button>
+            <a th:href="@{/admin/event_register}" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left me-1"></i> Quay lại DS Sự kiện
+            </a>
+        </div>
+    </div>
+
+    <!-- QR Scanner Section -->
+    <div id="qrScannerSection" class="card shadow mb-4" style="display: none;">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="qr-scanner-container">
+                        <h5 class="mb-3"><i class="fas fa-camera me-2"></i>Quét Mã QR Điểm Danh</h5>
+                        <div id="qr-reader"></div>
+                        <div class="mt-3 text-center">
+                            <button id="startScanBtn" class="btn btn-light btn-sm me-2" onclick="startScanner()">
+                                <i class="fas fa-play me-1"></i>Bắt đầu quét
+                            </button>
+                            <button id="stopScanBtn" class="btn btn-outline-light btn-sm" onclick="stopScanner()" style="display:none;">
+                                <i class="fas fa-stop me-1"></i>Dừng quét
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div id="scanResult" class="h-100">
+                        <div class="card h-100">
+                            <div class="card-header bg-info text-white">
+                                <i class="fas fa-info-circle me-2"></i>Kết Quả Quét
+                            </div>
+                            <div class="card-body" id="scanResultContent">
+                                <div class="text-center text-muted py-5">
+                                    <i class="fas fa-qrcode fa-3x mb-3"></i>
+                                    <p>Hướng camera vào mã QR để điểm danh</p>
+                                    <small>Mỗi người chỉ được điểm danh 1 lần</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Điểm danh gần đây -->
+            <div class="mt-4">
+                <h6 class="fw-bold"><i class="fas fa-history me-2"></i>Điểm danh gần đây qua QR:</h6>
+                <div id="recentScans" class="row g-2">
+                    <div class="col-12 text-muted small">Chưa có điểm danh nào qua QR</div>
+                </div>
+            </div>
+
+            <!-- Cấp giấy chứng nhận hàng loạt -->
+            <div class="mt-4 pt-3 border-top">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="fw-bold mb-1"><i class="fas fa-certificate me-2 text-success"></i>Cấp Giấy Chứng Nhận</h6>
+                        <small class="text-muted">Cấp giấy chứng nhận cho tất cả người đã điểm danh có mặt</small>
+                    </div>
+                    <button class="btn btn-success" onclick="issueCertificatesBatch()">
+                        <i class="fas fa-award me-1"></i>Cấp GCN Hàng Loạt
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -112,16 +204,16 @@
                     </thead>
                     <tbody>
                     <tr th:each="reg, stat : ${registrations}"
-                        th:with="attStatus=${attendanceStatusMap.get(reg.user.user_id)}"
+                        th:with="attStatus=${attendanceStatusMap.get(reg.user.userId)}"
 
                         th:data-reg-status="${reg.status}"
                         th:data-att-status="${attStatus == true ? 'present' : (attStatus == false ? 'absent' : 'pending')}">
 
                         <td class="text-center" th:text="${stat.count}">1</td>
-                        <td th:text="${reg.user.full_name}">Nguyễn Văn A</td>
+                        <td th:text="${reg.user.fullName}">Nguyễn Văn A</td>
                         <td>
                             <small th:text="${reg.user.email}"></small><br>
-                            <strong th:text="${reg.user.student_code}"></strong>
+                            <strong th:text="${reg.user.studentCode}"></strong>
                         </td>
 
                         <td class="text-center">
@@ -138,8 +230,8 @@
 
                         <td class="text-center">
                             <form th:action="@{/admin/event_register/attendance/record}" method="post" style="display: inline;">
-                                <input type="hidden" name="eventId" th:value="${event.event_id}">
-                                <input type="hidden" name="userId" th:value="${reg.user.user_id}">
+                                <input type="hidden" name="eventId" th:value="${event.eventId}">
+                                <input type="hidden" name="userId" th:value="${reg.user.userId}">
                                 <input type="hidden" name="isPresent" value="true">
                                 <button type="submit" class="btn btn-success btn-sm me-1" title="Điểm danh Có mặt">
                                     <i class="fas fa-check"></i> Có mặt
@@ -147,8 +239,8 @@
                             </form>
 
                             <form th:action="@{/admin/event_register/attendance/record}" method="post" style="display: inline;">
-                                <input type="hidden" name="eventId" th:value="${event.event_id}">
-                                <input type="hidden" name="userId" th:value="${reg.user.user_id}">
+                                <input type="hidden" name="eventId" th:value="${event.eventId}">
+                                <input type="hidden" name="userId" th:value="${reg.user.userId}">
                                 <input type="hidden" name="isPresent" value="false">
                                 <button type="submit" class="btn btn-danger btn-sm" title="Điểm danh Vắng mặt">
                                     <i class="fas fa-times"></i> Vắng
@@ -163,7 +255,227 @@
     </div>
 </div>
 
-<script layout:fragment="script">
+<script layout:fragment="script" th:inline="javascript">
+    // Biến toàn cục
+    let html5QrCode = null;
+    let isScanning = false;
+    // Lấy eventId từ Thymeleaf - sử dụng var để có thể reassign nếu cần
+    var eventId = [[${event.eventId}]];
+    console.log("Event ID from server:", eventId);
+    const recentScansData = [];
+
+    // Toggle QR Scanner Section
+    function toggleQRScanner() {
+        const section = document.getElementById('qrScannerSection');
+        if (section.style.display === 'none') {
+            section.style.display = 'block';
+        } else {
+            section.style.display = 'none';
+            stopScanner();
+        }
+    }
+
+    // Khởi tạo QR Scanner
+    function startScanner() {
+        if (html5QrCode === null) {
+            html5QrCode = new Html5Qrcode("qr-reader");
+        }
+
+        const config = {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0
+        };
+
+        html5QrCode.start(
+            { facingMode: "environment" },
+            config,
+            onScanSuccess,
+            onScanFailure
+        ).then(() => {
+            isScanning = true;
+            document.getElementById('startScanBtn').style.display = 'none';
+            document.getElementById('stopScanBtn').style.display = 'inline-block';
+        }).catch(err => {
+            console.error("Không thể khởi động camera:", err);
+            showScanResult('error', 'Không thể truy cập camera. Vui lòng cho phép quyền truy cập camera.');
+        });
+    }
+
+    // Dừng QR Scanner
+    function stopScanner() {
+        if (html5QrCode && isScanning) {
+            html5QrCode.stop().then(() => {
+                isScanning = false;
+                document.getElementById('startScanBtn').style.display = 'inline-block';
+                document.getElementById('stopScanBtn').style.display = 'none';
+            }).catch(err => console.error("Lỗi dừng scanner:", err));
+        }
+    }
+
+    // Xử lý khi quét thành công
+    function onScanSuccess(decodedText, decodedResult) {
+        // Kiểm tra dữ liệu
+        if (!decodedText || decodedText.trim() === '') {
+            showScanResult('error', 'Không đọc được nội dung mã QR');
+            return;
+        }
+
+        if (!eventId || eventId === 0) {
+            showScanResult('error', 'Lỗi: Không xác định được sự kiện');
+            return;
+        }
+
+        // Tạm dừng để tránh quét nhiều lần
+        if (html5QrCode && isScanning) {
+            html5QrCode.pause();
+        }
+
+        console.log('Sending QR data:', { qrContent: decodedText, eventId: eventId });
+
+        // Gửi request điểm danh
+        fetch('/api/qr/admin/scan-attendance', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                qrContent: decodedText,
+                eventId: eventId.toString()
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showScanResult('success', data);
+                addRecentScan(data);
+                // Hỏi cấp giấy chứng nhận
+                setTimeout(() => {
+                    if (confirm(`Điểm danh thành công cho ${data.userName}!\n\nBạn có muốn cấp giấy chứng nhận ngay?`)) {
+                        issueCertificate(data.userId, data.eventId);
+                    }
+                }, 500);
+            } else {
+                showScanResult('error', data.error);
+            }
+        })
+        .catch(error => {
+            showScanResult('error', 'Lỗi kết nối: ' + error.message);
+        })
+        .finally(() => {
+            // Tiếp tục quét sau 2 giây
+            setTimeout(() => {
+                if (html5QrCode && isScanning) {
+                    html5QrCode.resume();
+                }
+            }, 2000);
+        });
+    }
+
+    function onScanFailure(error) {
+        // Không hiển thị lỗi liên tục khi không có QR
+    }
+
+    // Hiển thị kết quả quét
+    function showScanResult(type, data) {
+        const resultDiv = document.getElementById('scanResultContent');
+
+        if (type === 'success') {
+            resultDiv.innerHTML = `
+                <div class="scan-result">
+                    <div class="alert alert-success mb-3">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <h5>ĐIỂM DANH THÀNH CÔNG!</h5>
+                    </div>
+                    <table class="table table-sm">
+                        <tr><th>Họ tên:</th><td class="fw-bold">${data.userName}</td></tr>
+                        <tr><th>Mã SV:</th><td>${data.studentCode || 'N/A'}</td></tr>
+                        <tr><th>Sự kiện:</th><td>${data.eventTitle}</td></tr>
+                        <tr><th>Thời gian:</th><td>${new Date(data.attendanceTime).toLocaleString('vi-VN')}</td></tr>
+                    </table>
+                    <button class="btn btn-success w-100" onclick="issueCertificate(${data.userId}, ${data.eventId})">
+                        <i class="fas fa-certificate me-1"></i>Cấp Giấy Chứng Nhận
+                    </button>
+                </div>
+            `;
+        } else {
+            resultDiv.innerHTML = `
+                <div class="scan-result">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                        <h5>KHÔNG THÀNH CÔNG</h5>
+                        <p class="mb-0">${typeof data === 'string' ? data : data.error}</p>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    // Thêm vào danh sách quét gần đây
+    function addRecentScan(data) {
+        recentScansData.unshift(data);
+        if (recentScansData.length > 5) recentScansData.pop();
+
+        const recentDiv = document.getElementById('recentScans');
+        recentDiv.innerHTML = recentScansData.map(item => `
+            <div class="col-auto">
+                <span class="badge bg-success p-2">
+                    <i class="fas fa-check me-1"></i>${item.userName}
+                </span>
+            </div>
+        `).join('');
+    }
+
+    // Cấp giấy chứng nhận cho 1 người
+    function issueCertificate(userId, eventId) {
+        fetch('/api/qr/admin/issue-certificate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId: userId, eventId: eventId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('✅ ' + data.message + '\nMã GCN: ' + data.certificateCode);
+            } else {
+                alert('❌ ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Lỗi: ' + error.message);
+        });
+    }
+
+    // Cấp giấy chứng nhận hàng loạt
+    function issueCertificatesBatch() {
+        if (!confirm('Bạn có chắc chắn muốn cấp giấy chứng nhận cho TẤT CẢ người đã điểm danh có mặt?')) {
+            return;
+        }
+
+        fetch('/api/qr/admin/issue-certificates-batch', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ eventId: eventId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('✅ ' + data.message);
+                location.reload();
+            } else {
+                alert('❌ ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Lỗi: ' + error.message);
+        });
+    }
+
+    // Filter logic
     document.addEventListener('DOMContentLoaded', function() {
         const regStatusFilter = document.getElementById('regStatusFilter');
         const attStatusFilter = document.getElementById('attStatusFilter');
@@ -171,7 +483,6 @@
         const tableBody = document.querySelector('#attendanceTable tbody');
         const rows = tableBody.querySelectorAll('tr');
 
-        // Hàm lọc chính
         function applyFilters() {
             const selectedRegStatus = regStatusFilter.value;
             const selectedAttStatus = attStatusFilter.value;
@@ -180,25 +491,20 @@
                 const rowRegStatus = row.getAttribute('data-reg-status');
                 const rowAttStatus = row.getAttribute('data-att-status');
 
-                // Lọc 1: Theo trạng thái đăng ký
                 const regMatch = selectedRegStatus === 'all' || rowRegStatus === selectedRegStatus;
-
-                // Lọc 2: Theo trạng thái điểm danh
                 const attMatch = selectedAttStatus === 'all' || rowAttStatus === selectedAttStatus;
 
                 if (regMatch && attMatch) {
-                    row.style.display = ''; // Hiển thị
+                    row.style.display = '';
                 } else {
-                    row.style.display = 'none'; // Ẩn
+                    row.style.display = 'none';
                 }
             });
         }
 
-        // Gắn sự kiện lắng nghe
         regStatusFilter.addEventListener('change', applyFilters);
         attStatusFilter.addEventListener('change', applyFilters);
 
-        // Đặt lại bộ lọc
         resetFiltersButton.addEventListener('click', function() {
             regStatusFilter.value = 'all';
             attStatusFilter.value = 'all';

@@ -7,7 +7,7 @@
                      th:each="e, i : ${events}"
                      th:attr="data-wow-delay=${0.1 + i.index * 0.2} + 's'">
 
-                    <a th:href="@{'/events/' + ${e.event_id}}" class="event-card-link d-block text-decoration-none text-body h-100">
+                    <a th:href="@{'/events/' + ${e.eventId}}" class="event-card-link d-block text-decoration-none text-body h-100">
 
                         <div class="card shadow-sm wow fadeInUp h-100 border-0 rounded" data-wow-delay="0.1s">
 

@@ -5,20 +5,227 @@
 
 <head>
     <title>Hồ sơ cá nhân</title>
+    <style>
+        .qr-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+        }
+        .qr-code-box {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            display: inline-block;
+        }
+        .certificate-card {
+            border-left: 4px solid #28a745;
+            transition: transform 0.2s;
+        }
+        .certificate-card:hover {
+            transform: translateX(5px);
+        }
+        .nav-pills .nav-link.active {
+            background-color: #667eea;
+        }
+
+        /* Certificate Styles */
+        .certificate-wrapper {
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .certificate-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .certificate-border {
+            border: 3px solid #1a5f2a;
+            margin: 10px;
+            padding: 5px;
+        }
+        .certificate-inner {
+            border: 1px solid #1a5f2a;
+            padding: 40px;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffffff 50%, #fff9e6 100%);
+            position: relative;
+        }
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .certificate-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+        .certificate-org h3 {
+            color: #1a5f2a;
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .certificate-org p {
+            color: #666;
+            margin: 0;
+            font-style: italic;
+        }
+        .certificate-title {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .certificate-title h1 {
+            font-size: 2.5rem;
+            color: #c9a227;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .certificate-title p {
+            color: #666;
+            font-style: italic;
+            font-size: 1rem;
+        }
+        .certificate-body {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cert-intro {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .cert-name {
+            font-size: 2rem;
+            color: #1a5f2a;
+            font-weight: bold;
+            border-bottom: 2px solid #c9a227;
+            display: inline-block;
+            padding: 10px 40px;
+            margin: 10px 0 20px;
+        }
+        .cert-info {
+            font-size: 1rem;
+            color: #555;
+        }
+        .cert-text {
+            font-size: 1rem;
+            color: #555;
+            margin: 20px 0 10px;
+        }
+        .cert-event {
+            font-size: 1.5rem;
+            color: #1a5f2a;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .cert-date {
+            color: #666;
+            font-style: italic;
+        }
+        .certificate-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px dashed #ccc;
+        }
+        .cert-code {
+            text-align: left;
+        }
+        .cert-code small {
+            display: block;
+            color: #888;
+            font-size: 0.75rem;
+        }
+        .cert-code strong {
+            color: #1a5f2a;
+            font-size: 0.9rem;
+        }
+        .cert-issued {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #555;
+        }
+        .cert-issuer {
+            font-weight: bold;
+        }
+        .cert-signature {
+            text-align: center;
+        }
+        .signature-line {
+            width: 150px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 5px;
+        }
+        .cert-signature p {
+            font-size: 0.85rem;
+            color: #555;
+            margin: 0;
+        }
+        .cert-qr {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            text-align: center;
+        }
+        .cert-qr img {
+            width: 60px;
+            height: 60px;
+        }
+        .cert-qr small {
+            display: block;
+            font-size: 0.65rem;
+            color: #888;
+        }
+
+        /* Print styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #certificatePrint, #certificatePrint * {
+                visibility: visible;
+            }
+            #certificatePrint {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .certificate-wrapper {
+                padding: 0;
+                background: white;
+            }
+            .modal-footer, .modal-header {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 
 <div layout:fragment="content">
     <div class="container py-5">
         <div class="row">
 
+            <!-- Cột trái: Thông tin cá nhân + QR Code -->
             <div class="col-md-4 mb-4">
-                <div class="card shadow border-0 text-center p-4">
+                <!-- Thông tin cá nhân -->
+                <div class="card shadow border-0 text-center p-4 mb-4">
                     <div class="mb-3">
                         <img th:src="${user.imageUrl != null ? user.imageUrl : 'https://ui-avatars.com/api/?name=' + user.fullName}"
                              class="rounded-circle img-thumbnail" width="150" height="150">
                     </div>
                     <h4 class="fw-bold text-primary" th:text="${user.fullName}">Tên Sinh Viên</h4>
-              <div>  Mã Sinh Viên:  <p class="text-muted" th:text="${user.studentCode}">Mã SV</p> </div>
+                    <div>Mã Sinh Viên: <span class="text-muted" th:text="${user.studentCode}">Mã SV</span></div>
 
                     <hr>
                     <div class="text-start">
@@ -27,73 +234,176 @@
                         <p><i class="fas fa-university me-2 text-info"></i> <span th:text="${user.faculty} + ' - ' + ${user.major}"></span></p>
                     </div>
                 </div>
+
+                <!-- Mã QR cá nhân -->
+                <div class="card shadow border-0 qr-container">
+                    <div class="text-center">
+                        <h5 class="mb-3"><i class="fas fa-qrcode me-2"></i>Mã QR Điểm Danh</h5>
+                        <div class="qr-code-box">
+                            <img th:src="${qrCode}" alt="QR Code" style="width: 200px; height: 200px;">
+                        </div>
+                        <p class="mt-3 mb-0 small">Quét mã này để điểm danh sự kiện</p>
+                        <button class="btn btn-light btn-sm mt-2" onclick="showQRModal()">
+                            <i class="fas fa-expand me-1"></i>Phóng to
+                        </button>
+                    </div>
+                </div>
             </div>
 
+            <!-- Cột phải: Tabs -->
             <div class="col-md-8">
-                <div class="card shadow border-0">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 fw-bold text-primary"><i class="fas fa-history me-2"></i>Lịch sử Tham gia Sự kiện</h5>
+                <!-- Nav tabs -->
+                <ul class="nav nav-pills mb-3" id="profileTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="events-tab" data-bs-toggle="pill" data-bs-target="#events" type="button">
+                            <i class="fas fa-calendar-alt me-1"></i>Sự kiện đã đăng ký
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="certificates-tab" data-bs-toggle="pill" data-bs-target="#certificates" type="button">
+                            <i class="fas fa-certificate me-1"></i>Giấy chứng nhận
+                            <span class="badge bg-success ms-1" th:text="${#lists.size(certificates)}">0</span>
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Tab content -->
+                <div class="tab-content">
+                    <!-- Tab: Sự kiện đã đăng ký -->
+                    <div class="tab-pane fade show active" id="events" role="tabpanel">
+                        <div class="card shadow border-0">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="mb-0 fw-bold text-primary"><i class="fas fa-history me-2"></i>Lịch sử Tham gia Sự kiện</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Tên Sự kiện</th>
+                                            <th>Ngày đăng ký</th>
+                                            <th class="text-center">Trạng thái</th>
+                                            <th class="text-center">Điểm danh</th>
+                                            <th class="text-center">Chứng nhận</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="reg : ${registrations}">
+                                            <td>
+                                                <a th:href="@{/events/{id}(id=${reg.event.eventId})}" class="fw-bold text-decoration-none text-dark">
+                                                    <span th:text="${reg.event.title}">Tên sự kiện</span>
+                                                </a>
+                                                <br>
+                                                <small class="text-muted" th:text="${#temporals.format(reg.event.startTime, 'dd/MM/yyyy HH:mm')}"></small>
+                                            </td>
+
+                                            <td th:text="${#temporals.format(reg.registrationDate, 'dd/MM/yyyy')}"></td>
+
+                                            <td class="text-center">
+                                                <span th:if="${reg.status == 'Đã xác nhận đăng ký'}" class="badge bg-success">Đã duyệt</span>
+                                                <span th:if="${reg.status == 'Đã đăng ký'}" class="badge bg-warning text-dark">Chờ duyệt</span>
+                                                <span th:if="${reg.status == 'Đã hủy'}" class="badge bg-danger">Đã hủy</span>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <div th:if="${reg.status == 'Đã hủy'}">
+                                                    <span class="text-muted small">--</span>
+                                                </div>
+
+                                                <div th:unless="${reg.status == 'Đã hủy'}">
+                                                    <div th:if="${attendanceMap.containsKey(reg.event.eventId)}">
+                                                        <span th:if="${attendanceMap.get(reg.event.eventId) == true}" class="badge bg-success">
+                                                            <i class="fas fa-check-circle"></i> Có mặt
+                                                        </span>
+                                                        <span th:if="${attendanceMap.get(reg.event.eventId) == false}" class="badge bg-danger">
+                                                            <i class="fas fa-times-circle"></i> Vắng
+                                                        </span>
+                                                    </div>
+
+                                                    <div th:unless="${attendanceMap.containsKey(reg.event.eventId)}">
+                                                        <span class="badge bg-secondary">Chưa điểm danh</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <div th:if="${certificateMap.containsKey(reg.event.eventId)}">
+                                                    <button type="button" class="btn btn-success btn-sm"
+                                                       th:onclick="'viewCertificateDetail(' + ${certificateMap.get(reg.event.eventId).certificateId} + ')'">
+                                                        <i class="fas fa-award"></i> Xem
+                                                    </button>
+                                                </div>
+                                                <div th:unless="${certificateMap.containsKey(reg.event.eventId)}">
+                                                    <span class="text-muted small">--</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr th:if="${#lists.isEmpty(registrations)}">
+                                            <td colspan="5" class="text-center py-5 text-muted">
+                                                <i class="fas fa-inbox fa-3x mb-3"></i><br>
+                                                Bạn chưa đăng ký tham gia sự kiện nào.
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
-                                <tr>
-                                    <th>Tên Sự kiện</th>
-                                    <th>Ngày đăng ký</th>
-                                    <th class="text-center">Trạng thái Đăng ký</th>
-                                    <th class="text-center">Trạng thái Điểm danh</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="reg : ${registrations}">
-                                    <td>
-                                        <a th:href="@{/events/{id}(id=${reg.event.event_id})}" class="fw-bold text-decoration-none text-dark">
-                                            <span th:text="${reg.event.title}">Tên sự kiện</span>
-                                        </a>
-                                        <br>
-                                        <small class="text-muted" th:text="${#temporals.format(reg.event.startTime, 'dd/MM/yyyy HH:mm')}"></small>
-                                    </td>
 
-                                    <td th:text="${#temporals.format(reg.registrationDate, 'dd/MM/yyyy')}"></td>
+                    <!-- Tab: Giấy chứng nhận -->
+                    <div class="tab-pane fade" id="certificates" role="tabpanel">
+                        <div class="card shadow border-0">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="mb-0 fw-bold text-success"><i class="fas fa-certificate me-2"></i>Giấy Chứng Nhận Đã Nhận</h5>
+                            </div>
+                            <div class="card-body">
+                                <div th:if="${#lists.isEmpty(certificates)}" class="text-center py-5 text-muted">
+                                    <i class="fas fa-award fa-3x mb-3"></i><br>
+                                    Bạn chưa có giấy chứng nhận nào.
+                                </div>
 
-                                    <td class="text-center">
-                                        <span th:if="${reg.status == 'Đã xác nhận đăng ký'}" class="badge bg-success">Đã duyệt</span>
-                                        <span th:if="${reg.status == 'Đã đăng ký'}" class="badge bg-warning text-dark">Chờ duyệt</span>
-                                        <span th:if="${reg.status == 'Đã hủy'}" class="badge bg-danger">Đã hủy</span>
-                                    </td>
-
-                                    <td class="text-center">
-                                        <div th:if="${reg.status == 'Đã hủy'}">
-                                            <span class="text-muted small">--</span>
-                                        </div>
-
-                                        <div th:unless="${reg.status == 'Đã hủy'}">
-
-                                            <div th:if="${attendanceMap.containsKey(reg.event.event_id)}">
-                                                    <span th:if="${attendanceMap.get(reg.event.event_id) == true}" class="badge bg-success">
-                                                        <i class="fas fa-check-circle"></i> Có mặt
-                                                    </span>
-                                                <span th:if="${attendanceMap.get(reg.event.event_id) == false}" class="badge bg-danger">
-                                                        <i class="fas fa-times-circle"></i> Vắng mặt
-                                                    </span>
+                                <div th:unless="${#lists.isEmpty(certificates)}" class="row g-3">
+                                    <div class="col-12" th:each="cert : ${certificates}">
+                                        <div class="card certificate-card shadow-sm"
+                                             th:data-cert-id="${cert.certificateId}"
+                                             th:data-cert-code="${cert.certificateCode}"
+                                             th:data-event-title="${cert.event.title}"
+                                             th:data-event-date="${#temporals.format(cert.event.startTime, 'dd/MM/yyyy')}"
+                                             th:data-issued-date="${#temporals.format(cert.issuedDate, 'dd/MM/yyyy')}"
+                                             th:data-issued-by="${cert.issuedBy}">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div>
+                                                        <h5 class="text-primary mb-1" th:text="${cert.event.title}">Tên sự kiện</h5>
+                                                        <p class="mb-1">
+                                                            <span class="badge bg-success me-2">
+                                                                <i class="fas fa-certificate"></i>
+                                                                <span th:text="${cert.certificateCode}">CERT-XXX</span>
+                                                            </span>
+                                                        </p>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-calendar me-1"></i>
+                                                            Ngày cấp: <span th:text="${#temporals.format(cert.issuedDate, 'dd/MM/yyyy HH:mm')}"></span>
+                                                        </small><br>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-user me-1"></i>
+                                                            Người cấp: <span th:text="${cert.issuedBy}"></span>
+                                                        </small>
+                                                    </div>
+                                                    <div>
+                                                        <button type="button" class="btn btn-outline-primary btn-sm"
+                                                                th:onclick="'viewCertificateDetail(' + ${cert.certificateId} + ')'">
+                                                            <i class="fas fa-eye me-1"></i>Xem chi tiết
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
-
-                                            <div th:unless="${attendanceMap.containsKey(reg.event.event_id)}">
-                                                <span class="badge bg-secondary">Chưa điểm danh</span>
-                                            </div>
                                         </div>
-                                    </td>
-                                </tr>
-
-                                <tr th:if="${#lists.isEmpty(registrations)}">
-                                    <td colspan="4" class="text-center py-5 text-muted">
-                                        <i class="fas fa-inbox fa-3x mb-3"></i><br>
-                                        Bạn chưa đăng ký tham gia sự kiện nào.
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -101,5 +411,188 @@
 
         </div>
     </div>
+
+    <!-- Modal QR Code phóng to -->
+    <div class="modal fade" id="qrModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-qrcode me-2"></i>Mã QR Điểm Danh</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img th:src="${qrCode}" alt="QR Code" style="width: 300px; height: 300px;">
+                    <div class="mt-3">
+                        <p class="fw-bold" th:text="${user.fullName}">Họ tên</p>
+                        <p class="text-muted" th:text="'Mã SV: ' + ${user.studentCode}">Mã SV</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Giấy chứng nhận chi tiết -->
+    <div class="modal fade" id="certificateModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fas fa-certificate me-2"></i>Giấy Chứng Nhận</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0" id="certificateContent">
+                    <!-- Certificate Template -->
+                    <div id="certificatePrint" class="certificate-wrapper">
+                        <div class="certificate-container">
+                            <!-- Border decorative -->
+                            <div class="certificate-border">
+                                <div class="certificate-inner">
+                                    <!-- Header -->
+                                    <div class="certificate-header">
+                                        <img src="/assets/img/aboutvinh.png" alt="Logo" class="certificate-logo">
+                                        <div class="certificate-org">
+                                            <h3>TRƯỜNG ĐẠI HỌC VINH</h3>
+                                            <p>VINH UNIVERSITY</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Title -->
+                                    <div class="certificate-title">
+                                        <h1>GIẤY CHỨNG NHẬN</h1>
+                                        <p>CERTIFICATE OF PARTICIPATION</p>
+                                    </div>
+
+                                    <!-- Body -->
+                                    <div class="certificate-body">
+                                        <p class="cert-intro">Chứng nhận rằng / This is to certify that</p>
+                                        <h2 class="cert-name" id="certUserName">--</h2>
+                                        <p class="cert-info">Mã sinh viên / Student ID: <strong id="certStudentCode">--</strong></p>
+                                        <p class="cert-text">Đã tham gia và hoàn thành / Has participated and completed</p>
+                                        <h3 class="cert-event" id="certEventTitle">--</h3>
+                                        <p class="cert-date">Ngày / Date: <span id="certEventDate">--</span></p>
+                                    </div>
+
+                                    <!-- Footer -->
+                                    <div class="certificate-footer">
+                                        <div class="cert-code">
+                                            <small>Mã chứng nhận / Certificate Code</small>
+                                            <strong id="certCode">--</strong>
+                                        </div>
+                                        <div class="cert-issued">
+                                            <p>Ngày cấp / Issued Date: <span id="certIssuedDate">--</span></p>
+                                            <p class="cert-issuer">Người cấp / Issued by: <span id="certIssuedBy">--</span></p>
+                                        </div>
+                                        <div class="cert-signature">
+                                            <div class="signature-line"></div>
+                                            <p>Xác nhận / Confirmation</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- QR Code for verification -->
+                                    <div class="cert-qr">
+                                        <div id="certQRCode"></div>
+                                        <small>Quét để xác minh</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="downloadCertificate()">
+                        <i class="fas fa-download me-1"></i>Tải xuống
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" onclick="printCertificate()">
+                        <i class="fas fa-print me-1"></i>In giấy chứng nhận
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- html2canvas for downloading certificate as image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script th:inline="javascript">
+        // User info from Thymeleaf
+        var userName = /*[[${user.fullName}]]*/ 'Unknown';
+        var studentCode = /*[[${user.studentCode}]]*/ 'N/A';
+
+        function showQRModal() {
+            var modal = new bootstrap.Modal(document.getElementById('qrModal'));
+            modal.show();
+        }
+
+        function showCertificate(certId) {
+            viewCertificateDetail(certId);
+        }
+
+        function viewCertificateDetail(certId) {
+            // Get certificate data from data attributes
+            var certElement = document.querySelector('[data-cert-id="' + certId + '"]');
+
+            if (certElement) {
+                var certCode = certElement.getAttribute('data-cert-code');
+                var eventTitle = certElement.getAttribute('data-event-title');
+                var eventDate = certElement.getAttribute('data-event-date');
+                var issuedDate = certElement.getAttribute('data-issued-date');
+                var issuedBy = certElement.getAttribute('data-issued-by');
+
+                // Populate certificate fields
+                document.getElementById('certUserName').textContent = userName;
+                document.getElementById('certStudentCode').textContent = studentCode;
+                document.getElementById('certEventTitle').textContent = eventTitle;
+                document.getElementById('certCode').textContent = certCode;
+                document.getElementById('certIssuedBy').textContent = issuedBy || 'Ban tổ chức';
+                document.getElementById('certIssuedDate').textContent = issuedDate;
+                document.getElementById('certEventDate').textContent = eventDate;
+            }
+
+            // Show modal
+            var modal = new bootstrap.Modal(document.getElementById('certificateModal'));
+            modal.show();
+        }
+
+        function printCertificate() {
+            window.print();
+        }
+
+        function downloadCertificate() {
+            var element = document.getElementById('certificatePrint');
+            var btn = document.querySelector('#certificateModal .btn-primary');
+
+            if (!btn) return;
+
+            var originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang tải...';
+            btn.disabled = true;
+
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff'
+            }).then(function(canvas) {
+                // Create download link
+                var link = document.createElement('a');
+                var certCode = document.getElementById('certCode').textContent;
+                link.download = 'GiayChungNhan_' + certCode + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+
+                // Reset button
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }).catch(function(err) {
+                console.error('Error generating image:', err);
+                alert('Có lỗi khi tạo ảnh. Vui lòng thử lại.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+    </script>
 </div>
 </html>

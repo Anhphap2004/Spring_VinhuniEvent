@@ -36,7 +36,7 @@ public class EventCategoryController {
 
         redirectAttributes.addFlashAttribute("message", "Danh mục đã được lưu thành công!");
 
-        return "redirect:/event_categories";
+        return "redirect:/admin/event_categories";
     }
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
@@ -49,7 +49,7 @@ public class EventCategoryController {
         } else {
             // Trường hợp không tìm thấy ID, chuyển hướng và thông báo lỗi
             redirectAttributes.addFlashAttribute("message", "Lỗi: Không tìm thấy Danh mục có ID " + id);
-            return "redirect:/event_categories";
+            return "redirect:/admin/event_categories";
         }
     }
 
@@ -61,6 +61,6 @@ public class EventCategoryController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", "Lỗi xóa Danh mục ID " + id + ": " + e.getMessage());
         }
-        return "redirect:/event_categories";
+        return "redirect:/admin/event_categories";
     }
 }

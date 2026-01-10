@@ -17,5 +17,10 @@ public interface EventRegistrationService {
     void deleteRegistration(Long registrationId) throws RegistrationException;
     Optional<EventRegistration> findRegistration(Long eventId, Long userId);
 
+    // Alias method
+    default Optional<EventRegistration> findByEventIdAndUserId(Long eventId, Long userId) {
+        return findRegistration(eventId, userId);
+    }
+
     List<EventRegistration> getRegistrationsByUserId(Long userId);
 }
