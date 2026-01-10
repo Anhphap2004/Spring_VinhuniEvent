@@ -3,406 +3,804 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{main/layout/base}">
 <head>
-    <title>VinhUni Events - Kết Nối Đam Mê</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --vinh-blue: #0056b3;
-            --vinh-red: #d32f2f;
-            --vinh-gold: #fbc02d;
-        }
-
-        body { font-family: 'Open Sans', sans-serif; }
-        h1, h2, h3, h4, h5, .display-3, .display-5, .display-6 { font-family: 'Montserrat', sans-serif; }
-
-        .text-primary { color: var(--vinh-blue) !important; }
-        .bg-primary { background-color: var(--vinh-blue) !important; }
-        .text-accent { color: var(--vinh-red) !important; }
-
-        /* Button Styles */
-        .btn-primary {
-            background-color: var(--vinh-blue);
-            border-color: var(--vinh-blue);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #003d6b;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 86, 179, 0.4);
-        }
-        .btn-outline-primary {
-            color: var(--vinh-blue);
-            border-color: var(--vinh-blue);
-        }
-        .btn-outline-primary:hover {
-            background-color: var(--vinh-blue);
-            color: white;
-        }
-
-        /* --- PHẦN QUAN TRỌNG: CẤU HÌNH ẢNH NỀN --- */
-        .hero-header {
-            /* LƯU Ý: Đảm bảo bạn đã lưu ảnh tên là 'vinh-bg.jpg'
-               vào thư mục: src/main/resources/static/assets/img/
-            */
-            background: linear-gradient(rgba(0, 50, 100, 0.6), rgba(0, 50, 100, 0.4)), url('/assets/img/vinh-bg.jpg');
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-attachment: fixed; /* Hiệu ứng ảnh đứng yên khi cuộn trang */
-            min-height: 85vh;
-            display: flex;
-            align-items: center;
-            color: white; /* Đổi chữ thành màu trắng để nổi trên nền ảnh */
-        }
-
-        /* Card Hover Effects */
-        .service-item {
-            transition: all 0.4s ease;
-            border: none !important;
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
-        }
-        .service-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 1rem 3rem rgba(0,0,0,0.15) !important;
-        }
-        .service-icon-bg {
-            width: 80px; height: 80px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
-            margin-bottom: 1.5rem;
-            transition: 0.3s;
-        }
-        .service-item:hover .service-icon-bg {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .stats-card {
-            border-radius: 15px;
-            border: 1px solid rgba(0,0,0,0.05);
-            transition: 0.3s;
-        }
-        .stats-card:hover { border-color: var(--vinh-blue); }
-
-        .menu-item { transition: 0.3s; border: 1px solid transparent; }
-        .menu-item:hover {
-            background-color: #f8f9fa !important;
-            border-color: #e9ecef;
-            transform: translateX(5px);
-        }
-
-        .badge-pulse { animation: pulse-red 2s infinite; }
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
-        }
-    </style>
+    <title>Trang Chủ</title>
 </head>
 <body>
 
 <main layout:fragment="content">
-    <div class="container-fluid hero-header mb-5"
-         th:style="'background: linear-gradient(rgba(0, 50, 100, 0.7), rgba(0, 50, 100, 0.5)), url(' + @{/assets/img/img.png} + '); background-position: center center; background-repeat: no-repeat; background-size: cover; min-height: 100vh; display: flex; align-items: center;'">
-
-        <div class="container py-5">
-            <div class="row g-5 align-items-center">
-
-                <div class="col-lg-6 col-md-12 text-white">
-                    <div class="d-inline-block fw-bold text-uppercase bg-white shadow-sm text-primary rounded-pill px-4 py-2 mb-4 animated bounceInDown">
-                        <i class="fas fa-university me-2"></i>Cổng thông tin chính thức
-                    </div>
-                    <h1 class="display-3 mb-4 animated bounceInDown fw-bold text-white" style="text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">
-                        Sự Kiện <span class="text-warning">Đại Học Vinh</span><br>
-                        <span class="fs-2 fw-normal fst-italic" style="color: #e0e0e0;">"Nơi bản lĩnh sinh viên tỏa sáng"</span>
-                    </h1>
-                    <p class="mb-5 fs-5 text-white" style="line-height: 1.8; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">
-                        Cập nhật nhanh nhất các hoạt động Đoàn - Hội, Hội thảo khoa học, Workshop kỹ năng và các sân chơi văn hóa nghệ thuật sôi động.
-                    </p>
-                    <div class="d-flex gap-3 animated bounceInLeft">
-                        <a href="/events" class="btn btn-primary rounded-pill py-3 px-5 shadow-lg border-2 border-white">
-                            Tham Gia Ngay <i class="fas fa-arrow-right ms-2"></i>
-                        </a>
-                        <a href="/calendar" class="btn btn-outline-light rounded-pill py-3 px-5 shadow">
-                            <i class="far fa-calendar-alt me-2"></i>Xem Lịch
-                        </a>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-md-12">
-                    <div class="row g-3">
-                        <div class="col-6 text-end" style="margin-top: -20px;">
-                            <img class="img-fluid rounded-3 w-100 shadow-lg border border-4 border-white mb-3 wow zoomIn"
-                                 data-wow-delay="0.1s"
-                                 th:src="@{/assets/img/img_1.png}"
-                                 alt="Event 1"
-                                 style="object-fit: cover; height: 200px;">
-
-                            <img class="img-fluid rounded-3 w-75 shadow-lg border border-4 border-white wow zoomIn"
-                                 data-wow-delay="0.3s"
-                                 th:src="@{/assets/img/img_2.png}"
-                                 alt="Event 2"
-                                 style="object-fit: cover; height: 150px;">
-                        </div>
-
-                        <div class="col-6 text-start" style="margin-top: 25%;">
-                            <img class="img-fluid rounded-3 w-75 shadow-lg border border-4 border-white mb-3 wow zoomIn"
-                                 data-wow-delay="0.5s"
-                                 th:src="@{/assets/img/img_3.png}"
-                                 alt="Event 3"
-                                 style="object-fit: cover; height: 150px;">
-
-                            <img class="img-fluid rounded-3 w-100 shadow-lg border border-4 border-white wow zoomIn"
-                                 data-wow-delay="0.7s"
-                                 th:src="@{/assets/img/img_4.png}"
-                                 alt="Event 4"
-                                 style="object-fit: cover; height: 200px;">
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="container-fluid py-5">
+    <!-- Hero Start -->
+    <!-- Hero Start -->
+    <div class="container-fluid py-6 my-6 mt-0" style="background-color:#ffffff;"> <!-- nền trắng -->
         <div class="container">
             <div class="row g-5 align-items-center">
-                <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.1s">
-                    <div class="row g-3">
-                        <div class="col-6 text-end">
-                            <img class="img-fluid rounded-3 w-100 shadow mb-3 wow zoomIn" data-wow-delay="0.1s" src="/assets/img/event-1.jpg" style="margin-top: 25%; object-fit: cover;">
-                            <img class="img-fluid rounded-3 w-75 shadow wow zoomIn" data-wow-delay="0.3s" src="/assets/img/event-2.jpg">
-                        </div>
-                        <div class="col-6 text-start">
-                            <img class="img-fluid rounded-3 w-75 shadow mb-3 wow zoomIn" data-wow-delay="0.5s" src="/assets/img/event-3.jpg">
-                            <img class="img-fluid rounded-3 w-100 shadow wow zoomIn" data-wow-delay="0.7s" src="/assets/img/event-4.jpg">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.3s">
-                    <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border-start border-5 border-primary px-3 py-1 mb-3">
-                        Về Chúng Tôi
+
+                <!-- Text -->
+                <div class="col-lg-7 col-md-12">
+                    <small class="d-inline-block fw-bold text-danger text-uppercase bg-light border border-danger rounded-pill px-4 py-1 mb-4 animated bounceInDown">
+                        Chào mừng đến với VinhUni Event
                     </small>
-                    <h1 class="display-5 mb-4 fw-bold">Kết Nối Tri Thức <br> <span class="text-primary">Lan Tỏa Đam Mê</span></h1>
-                    <p class="mb-4 text-secondary lh-lg">
-                        Hệ thống quản lý sự kiện Đại học Vinh không chỉ là nơi đăng ký tham gia, mà là cầu nối giúp sinh viên tiếp cận với môi trường năng động, sáng tạo và hội nhập.
+
+                    <h1 class="display-1 mb-4 animated bounceInDown">
+                        Khám Phá <span class="text-danger">Sự Kiện</span> Trường Đại Học Vinh
+                    </h1>
+
+                    <p class="mb-4 fs-5 text-dark">
+                        Nơi tuổi trẻ viết nên ký ức, nơi mỗi buổi hội thảo, workshop hay ngày hội sinh viên đều trở thành
+                        những gam màu rực rỡ trong hành trình thanh xuân của bạn.
                     </p>
 
-                    <div class="row g-4 mb-5">
-                        <div class="col-sm-6 d-flex align-items-center bg-white p-3 rounded shadow-sm">
-                            <i class="fas fa-qrcode text-primary fa-2x me-3"></i>
-                            <span class="fw-bold">Check-in QR Code</span>
+                    <a href="/events"
+                       class="btn btn-danger border-0 rounded-pill py-3 px-4 px-md-5 me-4 animated bounceInLeft">
+                        Xem Sự Kiện
+                    </a>
+
+                    <a href="/about"
+                       class="btn btn-warning border-0 rounded-pill py-3 px-4 px-md-5 animated bounceInLeft">
+                        Tìm Hiểu Thêm
+                    </a>
+                </div>
+
+                <!-- Image -->
+                <div class="col-lg-5 col-md-12">
+                    <img th:src="@{/assets/img/vinhuni.png}" class="img-fluid rounded animated zoomIn" alt="Vinh University">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Hero End -->
+
+
+    <!-- About Start -->
+    <div class="container-fluid py-6">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5 wow bounceInUp" data-wow-delay="0.1s">
+                    <img src="/assets/img/aboutvinh.png" class="img-fluid rounded" alt="Đại học Vinh Event">
+                </div>
+                <div class="col-lg-7 wow bounceInUp" data-wow-delay="0.3s">
+                    <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
+                        VinhUni Event
+                    </small>
+                    <h1 class="display-5 mb-4">
+                        Hơn 2000+ sinh viên đã đồng hành cùng các sự kiện của Trường Đại học Vinh
+                    </h1>
+                    <p class="mb-4">
+                        Từ những ngày hội tân sinh viên rộn ràng tiếng cười, đến những buổi hội thảo đầy cảm hứng,
+                        hành trình sự kiện của Đại học Vinh luôn mang trong mình sắc màu trẻ trung, nhiệt huyết và đầy
+                        kỷ niệm thanh xuân. Mỗi hoạt động là một dấu ấn – nơi chúng ta gặp gỡ, học hỏi và trưởng thành.
+                    </p>
+
+                    <div class="row g-4 text-dark mb-5">
+                        <div class="col-sm-6">
+                            <i class="fas fa-share text-primary me-2"></i>Sự kiện quy mô lớn – tổ chức chuyên nghiệp
                         </div>
-                        <div class="col-sm-6 d-flex align-items-center bg-white p-3 rounded shadow-sm">
-                            <i class="fas fa-certificate text-accent fa-2x me-3"></i>
-                            <span class="fw-bold">Chứng nhận Online</span>
+                        <div class="col-sm-6">
+                            <i class="fas fa-share text-primary me-2"></i>Hỗ trợ sinh viên 24/7 trong mùa hoạt động
                         </div>
-                        <div class="col-sm-6 d-flex align-items-center bg-white p-3 rounded shadow-sm">
-                            <i class="fas fa-users text-primary fa-2x me-3"></i>
-                            <span class="fw-bold">Cộng đồng năng động</span>
+                        <div class="col-sm-6">
+                            <i class="fas fa-share text-primary me-2"></i>Đăng ký tham gia dễ dàng, nhanh chóng
                         </div>
-                        <div class="col-sm-6 d-flex align-items-center bg-white p-3 rounded shadow-sm">
-                            <i class="fas fa-star text-warning fa-2x me-3"></i>
-                            <span class="fw-bold">Điểm rèn luyện</span>
+                        <div class="col-sm-6">
+                            <i class="fas fa-share text-primary me-2"></i>Không gian trải nghiệm đầy cảm hứng
                         </div>
                     </div>
-                    <a href="/about" class="btn btn-primary py-3 px-5 rounded-pill shadow">Tìm Hiểu Thêm</a>
+
+                    <a href="/events" class="btn btn-primary py-3 px-5 rounded-pill">
+                        Khám Phá Sự Kiện <i class="fas fa-arrow-right ps-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
+    <!-- About End -->
 
-    <div class="container-fluid bg-light py-6 my-5">
+
+
+    <!-- Fact Start-->
+    <div class="container-fluid faqt py-6">
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-lg-7">
                     <div class="row g-4">
                         <div class="col-sm-4 wow bounceInUp" data-wow-delay="0.3s">
-                            <div class="bg-white stats-card shadow-sm p-4 text-center h-100">
-                                <i class="fas fa-user-graduate fa-3x mb-3 text-primary"></i>
-                                <h2 class="display-6 fw-bold text-dark" data-toggle="counter-up">25,000+</h2>
-                                <p class="text-muted fw-bold mb-0 text-uppercase small">Sinh Viên</p>
+                            <div class="faqt-item bg-primary rounded p-4 text-center">
+                                <i class="fas fa-users fa-4x mb-4 text-white"></i>
+                                <h1 class="display-4 fw-bold" data-toggle="counter-up">689</h1>
+                                <p class="text-dark text-uppercase fw-bold mb-0">Happy Customers</p>
                             </div>
                         </div>
                         <div class="col-sm-4 wow bounceInUp" data-wow-delay="0.5s">
-                            <div class="bg-white stats-card shadow-sm p-4 text-center h-100">
-                                <i class="fas fa-calendar-check fa-3x mb-3 text-accent"></i>
-                                <h2 class="display-6 fw-bold text-dark" data-toggle="counter-up">150+</h2>
-                                <p class="text-muted fw-bold mb-0 text-uppercase small">Sự Kiện / Năm</p>
+                            <div class="faqt-item bg-primary rounded p-4 text-center">
+                                <i class="fas fa-users-cog fa-4x mb-4 text-white"></i>
+                                <h1 class="display-4 fw-bold" data-toggle="counter-up">107</h1>
+                                <p class="text-dark text-uppercase fw-bold mb-0">Expert Chefs</p>
                             </div>
                         </div>
                         <div class="col-sm-4 wow bounceInUp" data-wow-delay="0.7s">
-                            <div class="bg-white stats-card shadow-sm p-4 text-center h-100">
-                                <i class="fas fa-users-cog fa-3x mb-3 text-warning"></i>
-                                <h2 class="display-6 fw-bold text-dark" data-toggle="counter-up">45</h2>
-                                <p class="text-muted fw-bold mb-0 text-uppercase small">CLB & Đội Nhóm</p>
+                            <div class="faqt-item bg-primary rounded p-4 text-center">
+                                <i class="fas fa-check fa-4x mb-4 text-white"></i>
+                                <h1 class="display-4 fw-bold" data-toggle="counter-up">253</h1>
+                                <p class="text-dark text-uppercase fw-bold mb-0">Events Complete</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-5 wow bounceInUp" data-wow-delay="0.1s">
-                    <div class="position-relative rounded overflow-hidden shadow-lg border border-5 border-white">
-                        <img class="img-fluid w-100" src="/assets/img/video-thumb.jpg" alt="Video Thumb" style="filter: brightness(0.8);">
-                        <div class="position-absolute top-50 start-50 translate-middle">
-                            <button type="button" class="btn btn-play bg-white text-primary rounded-circle p-4 shadow-lg pulsate" data-bs-toggle="modal" data-src="https://www.youtube.com/embed/VIDEO_ID" data-bs-target="#videoModal">
-                                <i class="fas fa-play fa-2x ps-1"></i>
-                            </button>
-                        </div>
+                    <div class="video">
+                        <button type="button" class="btn btn-play" data-bs-toggle="modal" data-src="https://www.youtube.com/embed/DWRcNpR6Kdc" data-bs-target="#videoModal">
+                            <span></span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Modal Video -->
+    <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Youtube Video</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 16:9 aspect ratio -->
+                    <div class="ratio ratio-16x9">
+                        <iframe class="embed-responsive-item" src="" id="video" allowfullscreen allowscriptaccess="always"
+                                allow="autoplay"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fact End -->
 
-    <div class="container-fluid py-6">
+
+    <!-- Service Start -->
+    <div class="container-fluid service py-6">
         <div class="container">
             <div class="text-center wow bounceInUp" data-wow-delay="0.1s">
-                <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border-bottom border-3 border-primary px-4 py-1 mb-3">Lĩnh Vực Hoạt Động</small>
-                <h1 class="display-5 mb-5 fw-bold">Khám Phá Các Loại Hình Sự Kiện</h1>
+                <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">Our Services</small>
+                <h1 class="display-5 mb-5">What We Offer</h1>
             </div>
             <div class="row g-4">
                 <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.1s">
-                    <div class="bg-white rounded-3 shadow-sm p-4 service-item text-center h-100 position-relative overflow-hidden">
-                        <div class="service-content d-flex flex-column align-items-center">
-                            <div class="service-icon-bg bg-light text-primary">
-                                <i class="fas fa-graduation-cap fa-2x"></i>
+                    <div class="bg-light rounded service-item">
+                        <div class="service-content d-flex align-items-center justify-content-center p-4">
+                            <div class="service-content-icon text-center">
+                                <i class="fas fa-cheese fa-7x text-primary mb-4"></i>
+                                <h4 class="mb-3">Wedding Services</h4>
+                                <p class="mb-4">Contrary to popular belief, ipsum is not simply random.</p>
+                                <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
                             </div>
-                            <h4 class="mb-3 fw-bold">Học Thuật</h4>
-                            <p class="mb-4 text-muted small flex-grow-1">Hội thảo khoa học, Workshop kỹ năng, Olympic và nghiên cứu khoa học.</p>
-                            <a href="#" class="btn btn-sm btn-outline-primary rounded-pill px-4 stretched-link">Chi tiết</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.3s">
-                    <div class="bg-white rounded-3 shadow-sm p-4 service-item text-center h-100 position-relative overflow-hidden">
-                        <div class="service-content d-flex flex-column align-items-center">
-                            <div class="service-icon-bg bg-light text-success">
-                                <i class="fas fa-hands-helping fa-2x"></i>
+                    <div class="bg-light rounded service-item">
+                        <div class="service-content d-flex align-items-center justify-content-center p-4">
+                            <div class="service-content-icon text-center">
+                                <i class="fas fa-pizza-slice fa-7x text-primary mb-4"></i>
+                                <h4 class="mb-3">Corporate Catering</h4>
+                                <p class="mb-4">Contrary to popular belief, ipsum is not simply random.</p>
+                                <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
                             </div>
-                            <h4 class="mb-3 fw-bold">Tình Nguyện</h4>
-                            <p class="mb-4 text-muted small flex-grow-1">Mùa hè xanh, Tiếp sức mùa thi, Hiến máu nhân đạo và vì cộng đồng.</p>
-                            <a href="#" class="btn btn-sm btn-outline-success rounded-pill px-4 stretched-link">Chi tiết</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.5s">
-                    <div class="bg-white rounded-3 shadow-sm p-4 service-item text-center h-100 position-relative overflow-hidden">
-                        <div class="service-content d-flex flex-column align-items-center">
-                            <div class="service-icon-bg bg-light text-danger">
-                                <i class="fas fa-guitar fa-2x"></i>
+                    <div class="bg-light rounded service-item">
+                        <div class="service-content d-flex align-items-center justify-content-center p-4">
+                            <div class="service-content-icon text-center">
+                                <i class="fas fa-hotdog fa-7x text-primary mb-4"></i>
+                                <h4 class="mb-3">Cocktail Reception</h4>
+                                <p class="mb-4">Contrary to popular belief, ipsum is not simply random.</p>
+                                <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
                             </div>
-                            <h4 class="mb-3 fw-bold">Văn Hóa - Nghệ Thuật</h4>
-                            <p class="mb-4 text-muted small flex-grow-1">Gala chào tân sinh viên, Hội diễn văn nghệ, Tìm kiếm tài năng.</p>
-                            <a href="#" class="btn btn-sm btn-outline-danger rounded-pill px-4 stretched-link">Chi tiết</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.7s">
-                    <div class="bg-white rounded-3 shadow-sm p-4 service-item text-center h-100 position-relative overflow-hidden">
-                        <div class="service-content d-flex flex-column align-items-center">
-                            <div class="service-icon-bg bg-light text-warning">
-                                <i class="fas fa-futbol fa-2x"></i>
+                    <div class="bg-light rounded service-item">
+                        <div class="service-content d-flex align-items-center justify-content-center p-4">
+                            <div class="service-content-icon text-center">
+                                <i class="fas fa-hamburger fa-7x text-primary mb-4"></i>
+                                <h4 class="mb-3">Bento Catering</h4>
+                                <p class="mb-4">Contrary to popular belief, ipsum is not simply random.</p>
+                                <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
                             </div>
-                            <h4 class="mb-3 fw-bold">Thể Thao</h4>
-                            <p class="mb-4 text-muted small flex-grow-1">Giải bóng đá sinh viên, Hội thao, Các giải đấu mở rộng.</p>
-                            <a href="#" class="btn btn-sm btn-outline-warning rounded-pill px-4 stretched-link">Chi tiết</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.1s">
+                    <div class="bg-light rounded service-item">
+                        <div class="service-content d-flex align-items-center justify-content-center p-4">
+                            <div class="service-content-icon text-center">
+                                <i class="fas fa-wine-glass-alt fa-7x text-primary mb-4"></i>
+                                <h4 class="mb-3">Pub Party</h4>
+                                <p class="mb-4">Contrary to popular belief, ipsum is not simply random.</p>
+                                <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.3s">
+                    <div class="bg-light rounded service-item">
+                        <div class="service-content d-flex align-items-center justify-content-center p-4">
+                            <div class="service-content-icon text-center">
+                                <i class="fas fa-walking fa-7x text-primary mb-4"></i>
+                                <h4 class="mb-3">Home Delivery</h4>
+                                <p class="mb-4">Contrary to popular belief, ipsum is not simply random.</p>
+                                <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.5s">
+                    <div class="bg-light rounded service-item">
+                        <div class="service-content d-flex align-items-center justify-content-center p-4">
+                            <div class="service-content-icon text-center">
+                                <i class="fas fa-wheelchair fa-7x text-primary mb-4"></i>
+                                <h4 class="mb-3">Sit-down Catering</h4>
+                                <p class="mb-4">Contrary to popular belief, ipsum is not simply random.</p>
+                                <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="0.7s">
+                    <div class="bg-light rounded service-item">
+                        <div class="service-content d-flex align-items-center justify-content-center p-4">
+                            <div class="service-content-icon text-center">
+                                <i class="fas fa-utensils fa-7x text-primary mb-4"></i>
+                                <h4 class="mb-3">Buffet Catering</h4>
+                                <p class="mb-4">Contrary to popular belief, ipsum is not simply random.</p>
+                                <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Service End -->
 
-    <section class="bg-white py-5">
+    <section>
         <div th:replace="fragments/event-section :: mainEventSection"></div>
     </section>
 
-    <div class="container-fluid py-6 mb-5 bg-light">
+    <!-- Menu Start -->
+    <div class="container-fluid menu bg-light py-6 my-6">
         <div class="container">
             <div class="text-center wow bounceInUp" data-wow-delay="0.1s">
-                <small class="d-inline-block fw-bold text-dark text-uppercase bg-white border border-primary rounded-pill px-4 py-1 mb-3 shadow-sm">Lịch Trình</small>
-                <h1 class="display-5 mb-5 fw-bold">Sự Kiện Nổi Bật Sắp Tới</h1>
+                <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">Our Menu</small>
+                <h1 class="display-5 mb-5">Most Popular Food in the World</h1>
             </div>
-
             <div class="tab-class text-center">
                 <ul class="nav nav-pills d-inline-flex justify-content-center mb-5 wow bounceInUp" data-wow-delay="0.1s">
                     <li class="nav-item p-2">
-                        <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill active shadow-sm" data-bs-toggle="pill" href="#tab-week">
-                            <span class="text-dark fw-bold px-4">Tuần Này</span>
+                        <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill active" data-bs-toggle="pill" href="#tab-6">
+                            <span class="text-dark" style="width: 150px;">Starter</span>
                         </a>
                     </li>
                     <li class="nav-item p-2">
-                        <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill shadow-sm" data-bs-toggle="pill" href="#tab-month">
-                            <span class="text-dark fw-bold px-4">Tháng Này</span>
+                        <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill" data-bs-toggle="pill" href="#tab-7">
+                            <span class="text-dark" style="width: 150px;">Main Course</span>
                         </a>
                     </li>
                     <li class="nav-item p-2">
-                        <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill shadow-sm" data-bs-toggle="pill" href="#tab-hot">
-                            <span class="text-dark fw-bold px-4">Hot Nhất</span>
+                        <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill" data-bs-toggle="pill" href="#tab-8">
+                            <span class="text-dark" style="width: 150px;">Drinks</span>
+                        </a>
+                    </li>
+                    <li class="nav-item p-2">
+                        <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill" data-bs-toggle="pill" href="#tab-9">
+                            <span class="text-dark" style="width: 150px;">Offers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item p-2">
+                        <a class="d-flex py-2 mx-2 border border-primary bg-white rounded-pill" data-bs-toggle="pill" href="#tab-10">
+                            <span class="text-dark" style="width: 150px;">Our Spesial</span>
                         </a>
                     </li>
                 </ul>
-
                 <div class="tab-content">
-                    <div id="tab-week" class="tab-pane fade show p-0 active">
+                    <div id="tab-6" class="tab-pane fade show p-0 active">
                         <div class="row g-4">
                             <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.1s">
-                                <div class="menu-item d-flex align-items-center bg-white rounded-3 shadow-sm p-3 h-100">
-                                    <div class="flex-shrink-0 bg-primary text-white rounded-3 d-flex flex-column align-items-center justify-content-center shadow" style="width: 90px; height: 90px;">
-                                        <span class="fw-bold display-6">12</span>
-                                        <span class="small fw-bold text-uppercase" style="font-size: 0.8rem;">Th10</span>
-                                    </div>
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-01.jpg" alt="">
                                     <div class="w-100 d-flex flex-column text-start ps-4">
-                                        <div class="d-flex justify-content-between border-bottom border-light pb-2 mb-2">
-                                            <h5 class="fw-bold mb-0 text-dark">Workshop: Kỹ năng mềm SV</h5>
-                                            <span class="badge bg-danger rounded-pill badge-pulse d-flex align-items-center px-3">Sắp diễn ra</span>
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Paneer</h4>
+                                            <h4 class="text-primary">$90</h4>
                                         </div>
-                                        <p class="mb-0 text-muted small"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Hội trường A, Đại học Vinh</p>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.2s">
-                                <div class="menu-item d-flex align-items-center bg-white rounded-3 shadow-sm p-3 h-100">
-                                    <div class="flex-shrink-0 bg-success text-white rounded-3 d-flex flex-column align-items-center justify-content-center shadow" style="width: 90px; height: 90px;">
-                                        <span class="fw-bold display-6">14</span>
-                                        <span class="small fw-bold text-uppercase" style="font-size: 0.8rem;">Th10</span>
-                                    </div>
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-02.jpg" alt="">
                                     <div class="w-100 d-flex flex-column text-start ps-4">
-                                        <div class="d-flex justify-content-between border-bottom border-light pb-2 mb-2">
-                                            <h5 class="fw-bold mb-0 text-dark">Đại hội Thể dục Thể thao</h5>
-                                            <span class="badge bg-success rounded-pill px-3">Đang mở</span>
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Sweet Potato</h4>
+                                            <h4 class="text-primary">$90</h4>
                                         </div>
-                                        <p class="mb-0 text-muted small"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Sân vận động trường</p>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.3s">
-                                <div class="menu-item d-flex align-items-center bg-white rounded-3 shadow-sm p-3 h-100">
-                                    <div class="flex-shrink-0 bg-warning text-dark rounded-3 d-flex flex-column align-items-center justify-content-center shadow" style="width: 90px; height: 90px;">
-                                        <span class="fw-bold display-6">15</span>
-                                        <span class="small fw-bold text-uppercase" style="font-size: 0.8rem;">Th10</span>
-                                    </div>
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-03.jpg" alt="">
                                     <div class="w-100 d-flex flex-column text-start ps-4">
-                                        <div class="d-flex justify-content-between border-bottom border-light pb-2 mb-2">
-                                            <h5 class="fw-bold mb-0 text-dark">Đêm nhạc: Acoustic Night</h5>
-                                            <span class="badge bg-primary rounded-pill px-3">Miễn phí</span>
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Sabudana Tikki</h4>
+                                            <h4 class="text-primary">$90</h4>
                                         </div>
-                                        <p class="mb-0 text-muted small"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Khu A - Sảnh Thư viện</p>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.4s">
-                                <div class="menu-item d-flex align-items-center bg-white rounded-3 shadow-sm p-3 h-100">
-                                    <div class="flex-shrink-0 bg-info text-white rounded-3 d-flex flex-column align-items-center justify-content-center shadow" style="width: 90px; height: 90px;">
-                                        <span class="fw-bold display-6">18</span>
-                                        <span class="small fw-bold text-uppercase" style="font-size: 0.8rem;">Th10</span>
-                                    </div>
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-04.jpg" alt="">
                                     <div class="w-100 d-flex flex-column text-start ps-4">
-                                        <div class="d-flex justify-content-between border-bottom border-light pb-2 mb-2">
-                                            <h5 class="fw-bold mb-0 text-dark">Job Fair: Ngày hội việc làm</h5>
-                                            <span class="badge bg-danger rounded-pill badge-pulse px-3">Hot</span>
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Pizza</h4>
+                                            <h4 class="text-primary">$90</h4>
                                         </div>
-                                        <p class="mb-0 text-muted small"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Trung tâm Hỗ trợ SV</p>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.5s">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-05.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Bacon</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.6s">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-06.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Chicken</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.7s">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-07.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Blooming</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 wow bounceInUp" data-wow-delay="0.8s">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-08.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Sweet</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-7" class="tab-pane fade show p-0">
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-01.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Argentinian</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-03.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Crispy</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-05.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Sabudana Tikki</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-07.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Blooming</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-08.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Argentinian</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-03.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Lemon</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-02.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Water Drink</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-01.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Salty lemon</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-8" class="tab-pane fade show p-0">
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-01.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Crispy water</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-02.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Juice</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-03.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Orange</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-04.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Apple Juice</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-05.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Banana</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-06.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Sweet Water</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-07.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Hot Coffee</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-08.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Sweet Potato</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-9" class="tab-pane fade show p-0">
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-06.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Sabudana Tikki</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-07.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Crispy</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-09.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Pizza</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-02.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Bacon</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-03.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Chicken</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-05.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Blooming</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-07.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Sweet</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-09.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Argentinian</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-10" class="tab-pane fade show p-0">
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-06.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Sabudana Tikki</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-07.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Crispy</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-09.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Pizza</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-02.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Bacon</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-03.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Chicken</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-05.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Blooming</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-07.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Sweet</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="menu-item d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid rounded-circle" src="img/menu-09.jpg" alt="">
+                                    <div class="w-100 d-flex flex-column text-start ps-4">
+                                        <div class="d-flex justify-content-between border-bottom border-primary pb-2 mb-2">
+                                            <h4>Argentinian</h4>
+                                            <h4 class="text-primary">$90</h4>
+                                        </div>
+                                        <p class="mb-0">Consectetur adipiscing elit sed dwso eiusmod tempor incididunt ut labore.</p>
                                     </div>
                                 </div>
                             </div>
@@ -412,6 +810,423 @@
             </div>
         </div>
     </div>
+    <!-- Menu End -->
+
+
+    <!-- Book Us Start -->
+    <div class="container-fluid contact py-6 wow bounceInUp" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="row g-0">
+                <div class="col-1">
+                    <img src="img/background-site.jpg" class="img-fluid h-100 w-100 rounded-start" style="object-fit: cover; opacity: 0.7;" alt="">
+                </div>
+                <div class="col-10">
+                    <div class="border-bottom border-top border-primary bg-light py-5 px-4">
+                        <div class="text-center">
+                            <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">Book Us</small>
+                            <h1 class="display-5 mb-5">Where you want Our Services</h1>
+                        </div>
+                        <div class="row g-4 form">
+                            <div class="col-lg-4 col-md-6">
+                                <select class="form-select border-primary p-2" aria-label="Default select example">
+                                    <option selected>Select Country</option>
+                                    <option value="1">USA</option>
+                                    <option value="2">UK</option>
+                                    <option value="3">India</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <select class="form-select border-primary p-2" aria-label="Default select example">
+                                    <option selected>Select City</option>
+                                    <option value="1">Depend On Country</option>
+                                    <option value="2">UK</option>
+                                    <option value="3">India</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <select class="form-select border-primary p-2" aria-label="Default select example">
+                                    <option selected>Select Palace</option>
+                                    <option value="1">Depend On Country</option>
+                                    <option value="2">UK</option>
+                                    <option value="3">India</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <select class="form-select border-primary p-2" aria-label="Default select example">
+                                    <option selected>Small Event</option>
+                                    <option value="1">Event Type</option>
+                                    <option value="2">Big Event</option>
+                                    <option value="3">Small Event</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <select class="form-select border-primary p-2" aria-label="Default select example">
+                                    <option selected>No. Of Palace</option>
+                                    <option value="1">100-200</option>
+                                    <option value="2">300-400</option>
+                                    <option value="3">500-600</option>
+                                    <option value="4">700-800</option>
+                                    <option value="5">900-1000</option>
+                                    <option value="6">1000+</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <select class="form-select border-primary p-2" aria-label="Default select example">
+                                    <option selected>Vegetarian</option>
+                                    <option value="1">Vegetarian</option>
+                                    <option value="2">Non Vegetarian</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <input type="mobile" class="form-control border-primary p-2" placeholder="Your Contact No.">
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <input type="date" class="form-control border-primary p-2" placeholder="Select Date">
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <input type="email" class="form-control border-primary p-2" placeholder="Enter Your Email">
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary px-5 py-3 rounded-pill">Submit Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1">
+                    <img src="img/background-site.jpg" class="img-fluid h-100 w-100 rounded-end" style="object-fit: cover; opacity: 0.7;" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Book Us End -->
+
+
+    <!-- Team Start -->
+    <div class="container-fluid team py-6">
+        <div class="container">
+            <div class="text-center wow bounceInUp" data-wow-delay="0.1s">
+                <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">Our Team</small>
+                <h1 class="display-5 mb-5">We have experienced chef Team</h1>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6 wow bounceInUp" data-wow-delay="0.1s">
+                    <div class="team-item rounded">
+                        <img class="img-fluid rounded-top " src="img/team-1.jpg" alt="">
+                        <div class="team-content text-center py-3 bg-dark rounded-bottom">
+                            <h4 class="text-primary">Henry</h4>
+                            <p class="text-white mb-0">Decoration Chef</p>
+                        </div>
+                        <div class="team-icon d-flex flex-column justify-content-center m-4">
+                            <a class="share btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fas fa-share-alt"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 wow bounceInUp" data-wow-delay="0.3s">
+                    <div class="team-item rounded">
+                        <img class="img-fluid rounded-top " src="img/team-2.jpg" alt="">
+                        <div class="team-content text-center py-3 bg-dark rounded-bottom">
+                            <h4 class="text-primary">Jemes Born</h4>
+                            <p class="text-white mb-0">Executive Chef</p>
+                        </div>
+                        <div class="team-icon d-flex flex-column justify-content-center m-4">
+                            <a class="share btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fas fa-share-alt"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 wow bounceInUp" data-wow-delay="0.5s">
+                    <div class="team-item rounded">
+                        <img class="img-fluid rounded-top " src="img/team-3.jpg" alt="">
+                        <div class="team-content text-center py-3 bg-dark rounded-bottom">
+                            <h4 class="text-primary">Martin Hill</h4>
+                            <p class="text-white mb-0">Kitchen Porter</p>
+                        </div>
+                        <div class="team-icon d-flex flex-column justify-content-center m-4">
+                            <a class="share btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fas fa-share-alt"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 wow bounceInUp" data-wow-delay="0.7s">
+                    <div class="team-item rounded">
+                        <img class="img-fluid rounded-top " src="img/team-4.jpg" alt="">
+                        <div class="team-content text-center py-3 bg-dark rounded-bottom">
+                            <h4 class="text-primary">Adam Smith</h4>
+                            <p class="text-white mb-0">Head Chef</p>
+                        </div>
+                        <div class="team-icon d-flex flex-column justify-content-center m-4">
+                            <a class="share btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fas fa-share-alt"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square rounded-circle mb-2" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Team End -->
+
+
+    <!-- Testimonial Start -->
+    <div class="container-fluid py-6">
+        <div class="container">
+            <div class="text-center wow bounceInUp" data-wow-delay="0.1s">
+                <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">Testimonial</small>
+                <h1 class="display-5 mb-5">What Our Customers says!</h1>
+            </div>
+            <div class="owl-carousel owl-theme testimonial-carousel testimonial-carousel-1 mb-4 wow bounceInUp" data-wow-delay="0.1s">
+                <div class="testimonial-item rounded bg-light">
+                    <div class="d-flex mb-3">
+                        <img src="img/testimonial-1.jpg" class="img-fluid rounded-circle flex-shrink-0" alt="">
+                        <div class="position-absolute" style="top: 15px; right: 20px;">
+                            <i class="fa fa-quote-right fa-2x"></i>
+                        </div>
+                        <div class="ps-3 my-auto">
+                            <h4 class="mb-0">Person Name</h4>
+                            <p class="m-0">Profession</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="d-flex">
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                        </div>
+                        <p class="fs-5 m-0 pt-3">Lorem ipsum dolor sit amet elit, sed do eiusmod tempor ut labore et dolore magna aliqua.</p>
+                    </div>
+                </div>
+                <div class="testimonial-item rounded bg-light">
+                    <div class="d-flex mb-3">
+                        <img src="img/testimonial-2.jpg" class="img-fluid rounded-circle flex-shrink-0" alt="">
+                        <div class="position-absolute" style="top: 15px; right: 20px;">
+                            <i class="fa fa-quote-right fa-2x"></i>
+                        </div>
+                        <div class="ps-3 my-auto">
+                            <h4 class="mb-0">Person Name</h4>
+                            <p class="m-0">Profession</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="d-flex">
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                        </div>
+                        <p class="fs-5 m-0 pt-3">Lorem ipsum dolor sit amet elit, sed do eiusmod tempor ut labore et dolore magna aliqua.</p>
+                    </div>
+                </div>
+                <div class="testimonial-item rounded bg-light">
+                    <div class="d-flex mb-3">
+                        <img src="img/testimonial-3.jpg" class="img-fluid rounded-circle flex-shrink-0" alt="">
+                        <div class="position-absolute" style="top: 15px; right: 20px;">
+                            <i class="fa fa-quote-right fa-2x"></i>
+                        </div>
+                        <div class="ps-3 my-auto">
+                            <h4 class="mb-0">Person Name</h4>
+                            <p class="m-0">Profession</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="d-flex">
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                        </div>
+                        <p class="fs-5 m-0 pt-3">Lorem ipsum dolor sit amet elit, sed do eiusmod tempor ut labore et dolore magna aliqua.</p>
+                    </div>
+                </div>
+                <div class="testimonial-item rounded bg-light">
+                    <div class="d-flex mb-3">
+                        <img src="img/testimonial-4.jpg" class="img-fluid rounded-circle flex-shrink-0" alt="">
+                        <div class="position-absolute" style="top: 15px; right: 20px;">
+                            <i class="fa fa-quote-right fa-2x"></i>
+                        </div>
+                        <div class="ps-3 my-auto">
+                            <h4 class="mb-0">Person Name</h4>
+                            <p class="m-0">Profession</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="d-flex">
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                        </div>
+                        <p class="fs-5 m-0 pt-3">Lorem ipsum dolor sit amet elit, sed do eiusmod tempor ut labore et dolore magna aliqua.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="owl-carousel testimonial-carousel testimonial-carousel-2 wow bounceInUp" data-wow-delay="0.3s">
+                <div class="testimonial-item rounded bg-light">
+                    <div class="d-flex mb-3">
+                        <img src="img/testimonial-1.jpg" class="img-fluid rounded-circle flex-shrink-0" alt="">
+                        <div class="position-absolute" style="top: 15px; right: 20px;">
+                            <i class="fa fa-quote-right fa-2x"></i>
+                        </div>
+                        <div class="ps-3 my-auto">
+                            <h4 class="mb-0">Person Name</h4>
+                            <p class="m-0">Profession</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="d-flex">
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                        </div>
+                        <p class="fs-5 m-0 pt-3">Lorem ipsum dolor sit amet elit, sed do eiusmod tempor ut labore et dolore magna aliqua.</p>
+                    </div>
+                </div>
+                <div class="testimonial-item rounded bg-light">
+                    <div class="d-flex mb-3">
+                        <img src="img/testimonial-2.jpg" class="img-fluid rounded-circle flex-shrink-0" alt="">
+                        <div class="position-absolute" style="top: 15px; right: 20px;">
+                            <i class="fa fa-quote-right fa-2x"></i>
+                        </div>
+                        <div class="ps-3 my-auto">
+                            <h4 class="mb-0">Person Name</h4>
+                            <p class="m-0">Profession</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="d-flex">
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                        </div>
+                        <p class="fs-5 m-0 pt-3">Lorem ipsum dolor sit amet elit, sed do eiusmod tempor ut labore et dolore magna aliqua.</p>
+                    </div>
+                </div>
+                <div class="testimonial-item rounded bg-light">
+                    <div class="d-flex mb-3">
+                        <img src="img/testimonial-3.jpg" class="img-fluid rounded-circle flex-shrink-0" alt="">
+                        <div class="position-absolute" style="top: 15px; right: 20px;">
+                            <i class="fa fa-quote-right fa-2x"></i>
+                        </div>
+                        <div class="ps-3 my-auto">
+                            <h4 class="mb-0">Person Name</h4>
+                            <p class="m-0">Profession</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="d-flex">
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                        </div>
+                        <p class="fs-5 m-0 pt-3">Lorem ipsum dolor sit amet elit, sed do eiusmod tempor ut labore et dolore magna aliqua.</p>
+                    </div>
+                </div>
+                <div class="testimonial-item rounded bg-light">
+                    <div class="d-flex mb-3">
+                        <img src="img/testimonial-4.jpg" class="img-fluid rounded-circle flex-shrink-0" alt="">
+                        <div class="position-absolute" style="top: 15px; right: 20px;">
+                            <i class="fa fa-quote-right fa-2x"></i>
+                        </div>
+                        <div class="ps-3 my-auto">
+                            <h4 class="mb-0">Person Name</h4>
+                            <p class="m-0">Profession</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="d-flex">
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                            <i class="fas fa-star text-primary"></i>
+                        </div>
+                        <p class="fs-5 m-0 pt-3">Lorem ipsum dolor sit amet elit, sed do eiusmod tempor ut labore et dolore magna aliqua.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Testimonial End -->
+
+
+    <!-- Blog Start -->
+    <div class="container-fluid blog py-6">
+        <div class="container">
+            <div class="text-center wow bounceInUp" data-wow-delay="0.1s">
+                <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">Our Blog</small>
+                <h1 class="display-5 mb-5">Be First Who Read News</h1>
+            </div>
+            <div class="row gx-4 justify-content-center">
+                <div class="col-md-6 col-lg-4 wow bounceInUp" data-wow-delay="0.1s">
+                    <div class="blog-item">
+                        <div class="overflow-hidden rounded">
+                            <img src="img/blog-1.jpg" class="img-fluid w-100" alt="">
+                        </div>
+                        <div class="blog-content mx-4 d-flex rounded bg-light">
+                            <div class="text-dark bg-primary rounded-start">
+                                <div class="h-100 p-3 d-flex flex-column justify-content-center text-center">
+                                    <p class="fw-bold mb-0">16</p>
+                                    <p class="fw-bold mb-0">Sep</p>
+                                </div>
+                            </div>
+                            <a href="#" class="h5 lh-base my-auto h-100 p-3">How to get more test in your food from</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 wow bounceInUp" data-wow-delay="0.3s">
+                    <div class="blog-item">
+                        <div class="overflow-hidden rounded">
+                            <img src="img/blog-2.jpg" class="img-fluid w-100" alt="">
+                        </div>
+                        <div class="blog-content mx-4 d-flex rounded bg-light">
+                            <div class="text-dark bg-primary rounded-start">
+                                <div class="h-100 p-3 d-flex flex-column justify-content-center text-center">
+                                    <p class="fw-bold mb-0">16</p>
+                                    <p class="fw-bold mb-0">Sep</p>
+                                </div>
+                            </div>
+                            <a href="#" class="h5 lh-base my-auto h-100 p-3">How to get more test in your food from</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 wow bounceInUp" data-wow-delay="0.5s">
+                    <div class="blog-item">
+                        <div class="overflow-hidden rounded">
+                            <img src="img/blog-3.jpg" class="img-fluid w-100" alt="">
+                        </div>
+                        <div class="blog-content mx-4 d-flex rounded bg-light">
+                            <div class="text-dark bg-primary rounded-start">
+                                <div class="h-100 p-3 d-flex flex-column justify-content-center text-center">
+                                    <p class="fw-bold mb-0">16</p>
+                                    <p class="fw-bold mb-0">Sep</p>
+                                </div>
+                            </div>
+                            <a href="#" class="h5 lh-base my-auto h-100 p-3">How to get more test in your food from</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Blog End -->
 </main>
 
 </body>
