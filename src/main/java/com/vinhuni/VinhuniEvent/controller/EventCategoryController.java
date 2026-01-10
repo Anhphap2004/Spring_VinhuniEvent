@@ -1,4 +1,5 @@
 package com.vinhuni.VinhuniEvent.controller;
+import com.vinhuni.VinhuniEvent.config.RequiredRole;
 import com.vinhuni.VinhuniEvent.model.EventCategory;
 import com.vinhuni.VinhuniEvent.service.EventCategoryService;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequiredRole({1})
 @RequestMapping("/admin/event_categories")
 public class EventCategoryController {
     private EventCategoryService eventCategoryService;

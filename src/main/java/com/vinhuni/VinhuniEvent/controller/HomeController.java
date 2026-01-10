@@ -42,6 +42,10 @@ public class HomeController {
         return "fragments/event-list :: eventListFragment";
     }
 
+    @GetMapping("/403")
+    public String accessDenied() {
+        return "403"; // Trả về file 403.html
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package com.vinhuni.VinhuniEvent.controller;
 
+import com.vinhuni.VinhuniEvent.config.RequiredRole;
 import com.vinhuni.VinhuniEvent.model.User;
 import com.vinhuni.VinhuniEvent.model.Role; // Giả định bạn có Role model và RoleService
 import com.vinhuni.VinhuniEvent.service.UserService;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequiredRole({1})
 @RequestMapping("/admin/users") // Base URL cho quản lý người dùng
 public class UserController {
 

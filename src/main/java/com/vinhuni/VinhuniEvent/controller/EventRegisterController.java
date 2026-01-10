@@ -1,5 +1,6 @@
 package com.vinhuni.VinhuniEvent.controller;
 
+import com.vinhuni.VinhuniEvent.config.RequiredRole;
 import com.vinhuni.VinhuniEvent.exception.RegistrationException;
 import com.vinhuni.VinhuniEvent.model.Event;
 import com.vinhuni.VinhuniEvent.model.EventRegistration;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.*;
 
 @Controller
+@RequiredRole({1, 3})
 @RequestMapping("/admin/event_register")
 public class EventRegisterController {
 
