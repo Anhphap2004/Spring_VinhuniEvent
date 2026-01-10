@@ -38,15 +38,19 @@ public class EventController {
         List<Event> events;
 
         if (categoryId != null) {
-            // SỬA: Gọi hàm chỉ lấy active
             events = eventService.getActiveEventsByCategoryId(categoryId);
         } else {
-            // SỬA: Gọi hàm chỉ lấy active
             events = eventService.getAllActiveEvents();
         }
 
+        // --- BỔ SUNG 2 DÒNG NÀY ---
+        // Lấy danh sách danh mục để hiển thị lên sidebar
+        model.addAttribute("eventCategories", eventCategoryService.getAllEventCategories());
+        // Truyền categoryId hiện tại để làm sáng (active) menu bên trái
+        model.addAttribute("selectedCategory", categoryId);
+        // --------------------------
+
         model.addAttribute("events", events);
-        // ... code khác ...
         return "main/event/index";
     }
 

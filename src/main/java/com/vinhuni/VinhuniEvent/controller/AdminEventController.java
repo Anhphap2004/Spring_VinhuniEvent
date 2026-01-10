@@ -45,7 +45,7 @@ public class AdminEventController {
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("event", new Event());
-        model.addAttribute("categories", categoryService.getAllEventCategories()); // Load danh mục để chọn
+        model.addAttribute("categories", categoryService.getAllEventCategories());
         return "admin/event/form";
     }
 

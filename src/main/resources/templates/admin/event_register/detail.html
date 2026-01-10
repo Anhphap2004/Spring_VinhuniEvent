@@ -78,11 +78,11 @@
                     <tr th:each="reg, stat : ${registrations}" th:data-status="${reg.status}">
                         <td class="text-center" th:text="${stat.count}">1</td>
 
-                        <td class="fw-bold" th:text="${reg.user.full_name}">Nguyễn Văn A</td>
+                        <td class="fw-bold" th:text="${reg.user.fullName}">Nguyễn Văn A</td>
 
                         <td>
                             <div class="small text-muted"><i class="fas fa-envelope me-1"></i><span th:text="${reg.user.email}"></span></div>
-                            <div class="small text-muted" th:if="${reg.user.student_code}"><i class="fas fa-id-card me-1"></i><span th:text="${reg.user.student_code}"></span></div>
+                            <div class="small text-muted" th:if="${reg.user.studentCode}"><i class="fas fa-id-card me-1"></i><span th:text="${reg.user.student_code}"></span></div>
                         </td>
 
                         <td class="text-center">

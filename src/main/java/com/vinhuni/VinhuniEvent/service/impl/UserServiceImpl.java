@@ -87,25 +87,16 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public User authenticate(String email, String password) {
-        // 1. Tìm user theo email
         User user = userRepository.findByEmail(email);
-
-        // 2. Nếu không thấy -> Ném lỗi
         if (user == null) {
             throw new RegistrationException("Email không tồn tại!");
         }
-
-        // 3. Nếu thấy nhưng sai mật khẩu -> Ném lỗi
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new RegistrationException("Mật khẩu không chính xác!");
         }
-
-        // 4. Nếu bị khóa -> Ném lỗi
         if (user.getIsActive() != null && !user.getIsActive()) {
             throw new RegistrationException("Tài khoản đã bị khóa!");
         }
-
-        // 5. Mọi thứ ok thì mới trả về user
         return user;
     }
 }
