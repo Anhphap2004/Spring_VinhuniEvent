@@ -1,71 +1,359 @@
 <footer th:fragment="footer">
-    <!-- Footer Start -->
-    <div class="container-fluid footer py-6 my-6 mb-0 bg-light wow bounceInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-item">
-                        <h1 class="text-primary">Cater<span class="text-dark">Serv</span></h1>
-                        <p class="lh-lg mb-4">There cursus massa at urnaaculis estieSed aliquamellus vitae ultrs condmentum leo massamollis its estiegittis miristum.</p>
-                        <div class="footer-icon d-flex">
-                            <a class="btn btn-primary btn-sm-square me-2 rounded-circle" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-primary btn-sm-square me-2 rounded-circle" href=""><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="btn btn-primary btn-sm-square me-2 rounded-circle"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="btn btn-primary btn-sm-square rounded-circle"><i class="fab fa-linkedin-in"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-item">
-                        <h4 class="mb-4">Special Facilities</h4>
-                        <div class="d-flex flex-column align-items-start">
-                            <a class="text-body mb-3" href=""><i class="fa fa-check text-primary me-2"></i>Cheese Burger</a>
-                            <a class="text-body mb-3" href=""><i class="fa fa-check text-primary me-2"></i>Sandwich</a>
-                            <a class="text-body mb-3" href=""><i class="fa fa-check text-primary me-2"></i>Panner Burger</a>
-                            <a class="text-body mb-3" href=""><i class="fa fa-check text-primary me-2"></i>Special Sweets</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-item">
-                        <h4 class="mb-4">Contact Us</h4>
-                        <div class="d-flex flex-column align-items-start">
-                            <p><i class="fa fa-map-marker-alt text-primary me-2"></i> 123 Street, New York, USA</p>
-                            <p><i class="fa fa-phone-alt text-primary me-2"></i> (+012) 3456 7890 123</p>
-                            <p><i class="fas fa-envelope text-primary me-2"></i> info@example.com</p>
-                            <p><i class="fa fa-clock text-primary me-2"></i> 26/7 Hours Service</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-item">
-                        <h4 class="mb-4">Social Gallery</h4>
-                        <div class="row g-2">
-                            <div class="col-4">
-                                <img th:src="@{/assets/img/menu-01.jpg}" class="img-fluid rounded-circle border border-primary p-2" alt="">
-                            </div>
-                            <div class="col-4">
-                                <img th:src="@{/assets/img/menu-02.jpg}" class="img-fluid rounded-circle border border-primary p-2" alt="">
-                            </div>
-                            <div class="col-4">
-                                <img th:src="@{/assets/img/menu-03.jpg}" class="img-fluid rounded-circle border border-primary p-2" alt="">
-                            </div>
-                            <div class="col-4">
-                                <img th:src="@{/assets/img/menu-04.jpg}" class="img-fluid rounded-circle border border-primary p-2" alt="">
-                            </div>
-                            <div class="col-4">
-                                <img th:src="@{/assets/img/menu-05.jpg}" class="img-fluid rounded-circle border border-primary p-2" alt="">
-                            </div>
-                            <div class="col-4">
-                                <img th:src="@{/assets/img/menu-06.jpg}" class="img-fluid rounded-circle border border-primary p-2" alt="">
-                            </div>
+    <style>
+        .footer-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #ffffff;
+            padding: 60px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
 
+        .footer-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .footer-logo-text h3 {
+            color: #ffd700;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .footer-logo-text p {
+            color: #e0e0e0;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .footer-title {
+            color: #ffd700;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background: #ffd700;
+        }
+
+        .footer-description {
+            color: #d0d0d0;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a:hover {
+            color: #ffd700;
+            padding-left: 5px;
+        }
+
+        .footer-links i {
+            color: #ffd700;
+            font-size: 12px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: start;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+            font-size: 15px;
+        }
+
+        .contact-item i {
+            color: #ffd700;
+            font-size: 18px;
+            margin-top: 3px;
+        }
+
+        .contact-item a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-item a:hover {
+            color: #ffd700;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .social-links a:hover {
+            background: #ffd700;
+            color: #1e3c72;
+            transform: translateY(-3px);
+            border-color: #ffd700;
+        }
+
+        .event-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .event-gallery img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .event-gallery img:hover {
+            transform: scale(1.05);
+            border-color: #ffd700;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .footer-bottom {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .copyright {
+            color: #d0d0d0;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .copyright a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-menu {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-menu a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-menu a:hover {
+            color: #ffd700;
+        }
+
+        @media (max-width: 768px) {
+            .footer-section {
+                padding: 40px 0 0;
+            }
+
+            .footer-title {
+                font-size: 18px;
+            }
+
+            .footer-bottom-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <div class="footer-section">
+        <div class="container footer-content">
+            <div class="row">
+                <!-- Cột 1: Thông tin trường -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-logo">
+                        <img th:src="@{/assets/img/vinh-university-logo.png}" alt="Logo ĐH Vinh">
+                        <div class="footer-logo-text">
+                            <h3>ĐH Vinh</h3>
+                            <p>Events Portal</p>
                         </div>
+                    </div>
+                    <p class="footer-description">
+                        Cổng thông tin sự kiện chính thức của Trường Đại học Vinh - Nơi kết nối và chia sẻ những hoạt động văn hóa, học thuật và cộng đồng sinh viên.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/dhvinh" target="_blank" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://youtube.com/dhvinh" target="_blank" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#" target="_blank" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" target="_blank" title="Zalo">
+                            <i class="fas fa-comment-dots"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cột 2: Danh mục sự kiện -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h4 class="footer-title">Danh Mục Sự Kiện</h4>
+                    <ul class="footer-links">
+                        <li><a th:href="@{/events/academic}"><i class="fas fa-chevron-right"></i> Sự kiện học thuật</a></li>
+                        <li><a th:href="@{/events/cultural}"><i class="fas fa-chevron-right"></i> Văn hóa - Nghệ thuật</a></li>
+                        <li><a th:href="@{/events/sports}"><i class="fas fa-chevron-right"></i> Thể thao - Giải trí</a></li>
+                        <li><a th:href="@{/events/volunteer}"><i class="fas fa-chevron-right"></i> Tình nguyện - Cộng đồng</a></li>
+                        <li><a th:href="@{/events/career}"><i class="fas fa-chevron-right"></i> Hướng nghiệp - Việc làm</a></li>
+                        <li><a th:href="@{/events/workshop}"><i class="fas fa-chevron-right"></i> Workshop - Đào tạo</a></li>
+                    </ul>
+                </div>
+
+                <!-- Cột 3: Liên hệ -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h4 class="footer-title">Liên Hệ</h4>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>Địa chỉ:</strong><br>
+                            182 Lê Duẩn, TP. Vinh, Nghệ An
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <strong>Điện thoại:</strong><br>
+                            <a href="tel:0383841270">(038) 384 1270</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>Email:</strong><br>
+                            <a href="mailto:events@vinhuni.edu.vn">events@vinhuni.edu.vn</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>Giờ làm việc:</strong><br>
+                            T2 - T6: 7:30 - 17:00
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cột 4: Thư viện ảnh sự kiện -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h4 class="footer-title">Sự Kiện Nổi Bật</h4>
+                    <div class="event-gallery">
+                        <img th:src="@{/assets/img/event-01.jpg}" alt="Sự kiện 1">
+                        <img th:src="@{/assets/img/event-02.jpg}" alt="Sự kiện 2">
+                        <img th:src="@{/assets/img/event-03.jpg}" alt="Sự kiện 3">
+                        <img th:src="@{/assets/img/event-04.jpg}" alt="Sự kiện 4">
+                        <img th:src="@{/assets/img/event-05.jpg}" alt="Sự kiện 5">
+                        <img th:src="@{/assets/img/event-06.jpg}" alt="Sự kiện 6">
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Footer End -->
 
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p class="copyright">
+                        &copy; 2026 <a href="https://vinhuni.edu.vn" target="_blank">Đại học Vinh</a>. All Rights Reserved.
+                    </p>
+                    <ul class="footer-menu">
+                        <li><a th:href="@{/about}">Giới thiệu</a></li>
+                        <li><a th:href="@{/privacy}">Chính sách</a></li>
+                        <li><a th:href="@{/terms}">Điều khoản</a></li>
+                        <li><a th:href="@{/contact}">Liên hệ</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>

@@ -247,9 +247,6 @@
                         <span class="brand-name">Vinhuni Event</span>
                     </div>
                 </a>
-
-
-
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars"></span>
@@ -284,16 +281,27 @@
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-christmas">
 
                             <div th:if="${loggedInUser != null}">
-                                <span class="dropdown-item dropdown-item-christmas" style="font-style: italic; font-weight: bold; cursor: default;">
-                                    Xin chào, <span th:text="${loggedInUser.full_name}">User Name</span>
-                                </span>
+
+        <span class="dropdown-item dropdown-item-christmas" style="font-style: italic; font-weight: bold; cursor: default;">
+            Xin chào, <span th:text="${loggedInUser.full_name}">User Name</span>
+        </span>
 
                                 <a th:href="@{/profile}" class="dropdown-item dropdown-item-christmas">
                                     <i class="fa fa-id-card"></i> Hồ sơ cá nhân
                                 </a>
-                                <a th:href="@{/profile/request}" class="dropdown-item dropdown-item-christmas">
-                                    <i class="fa fa-id-card"></i> Yêu cầu nâng quyền
+
+                                <a th:if="${loggedInUser.role != null && loggedInUser.role.role_id == 2}"
+                                   th:href="@{/profile/request}"
+                                   class="dropdown-item dropdown-item-christmas">
+                                    <i class="fa fa-arrow-circle-up"></i> Yêu cầu nâng quyền
                                 </a>
+
+                                <a th:if="${loggedInUser.role != null && (loggedInUser.role.role_id == 3 || loggedInUser.role.role_id == 1)}"
+                                   th:href="@{/admin/dashboard}"
+                                   class="dropdown-item dropdown-item-christmas">
+                                    <i class="fa fa-cogs"></i> Ban tổ chức - Quản lý
+                                </a>
+
                                 <div class="dropdown-divider"></div>
 
                                 <a th:href="@{/logout}" class="dropdown-item dropdown-item-christmas">
@@ -311,6 +319,8 @@
                             </div>
 
                         </div>
+
+
                     </div>
                 </div>
             </nav>
