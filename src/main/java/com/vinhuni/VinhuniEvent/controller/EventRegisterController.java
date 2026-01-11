@@ -43,6 +43,12 @@ public class EventRegisterController {
     public String listRegisteredEvents(Model model) {
         List<Event> events = eventService.getAllEvents();
         model.addAttribute("events", events);
+        int totalRegistrations = events.stream()
+                .mapToInt(e -> e.getEventRegistrations().size())
+                .sum();
+
+        model.addAttribute("totalRegistrations", totalRegistrations);
+
         return "admin/event_register/list";
     }
 

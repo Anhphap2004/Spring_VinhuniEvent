@@ -1,127 +1,90 @@
 <div th:fragment="admin_side_bar">
-<nav id="sidebar" class="sidebar js-sidebar">
-    <div class="sidebar-content js-simplebar">
-        <a class="sidebar-brand" href="/admin">
-            <span class="align-middle">VinhuniEvent</span>
-        </a>
+    <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
 
-        <ul class="sidebar-nav">
-            <li class="sidebar-header">
-                Pages
-            </li>
+            <a class="sidebar-brand d-flex align-items-center" href="/admin" style="padding-top: 1.5rem; padding-bottom: 1.5rem;">
+                <img src="/uploads/logo.jpg" alt="Logo"
+                     style="width: 35px; height: 35px; border-radius: 5px; margin-right: 10px; object-fit: cover;"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block'">
+                <i class="align-middle text-primary" data-feather="hexagon" style="display:none; margin-right: 10px;"></i>
 
-            <li class="sidebar-item active">
-                <a class="sidebar-link" th:href="@{/admin}">
-                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
-                </a>
-            </li>
+                <span class="align-middle" style="font-size: 1.2rem; font-weight: 600;">VinhuniEvent</span>
+            </a>
 
-            <li class="sidebar-item">
-                <a class="sidebar-link" th:href="@{/admin/users}">
-                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Quản Lý Người Dùng</span>
-                </a>
-            </li>
+            <ul class="sidebar-nav">
 
-<!--            <li class="sidebar-item">-->
-<!--                <a class="sidebar-link" href="pages-sign-in.html">-->
-<!--                    <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Sign In</span>-->
-<!--                </a>-->
-<!--            </li>-->
+                <li class="sidebar-header">
+                    Tổng quan
+                </li>
 
-<!--            <li class="sidebar-item">-->
-<!--                <a class="sidebar-link" href="pages-sign-up.html">-->
-<!--                    <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Sign Up</span>-->
-<!--                </a>-->
-<!--            </li>-->
+                <li class="sidebar-item" th:classappend="${currentPage == 'dashboard'} ? 'active'">
+                    <a class="sidebar-link" th:href="@{/admin}">
+                        <i class="align-middle" data-feather="sliders"></i>
+                        <span class="align-middle">Dashboard</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item">
-                <a class="sidebar-link" th:href="@{/admin/roles}">
-                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Phân Quyền</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" th:href="@{/admin/role-requests}">
-                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Nâng Quyền</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" th:href="@{/admin/event_categories}">
-                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Danh Mục Sự Kiện</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" th:href="@{/admin/events}">
-                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Quản Lý Sự Kiện</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" th:href="@{/admin/event_register}">
-                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">QL Đăng Ký Sự Kiện</span>
-                </a>
-            </li>
+                <li class="sidebar-header">
+                    Hệ thống
+                </li>
 
-            <li class="sidebar-header">
-                Tools & Components
-            </li>
+                <li class="sidebar-item" th:classappend="${currentPage == 'users'} ? 'active'">
+                    <a class="sidebar-link" th:href="@{/admin/users}">
+                        <i class="align-middle" data-feather="users"></i>
+                        <span class="align-middle">Người dùng</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="ui-buttons.html">
-                    <i class="align-middle" data-feather="square"></i> <span class="align-middle">Buttons</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${currentPage == 'roles'} ? 'active'">
+                    <a class="sidebar-link" th:href="@{/admin/roles}">
+                        <i class="align-middle" data-feather="shield"></i>
+                        <span class="align-middle">Phân quyền</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="ui-forms.html">
-                    <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Forms</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${currentPage == 'role-requests'} ? 'active'">
+                    <a class="sidebar-link" th:href="@{/admin/role-requests}">
+                        <i class="align-middle" data-feather="user-check"></i>
+                        <span class="align-middle">Yêu cầu nâng quyền</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="ui-cards.html">
-                    <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Cards</span>
-                </a>
-            </li>
+                <li class="sidebar-header">
+                    Quản lý Sự kiện
+                </li>
 
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="ui-typography.html">
-                    <i class="align-middle" data-feather="align-left"></i> <span class="align-middle">Typography</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${currentPage == 'categories'} ? 'active'">
+                    <a class="sidebar-link" th:href="@{/admin/event_categories}">
+                        <i class="align-middle" data-feather="layers"></i>
+                        <span class="align-middle">Danh mục</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="icons-feather.html">
-                    <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">Icons</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${currentPage == 'events'} ? 'active'">
+                    <a class="sidebar-link" th:href="@{/admin/events}">
+                        <i class="align-middle" data-feather="calendar"></i>
+                        <span class="align-middle">Danh sách sự kiện</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-header">
-                Plugins & Addons
-            </li>
+                <li class="sidebar-item" th:classappend="${currentPage == 'registrations'} ? 'active'">
+                    <a class="sidebar-link" th:href="@{/admin/event_register}">
+                        <i class="align-middle" data-feather="clipboard"></i>
+                        <span class="align-middle">Đăng ký tham gia</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="charts-chartjs.html">
-                    <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Charts</span>
-                </a>
-            </li>
+                <li class="sidebar-header">
+                    Cài đặt
+                </li>
 
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="maps-google.html">
-                    <i class="align-middle" data-feather="map"></i> <span class="align-middle">Maps</span>
-                </a>
-            </li>
-        </ul>
-
-        <div class="sidebar-cta">
-            <div class="sidebar-cta-content">
-                <strong class="d-inline-block mb-2">Upgrade to Pro</strong>
-                <div class="mb-3 text-sm">
-                    Are you looking for more components? Check out our premium version.
-                </div>
-                <div class="d-grid">
-                    <a href="upgrade-to-pro.html" class="btn btn-primary">Upgrade to Pro</a>
-                </div>
-            </div>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#">
+                        <i class="align-middle" data-feather="settings"></i>
+                        <span class="align-middle">Cấu hình chung</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-    </div>
-</nav>
+    </nav>
 </div>

@@ -4,122 +4,408 @@
       layout:decorate="~{admin/layout/base}">
 <head>
     <title th:text="${event.title} + ' | Chi tiết Đăng ký'"></title>
-</head>
-<div layout:fragment="content">
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .page-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .page-header .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0.5rem 0 0;
+        }
+        .page-header .breadcrumb a { color: rgba(255,255,255,0.8); }
+        .page-header .breadcrumb .active { color: white; }
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h3 mb-0 text-gray-800">
-            <i class="fas fa-list-alt me-2 text-primary"></i> Chi tiết Đăng ký
-        </h2>
-        <a th:href="@{/admin/event_register}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-arrow-left me-1"></i> Quay lại Danh sách
-        </a>
+        .event-info-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .event-info-card h5 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #667eea;
+        }
+        .event-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .event-detail-item {
+            display: flex;
+            align-items: center;
+        }
+        .event-detail-item i {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1rem;
+        }
+        .event-detail-item i.time { background: #e3f2fd; color: #1565c0; }
+        .event-detail-item i.location { background: #fce4ec; color: #c2185b; }
+        .event-detail-item i.count { background: #e8f5e9; color: #2e7d32; }
+        .event-detail-item i.max { background: #fff3e0; color: #ef6c00; }
+        .event-detail-item .detail-text label {
+            display: block;
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .event-detail-item .detail-text span {
+            font-weight: 600;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .filter-bar {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+        .filter-bar .form-select {
+            max-width: 250px;
+        }
+        .filter-stats {
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+        }
+        .filter-stat {
+            text-align: center;
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .filter-stat .count { font-size: 1.25rem; font-weight: 700; }
+        .filter-stat .label { font-size: 0.75rem; color: #666; }
+        .filter-stat.pending .count { color: #f59e0b; }
+        .filter-stat.confirmed .count { color: #10b981; }
+
+        .registrations-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .registrations-card .card-header {
+            background: #f8f9fa;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .registrations-card .card-header h5 {
+            margin: 0;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .table-registrations {
+            margin: 0;
+        }
+        .table-registrations thead th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+            padding: 1rem;
+            border: none;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        .table-registrations tbody tr {
+            transition: background-color 0.15s;
+        }
+        .table-registrations tbody tr:hover {
+            background-color: #f8f9ff;
+        }
+        .table-registrations tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #eee;
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+        }
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 1rem;
+            font-size: 1rem;
+        }
+        .user-info h6 { margin: 0 0 3px; font-weight: 600; color: #333; }
+        .user-info .email { font-size: 0.85rem; color: #666; }
+
+        .contact-info {
+            font-size: 0.9rem;
+        }
+        .contact-info div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .contact-info div:last-child { margin-bottom: 0; }
+        .contact-info i {
+            width: 20px;
+            color: #888;
+            margin-right: 8px;
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+        }
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        .status-confirmed {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .action-buttons .btn {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<div layout:fragment="content" class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <nav class="breadcrumb mb-2">
+                    <a th:href="@{/admin/event_register}" class="breadcrumb-item">Quản lý đăng ký</a>
+                    <span class="breadcrumb-item active">Chi tiết</span>
+                </nav>
+                <h1><i class="fas fa-users me-2"></i><span th:text="${event.title}">Tên sự kiện</span></h1>
+            </div>
+            <a th:href="@{/admin/event_register}" class="btn btn-light">
+                <i class="fas fa-arrow-left me-1"></i>Quay lại
+            </a>
+        </div>
     </div>
 
-    <div class="card shadow mb-4 border-left-primary">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary" th:text="${event.title}">Tên Sự kiện</h6>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><i class="far fa-clock me-2"></i><strong>Thời gian:</strong> <span th:text="${#temporals.format(event.startTime, 'dd/MM/yyyy HH:mm')}"></span></p>
-                    <p><i class="fas fa-map-marker-alt me-2"></i><strong>Địa điểm:</strong> <span th:text="${event.location}"></span></p>
+    <!-- Alerts -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Event Info Card -->
+    <div class="event-info-card">
+        <h5><i class="fas fa-info-circle me-2"></i>Thông tin sự kiện</h5>
+        <div class="event-details">
+            <div class="event-detail-item">
+                <i class="fas fa-clock time"></i>
+                <div class="detail-text">
+                    <label>Thời gian bắt đầu</label>
+                    <span th:text="${#temporals.format(event.startTime, 'dd/MM/yyyy HH:mm')}"></span>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <h5 class="text-success">
-                        Tổng số đăng ký hiện tại:
-                        <span class="badge bg-success fs-6" th:text="${registrations.size()}">0</span>
-                    </h5>
-                    <small class="text-muted" th:if="${event.max_participants != null}">
-                        Giới hạn: <span th:text="${event.max_participants}"></span>
-                    </small>
+            </div>
+            <div class="event-detail-item">
+                <i class="fas fa-map-marker-alt location"></i>
+                <div class="detail-text">
+                    <label>Địa điểm</label>
+                    <span th:text="${event.location}"></span>
+                </div>
+            </div>
+            <div class="event-detail-item">
+                <i class="fas fa-users count"></i>
+                <div class="detail-text">
+                    <label>Số lượng đăng ký</label>
+                    <span class="text-success" th:text="${registrations.size()} + ' người'"></span>
+                </div>
+            </div>
+            <div class="event-detail-item">
+                <i class="fas fa-user-friends max"></i>
+                <div class="detail-text">
+                    <label>Giới hạn tham gia</label>
+                    <span th:if="${event.maxParticipants != null}" th:text="${event.maxParticipants} + ' người'"></span>
+                    <span th:unless="${event.maxParticipants != null}" class="text-muted">Không giới hạn</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mb-3 align-items-center">
-        <div class="col-md-4">
-            <label for="statusFilter" class="form-label fw-bold">Lọc theo Trạng thái:</label>
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <div>
+            <label for="statusFilter" class="form-label mb-1 fw-bold"><i class="fas fa-filter me-1"></i>Lọc trạng thái:</label>
             <select id="statusFilter" class="form-select">
-                <option value="Tất cả">Tất cả</option>
-                <option value="Đã đăng ký">Đã đăng ký (Chờ duyệt)</option>
-                <option value="Đã xác nhận đăng ký">Đã xác nhận</option>
+                <option value="Tất cả">Tất cả trạng thái</option>
+                <option value="Đã đăng ký">⏳ Chờ duyệt</option>
+                <option value="Đã xác nhận đăng ký">✅ Đã xác nhận</option>
             </select>
         </div>
-
-        <div class="col-md-8 mt-3 mt-md-0">
-            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show mb-0" role="alert">
-                <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="filter-stats">
+            <div class="filter-stat pending">
+                <div class="count" id="pendingCount">0</div>
+                <div class="label">Chờ duyệt</div>
             </div>
-            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show mb-0" role="alert">
-                <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="filter-stat confirmed">
+                <div class="count" id="confirmedCount">0</div>
+                <div class="label">Đã duyệt</div>
             </div>
         </div>
     </div>
 
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped align-middle" id="registrationTable" width="100%" cellspacing="0">
-                    <thead class="table-light">
-                    <tr>
-                        <th class="text-center" style="width: 50px;">#</th>
-                        <th><i class="fas fa-user me-1"></i> Sinh viên</th>
-                        <th>Thông tin liên hệ</th>
-                        <th class="text-center">Trạng thái</th>
-                        <th class="text-center" style="width: 200px;">Thao tác</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="reg, stat : ${registrations}" th:data-status="${reg.status}">
-                        <td class="text-center" th:text="${stat.count}">1</td>
+    <!-- Registrations Table -->
+    <div class="registrations-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5><i class="fas fa-list me-2"></i>Danh sách người đăng ký</h5>
+            <span class="badge bg-primary" th:text="${registrations.size()} + ' bản ghi'"></span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-registrations" id="registrationTable">
+                <thead>
+                <tr>
+                    <th style="width: 60px;">#</th>
+                    <th>Thông tin sinh viên</th>
+                    <th>Mã SV / Khoa</th>
+                    <th>Liên hệ</th>
+                    <th>Ngày đăng ký</th>
+                    <th class="text-center">Trạng thái</th>
+                    <th class="text-center" style="width: 200px;">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="reg, stat : ${registrations}" th:data-status="${reg.status}">
+                    <td class="text-center fw-bold text-muted" th:text="${stat.count}">1</td>
 
-                        <td class="fw-bold" th:text="${reg.user.full_name}">Nguyễn Văn A</td>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar"
+                                 th:text="${reg.user.fullName != null ? reg.user.fullName.substring(0,1).toUpperCase() : 'U'}">U</div>
+                            <div class="user-info">
+                                <h6 th:text="${reg.user.fullName}">Nguyễn Văn A</h6>
+                                <span class="email" th:text="${reg.user.email}">email@example.com</span>
+                            </div>
+                        </div>
+                    </td>
 
-                        <td>
-                            <div class="small text-muted"><i class="fas fa-envelope me-1"></i><span th:text="${reg.user.email}"></span></div>
-                            <div class="small text-muted" th:if="${reg.user.student_code}"><i class="fas fa-id-card me-1"></i><span th:text="${reg.user.student_code}"></span></div>
-                        </td>
+                    <td>
+                        <div th:if="${reg.user.studentCode}" class="fw-semibold text-primary" th:text="${reg.user.studentCode}"></div>
+                        <div th:if="${reg.user.faculty}" class="small text-muted" th:text="${reg.user.faculty}"></div>
+                        <div th:if="${reg.user.major}" class="small text-muted" th:text="${reg.user.major}"></div>
+                        <span th:unless="${reg.user.studentCode || reg.user.faculty}" class="text-muted">-</span>
+                    </td>
 
-                        <td class="text-center">
-                            <span th:if="${reg.status == 'Đã xác nhận đăng ký'}" class="badge bg-success">
-                                <i class="fas fa-check-circle"></i> Đã xác nhận
-                            </span>
-                            <span th:if="${reg.status == 'Đã đăng ký'}" class="badge bg-warning text-dark">
-                                <i class="fas fa-clock"></i> Chờ duyệt
-                            </span>
-                        </td>
+                    <td>
+                        <div class="contact-info">
+                            <div th:if="${reg.user.phoneNumber}">
+                                <i class="fas fa-phone"></i>
+                                <span th:text="${reg.user.phoneNumber}"></span>
+                            </div>
+                            <div>
+                                <i class="fas fa-envelope"></i>
+                                <span th:text="${reg.user.email}"></span>
+                            </div>
+                        </div>
+                    </td>
 
-                        <td class="text-center">
-                            <form th:action="@{/admin/event_register/update/{id}(id=${reg.registrationId})}" method="post" class="d-inline-block">
+                    <td>
+                        <span th:if="${reg.registrationDate}"
+                              th:text="${#temporals.format(reg.registrationDate, 'dd/MM/yyyy HH:mm')}"></span>
+                        <span th:unless="${reg.registrationDate}" class="text-muted">-</span>
+                    </td>
 
-                                <input type="hidden" name="eventId" th:value="${event.event_id}" />
+                    <td class="text-center">
+                        <span th:if="${reg.status == 'Đã xác nhận đăng ký'}" class="status-badge status-confirmed">
+                            <i class="fas fa-check-circle me-1"></i>Đã duyệt
+                        </span>
+                        <span th:if="${reg.status == 'Đã đăng ký'}" class="status-badge status-pending">
+                            <i class="fas fa-clock me-1"></i>Chờ duyệt
+                        </span>
+                    </td>
 
-                                <button type="submit" name="action" value="confirm"
-                                        th:if="${reg.status != 'Đã xác nhận đăng ký'}"
-                                        class="btn btn-success btn-sm me-1" title="Xác nhận đăng ký">
-                                    <i class="fas fa-check"></i> Duyệt
-                                </button>
+                    <td class="text-center">
+                        <form th:action="@{/admin/event_register/update/{id}(id=${reg.registrationId})}"
+                              method="post" class="action-buttons justify-content-center">
+                            <input type="hidden" name="eventId" th:value="${event.eventId}" />
 
-                                <button type="submit" name="action" value="cancel"
-                                        class="btn btn-danger btn-sm"
-                                        title="Hủy và Xóa bản ghi"
-                                        onclick="return confirm('CẢNH BÁO: Bạn có chắc chắn muốn HỦY và XÓA bản ghi này không? Hành động này không thể hoàn tác.');">
-                                    <i class="fas fa-trash-alt"></i> Hủy
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
+                            <button type="submit" name="action" value="confirm"
+                                    th:if="${reg.status != 'Đã xác nhận đăng ký'}"
+                                    class="btn btn-success" title="Xác nhận đăng ký">
+                                <i class="fas fa-check me-1"></i>Duyệt
+                            </button>
 
-                    <tr th:if="${#lists.isEmpty(registrations)}">
-                        <td colspan="5" class="text-center text-muted py-4">Chưa có sinh viên nào đăng ký.</td>
-                    </tr>
-                    </tbody>
-                </table>
+                            <button type="submit" name="action" value="cancel"
+                                    class="btn btn-outline-danger"
+                                    title="Hủy và Xóa"
+                                    onclick="return confirm('Bạn có chắc chắn muốn HỦY và XÓA đăng ký này?');">
+                                <i class="fas fa-trash-alt me-1"></i>Xóa
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div th:if="${#lists.isEmpty(registrations)}" class="empty-state">
+                <i class="fas fa-user-slash"></i>
+                <h5>Chưa có người đăng ký</h5>
+                <p class="text-muted">Sự kiện này chưa có sinh viên nào đăng ký tham gia</p>
             </div>
         </div>
     </div>
@@ -129,19 +415,27 @@
     document.addEventListener('DOMContentLoaded', function() {
         const filterSelect = document.getElementById('statusFilter');
         const tableBody = document.querySelector('#registrationTable tbody');
-        const rows = tableBody.querySelectorAll('tr');
+        const rows = tableBody.querySelectorAll('tr[data-status]');
+        const pendingCountEl = document.getElementById('pendingCount');
+        const confirmedCountEl = document.getElementById('confirmedCount');
 
-        // Hàm lọc bảng
+        // Đếm số lượng theo trạng thái
+        function countStatus() {
+            let pending = 0, confirmed = 0;
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status');
+                if (status === 'Đã đăng ký') pending++;
+                else if (status === 'Đã xác nhận đăng ký') confirmed++;
+            });
+            pendingCountEl.textContent = pending;
+            confirmedCountEl.textContent = confirmed;
+        }
+
+        // Lọc bảng
         function filterTable() {
             const selectedStatus = filterSelect.value;
-
             rows.forEach(row => {
-                // Lấy status từ thuộc tính data-status
                 const rowStatus = row.getAttribute('data-status');
-
-                // Nếu là dòng thông báo "Trống" thì bỏ qua
-                if (!rowStatus) return;
-
                 if (selectedStatus === 'Tất cả' || rowStatus === selectedStatus) {
                     row.style.display = '';
                 } else {
@@ -151,6 +445,7 @@
         }
 
         filterSelect.addEventListener('change', filterTable);
+        countStatus();
     });
 </script>
 </html>

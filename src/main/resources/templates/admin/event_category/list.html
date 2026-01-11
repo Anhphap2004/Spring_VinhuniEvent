@@ -4,55 +4,136 @@
       layout:decorate="~{admin/layout/base}">
 <head>
     <meta charset="UTF-8">
-    <title>Danh sách Danh mục Sự kiện</title>
+    <title>Quản lý Danh mục</title>
+    <style>
+        /* --- STYLE ĐỒNG BỘ HỆ THỐNG --- */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .page-header h1 { margin: 0; font-size: 1.75rem; font-weight: 600; }
+        .page-header p { margin: 0.5rem 0 0; opacity: 0.9; }
+
+        /* Stats Cards */
+        .stats-cards {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem; margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: white; border-radius: 10px; padding: 1.25rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08); display: flex; align-items: center;
+            transition: transform 0.2s; border-left: 4px solid #4e73df;
+        }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-icon {
+            width: 50px; height: 50px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 1rem; font-size: 1.25rem;
+            background: #e0e7ff; color: #4e73df;
+        }
+
+        /* Table */
+        .data-table-card {
+            background: white; border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow: hidden;
+        }
+        .data-table-card .card-header {
+            background: #f8f9fa; border-bottom: 1px solid #e9ecef;
+            padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center;
+        }
+        .data-table-card .card-header h5 { margin: 0; font-weight: 600; color: #333; }
+
+        .table-modern { margin: 0; }
+        .table-modern thead th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; font-weight: 600; padding: 1rem 0.75rem;
+            border: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px;
+        }
+        .table-modern tbody td { padding: 1rem 0.75rem; vertical-align: middle; border-bottom: 1px solid #eee; }
+        .table-modern tbody tr:hover { background-color: #f8f9ff; }
+
+        .action-btns .btn { padding: 0.35rem 0.6rem; font-size: 0.8rem; border-radius: 6px; margin: 0 2px; }
+        .empty-state { text-align: center; padding: 3rem; color: #999; }
+    </style>
 </head>
 <body>
-<div layout:fragment="content" class="main container-fluid py-5 px-4">
+<div layout:fragment="content" class="container-fluid py-4">
 
-    <h1 class="mb-4 text-primary">Danh sách Danh mục Sự kiện</h1>
-
-    <!-- Message thông báo -->
-    <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
-
-    <!-- Nút thêm mới -->
-    <div class="mb-3">
-        <a th:href="@{/admin/event_categories/new}" class="btn btn-success">
-            <i class="bi bi-plus-circle"></i> Thêm Danh mục mới
-        </a>
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-layer-group me-2"></i>Danh mục Sự kiện</h1>
+                <p>Phân loại và quản lý các nhóm sự kiện trong hệ thống</p>
+            </div>
+            <a th:href="@{/admin/event_categories/new}" class="btn btn-light btn-lg shadow-sm">
+                <i class="fas fa-plus me-2"></i>Thêm danh mục
+            </a>
+        </div>
     </div>
 
-    <!-- Bảng danh mục -->
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-primary">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Tên Danh mục</th>
-                <th scope="col">Hành động</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="category : ${eventCategories}">
-                <td th:text="${category.categoryId}">1</td>
-                <td th:text="${category.categoryName}">Thể thao</td>
-                <td>
-                    <a th:href="@{/admin/event_categories/edit/{id}(id=${category.categoryId})}"
-                       class="btn btn-sm btn-warning me-2">
-                        <i class="bi bi-pencil-square"></i> Sửa
-                    </a>
-                    <a th:href="@{/admin/event_categories/delete/{id}(id=${category.categoryId})}"
-                       class="btn btn-sm btn-danger"
-                       onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
-                        <i class="bi bi-trash"></i> Xóa
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fas fa-check-circle me-2"></i><span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="stats-cards">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-folder-open"></i></div>
+            <div class="stat-info">
+                <h4 th:text="${eventCategories != null ? eventCategories.size() : 0}">0</h4>
+                <p class="text-muted mb-0">Tổng danh mục hiện có</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="data-table-card">
+        <div class="card-header">
+            <h5><i class="fas fa-list me-2"></i>Danh sách Danh mục</h5>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-modern">
+                <thead>
+                <tr>
+                    <th class="text-center" style="width: 80px;">ID</th>
+                    <th>Tên Danh mục</th>
+                    <th class="text-center" style="width: 200px;">Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="category, stat : ${eventCategories}">
+                    <td class="text-center fw-bold text-muted" th:text="${category.categoryId}">1</td>
+                    <td>
+                        <span class="fw-bold text-dark" th:text="${category.categoryName}">Thể thao</span>
+                    </td>
+                    <td class="text-center action-btns">
+                        <a th:href="@{/admin/event_categories/edit/{id}(id=${category.categoryId})}"
+                           class="btn btn-warning btn-sm" title="Chỉnh sửa">
+                            <i class="fas fa-edit">Sửa</i>
+                        </a>
+                        <a th:href="@{/admin/event_categories/delete/{id}(id=${category.categoryId})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Cảnh báo: Xóa danh mục này có thể ảnh hưởng đến các sự kiện liên quan. Bạn có chắc chắn?');"
+                           title="Xóa">
+                            <i class="fas fa-trash-alt">Xoá</i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${eventCategories == null || eventCategories.isEmpty()}" class="empty-state">
+                <i class="fas fa-folder-minus fa-3x mb-3 opacity-25"></i>
+                <h5>Chưa có danh mục nào</h5>
+                <p class="text-muted">Hãy tạo danh mục đầu tiên để phân loại sự kiện.</p>
+                <a th:href="@{/admin/event_categories/new}" class="btn btn-primary mt-2">
+                    <i class="fas fa-plus me-1"></i>Thêm mới ngay
+                </a>
+            </div>
+        </div>
     </div>
 
 </div>
-
-
 </body>
 </html>

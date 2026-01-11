@@ -3,73 +3,172 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layout/base}">
 <head>
-    <title>Quản lý Đăng ký Sự kiện</title>
+    <title>Quản lý Đăng ký</title>
+    <style>
+        /* CSS Cũ giữ nguyên */
+        .card { border: none; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); margin-bottom: 1.5rem; }
+        .stat-card { border-left: 4px solid; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-card.primary { border-left-color: #4e73df; }
+        .stat-card.info { border-left-color: #36b9cc; }
+        .table th { font-weight: 600; font-size: 0.85rem; text-transform: uppercase; color: #6c757d; background-color: #f8f9fa; border-bottom: 2px solid #dee2e6; vertical-align: middle; }
+        .table td { vertical-align: middle; font-size: 0.9rem; }
+        .progress-label { font-size: 0.75rem; margin-bottom: 0.25rem; display: flex; justify-content: space-between; color: #5a5c69; }
+        .progress { height: 0.5rem; background-color: #eaecf4; border-radius: 0.25rem; }
+        .action-btn { padding: 0.25rem 0.5rem; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.25rem; }
+
+        /* THÊM MỚI: CSS cho hình ảnh thumbnail */
+        .event-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0; /* Đảm bảo ảnh không bị bóp méo */
+        }
+    </style>
 </head>
-<div layout:fragment="content">
+
+<div layout:fragment="content" class="container-fluid py-4 bg-light">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h3 mb-0 text-gray-800">
-            <i class="fas fa-clipboard-list me-2 text-primary"></i> Quản lý Người đăng ký Sự kiện
-        </h2>
+        <div>
+            <h4 class="mb-1 text-gray-800 font-weight-bold">Quản lý Đăng ký Sự kiện</h4>
+        </div>
     </div>
 
-    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle" width="100%" cellspacing="0">
-                    <thead class="table-light">
-                    <tr>
-                        <th class="text-center">STT</th>
-                        <th><i class="fas fa-bullhorn me-1"></i> Tên Sự kiện</th>
-                        <th><i class="far fa-clock me-1"></i> Thời gian Bắt đầu</th>
-                        <th><i class="fas fa-map-marker-alt me-1"></i> Địa điểm</th>
-                        <th><i class="fas fa-map-marker-alt me-1"></i> Số Lượng Đăng Kí</th>
-                        <th class="text-center">Thao tác</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="event, stat : ${events}">
-                        <td class="text-center" th:text="${stat.count}">1</td>
-
-                        <td class="fw-bold text-primary" th:text="${event.title}">Tên Sự kiện</td>
-
-                        <td th:text="${#temporals.format(event.startTime, 'dd/MM/yyyy HH:mm')}">01/01/2025 08:00</td>
-                        <td th:text="${event.location}">Hội trường A</td>
-                        <td class="text-center">
-
-<span class="badge bg-success"
-
-      th:text="${event.eventRegistrations.size()}">50</span>
-
-                        </td>
-                        <td class="text-center">
-                            <a th:href="@{/admin/event_register/{id}(id=${event.eventId})}"
-                               class="btn btn-info btn-sm me-1 text-white" title="Xem danh sách người đăng ký">
-                                <i class="fas fa-list-alt me-1"></i>DS Đăng ký
-                            </a>
-
-                            <a th:href="@{/admin/event_register/{id}/attendance(id=${event.eventId})}"
-                               class="btn btn-warning btn-sm text-dark" title="Quản lý điểm danh">
-                                <i class="fas fa-user-check me-1"></i>Điểm danh
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr th:if="${#lists.isEmpty(events)}">
-                        <td colspan="5" class="text-center text-muted py-3">Hiện chưa có sự kiện nào.</td>
-                    </tr>
-                    </tbody>
-                </table>
+    <div class="row g-3 mb-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="card stat-card primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sự kiện đang mở</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${events != null ? events.size() : 0}">0</div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-calendar-alt fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card stat-card info h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tổng lượt đăng ký</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalRegistrations}">0</div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-users fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3 border-bottom-0">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách & Tiến độ đăng ký</h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="bg-light">
+                <tr>
+                    <th class="text-center" style="width: 50px;">#</th>
+                    <th style="width: 30%;">Sự kiện</th>
+                    <th style="width: 25%;">Thời gian & Địa điểm</th>
+                    <th style="width: 20%;">Tiến độ đăng ký</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="event, stat : ${events}">
+                    <td class="text-center text-muted" th:text="${stat.count}">1</td>
+
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img th:src="${event.image}" class="event-thumb me-3 shadow-sm"
+                                 onerror="this.src='/assets/img/default-event.jpg'">
+
+                            <div>
+                                <span class="d-block fw-bold text-dark" th:text="${event.title}">Tên Sự kiện</span>
+                                <small class="text-muted" th:if="${event.maxParticipants == null}">
+                                    <i class="fas fa-infinity me-1"></i>Không giới hạn
+                                </small>
+                                <small class="text-muted" th:if="${event.maxParticipants != null}">
+                                    <i class="fas fa-user-friends me-1"></i>Giới hạn: <span th:text="${event.maxParticipants}"></span>
+                                </small>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="d-flex flex-column">
+                            <span class="text-dark font-weight-bold">
+                                <i class="far fa-clock me-1 text-primary"></i>
+                                <span th:text="${#temporals.format(event.startTime, 'dd/MM/yyyy HH:mm')}"></span>
+                            </span>
+                            <small class="text-muted mt-1">
+                                <i class="fas fa-map-marker-alt me-1 text-secondary"></i>
+                                <span th:text="${event.location}"></span>
+                            </small>
+                        </div>
+                    </td>
+
+                    <td class="align-middle">
+                        <div class="progress-wrapper">
+                            <div class="progress-label">
+                                <span class="fw-bold text-dark">
+                                    <span th:text="${event.eventRegistrations.size()}">0</span> người
+                                </span>
+                                <span class="text-muted" th:if="${event.maxParticipants != null}"
+                                      th:text="${T(java.lang.Math).round((event.eventRegistrations.size() * 100.0) / event.maxParticipants) + '%'}">
+                                    50%
+                                </span>
+                            </div>
+                            <div class="progress" th:if="${event.maxParticipants != null}">
+                                <div class="progress-bar bg-info" role="progressbar"
+                                     th:style="'width: ' + ${(event.eventRegistrations.size() * 100.0) / event.maxParticipants} + '%'"
+                                     th:aria-valuenow="${event.eventRegistrations.size()}" aria-valuemin="0"
+                                     th:aria-valuemax="${event.maxParticipants}">
+                                </div>
+                            </div>
+                            <div class="progress" th:if="${event.maxParticipants == null}">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%">
+                                    Mở tự do
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a th:href="@{/admin/event_register/{id}(id=${event.eventId})}"
+                               class="btn btn-primary btn-sm action-btn shadow-sm">
+                                <i class="fas fa-list-ul"></i> DS Đăng ký
+                            </a>
+                            <a th:href="@{/admin/event_register/{id}/attendance(id=${event.eventId})}"
+                               class="btn btn-success btn-sm action-btn shadow-sm text-white">
+                                <i class="fas fa-check-double"></i> Điểm danh
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr th:if="${events == null || events.isEmpty()}">
+                    <td colspan="5" class="text-center py-5">
+                        <div class="text-muted">
+                            <i class="fas fa-clipboard-list fa-3x mb-3 opacity-25"></i>
+                            <p class="mb-0">Hiện chưa có sự kiện nào để quản lý đăng ký.</p>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

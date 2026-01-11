@@ -1,68 +1,250 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{admin/layout/base}"> <head>
+      layout:decorate="~{admin/layout/base}">
+<head>
     <title>Quản lý Sự kiện</title>
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+        .page-header h1 { margin: 0; font-size: 1.75rem; font-weight: 600; }
+        .page-header p { margin: 0.5rem 0 0; opacity: 0.9; }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+        }
+        .stat-icon {
+            width: 50px; height: 50px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 1rem; font-size: 1.25rem;
+        }
+        .stat-icon.total { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .stat-icon.active { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; }
+        .stat-icon.inactive { background: linear-gradient(135deg, #bdc3c7, #2c3e50); color: white; }
+        .stat-info h4 { margin: 0; font-size: 1.5rem; font-weight: 700; color: #333; }
+        .stat-info p { margin: 0; font-size: 0.85rem; color: #666; }
+
+        .events-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .events-card .card-header {
+            background: #f8f9fa;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .events-card .card-header h5 { margin: 0; font-weight: 600; color: #333; }
+
+        .table-events { margin: 0; }
+        .table-events thead th {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            font-weight: 600;
+            padding: 1rem;
+            border: none;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        .table-events tbody tr { transition: background-color 0.15s; }
+        .table-events tbody tr:hover { background-color: #fff5f7; }
+        .table-events tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #eee;
+        }
+
+        .event-cell {
+            display: flex;
+            align-items: center;
+        }
+        .event-thumb {
+            width: 80px; height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .event-info h6 { margin: 0 0 4px; font-weight: 600; color: #333; }
+        .event-info small { color: #888; }
+
+        .category-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-active { background: #d1fae5; color: #059669; }
+        .status-inactive { background: #f3f4f6; color: #6b7280; }
+
+        .action-btns .btn {
+            padding: 0.4rem 0.65rem;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            margin: 0 2px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+        .empty-state i { font-size: 4rem; margin-bottom: 1rem; opacity: 0.3; }
+    </style>
 </head>
 
-<div layout:fragment="content">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Danh sách Sự kiện</h1>
-        <a th:href="@{/admin/events/create}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Thêm mới Sự kiện
-        </a>
+<div layout:fragment="content" class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-calendar-alt me-2"></i>Quản lý Sự kiện</h1>
+                <p>Tạo và quản lý các sự kiện trong hệ thống</p>
+            </div>
+            <a th:href="@{/admin/events/create}" class="btn btn-light btn-lg">
+                <i class="fas fa-plus me-2"></i>Tạo sự kiện
+            </a>
+        </div>
     </div>
 
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    <!-- Alerts -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i><span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tên sự kiện</th>
-                        <th>Hình ảnh</th>
-                        <th>Danh mục</th>
-                        <th>Bắt đầu</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="item : ${events}">
-                        <td th:text="${item.eventId}"></td>
-                        <td th:text="${item.title}"></td>
-                        <td class="text-center">
-                            <img th:src="${item.image}"
-                                 alt="Ảnh sự kiện"
-                                 style="width: 80px; height: 60px; object-fit: cover; border-radius: 6px;">
-                        </td>
+    <!-- Stats Row -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon total"><i class="fas fa-calendar"></i></div>
+            <div class="stat-info">
+                <h4 th:text="${events != null ? events.size() : 0}">0</h4>
+                <p>Tổng sự kiện</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon active"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-info">
+                <h4 th:text="${activeCount}">0</h4>
+                <p>Đang hoạt động</p>
+            </div>
+        </div>
 
-                        <td th:text="${item.category != null ? item.category.categoryName : 'N/A'}"></td>
-                        <td th:text="${#temporals.format(item.startTime, 'dd/MM/yyyy HH:mm')}"></td>
-                        <td>
-                            <span th:if="${item.isActive}" class="badge bg-success">Hoạt động</span>
-                            <span th:unless="${item.isActive}" class="badge bg-secondary">Tạm ẩn</span>
-                        </td>
-                        <td>
-                            <a th:href="@{/admin/events/detail/{id}(id=${item.eventId})}" class="btn btn-info btn-sm">
-                                <i class="fas fa-eye">Chi tiết</i>
-                            </a>
-                            <a th:href="@{/admin/events/edit/{id}(id=${item.eventId})}" class="btn btn-warning btn-sm">
-                                <i class="fas fa-edit">Sửa</i>
-                            </a>
-                            <a th:href="@{/admin/events/delete/{id}(id=${item.eventId})}"
-                               class="btn btn-danger btn-sm"
-                               onclick="return confirm('Bạn có chắc chắn muốn xóa sự kiện này?');">
-                                <i class="fas fa-trash">Xoá</i>
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+        <div class="stat-card">
+            <div class="stat-icon inactive"><i class="fas fa-eye-slash"></i></div>
+            <div class="stat-info">
+                <h4 th:text="${inactiveCount}">0</h4>
+                <p>Đang ẩn</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Events Table -->
+    <div class="events-card">
+        <div class="card-header">
+            <h5><i class="fas fa-list me-2"></i>Danh sách sự kiện</h5>
+            <span class="badge bg-primary" th:text="${events != null ? events.size() + ' sự kiện' : '0 sự kiện'}"></span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-events">
+                <thead>
+                <tr>
+                    <th style="width: 60px;">#</th>
+                    <th>Sự kiện</th>
+                    <th>Danh mục</th>
+                    <th>Thời gian</th>
+                    <th class="text-center">Trạng thái</th>
+                    <th class="text-center" style="width: 280px;">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item, stat : ${events}">
+                    <td class="text-center fw-bold text-muted" th:text="${stat.count}">1</td>
+                    <td>
+                        <div class="event-cell">
+                            <img th:src="${item.image}" th:alt="${item.title}" class="event-thumb"
+                                 onerror="this.src='/assets/img/default-event.jpg'">
+                            <div class="event-info">
+                                <h6 th:text="${item.title}">Tên sự kiện</h6>
+                                <small><i class="fas fa-map-marker-alt me-1"></i><span th:text="${item.location}">Địa điểm</span></small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span th:if="${item.category != null}" class="category-badge" th:text="${item.category.categoryName}">Danh mục</span>
+                        <span th:unless="${item.category != null}" class="text-muted">-</span>
+                    </td>
+                    <td>
+                        <div><i class="fas fa-calendar-day me-1 text-primary"></i><span th:text="${#temporals.format(item.startTime, 'dd/MM/yyyy')}"></span></div>
+                        <small class="text-muted"><i class="fas fa-clock me-1"></i><span th:text="${#temporals.format(item.startTime, 'HH:mm')}"></span></small>
+                    </td>
+                    <td class="text-center">
+                        <span th:if="${item.isActive}" class="status-badge status-active">
+                            <i class="fas fa-check-circle me-1"></i>Hoạt động
+                        </span>
+                        <span th:unless="${item.isActive}" class="status-badge status-inactive">
+                            <i class="fas fa-eye-slash me-1"></i>Tạm ẩn
+                        </span>
+                    </td>
+                    <td class="text-center action-btns">
+                        <a th:href="@{/admin/events/detail/{id}(id=${item.eventId})}" class="btn btn-info btn-sm text-white" title="Chi tiết">
+                            <i class="fas fa-eye">Xem</i>
+                        </a>
+                        <a th:href="@{/admin/events/edit/{id}(id=${item.eventId})}" class="btn btn-warning btn-sm" title="Sửa">
+                            <i class="fas fa-edit">Sửa</i>
+                        </a>
+                        <a th:href="@{/admin/events/delete/{id}(id=${item.eventId})}"
+                           class="btn btn-danger btn-sm" title="Xóa"
+                           onclick="return confirm('Bạn có chắc chắn muốn xóa sự kiện này?');">
+                            <i class="fas fa-trash-alt">Xoá</i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div th:if="${events == null || events.isEmpty()}" class="empty-state">
+                <i class="fas fa-calendar-times"></i>
+                <h5>Chưa có sự kiện nào</h5>
+                <p class="text-muted">Hãy tạo sự kiện đầu tiên ngay bây giờ</p>
+                <a th:href="@{/admin/events/create}" class="btn btn-primary mt-2">
+                    <i class="fas fa-plus me-1"></i>Tạo sự kiện
+                </a>
             </div>
         </div>
     </div>

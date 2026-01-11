@@ -3,53 +3,175 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layout/base}">
 <head>
-    <title>Danh sách Role</title>
+    <meta charset="UTF-8">
+    <title>Quản lý Phân quyền</title>
+    <style>
+        /* --- COPY STYLE TỪ TRANG USER ĐỂ ĐỒNG BỘ --- */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .page-header h1 { margin: 0; font-size: 1.75rem; font-weight: 600; }
+        .page-header p { margin: 0.5rem 0 0; opacity: 0.9; }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            display: flex; align-items: center;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-icon {
+            width: 50px; height: 50px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 1rem; font-size: 1.25rem;
+        }
+        .stat-icon.role { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+
+        .filter-card {
+            background: white; border-radius: 10px; padding: 1.25rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 1.5rem;
+        }
+
+        .data-table-card {
+            background: white; border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow: hidden;
+        }
+        .data-table-card .card-header {
+            background: #f8f9fa; border-bottom: 1px solid #e9ecef;
+            padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center;
+        }
+        .data-table-card .card-header h5 { margin: 0; font-weight: 600; color: #333; }
+
+        .table-modern { margin: 0; }
+        .table-modern thead th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; font-weight: 600; padding: 1rem 0.75rem;
+            border: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px;
+        }
+        .table-modern tbody td {
+            padding: 1rem 0.75rem; vertical-align: middle; border-bottom: 1px solid #eee;
+        }
+        .table-modern tbody tr:hover { background-color: #f8f9ff; }
+
+        /* Style riêng cho Role icon */
+        .role-info { display: flex; align-items: center; }
+        .role-icon-box {
+            width: 40px; height: 40px; border-radius: 8px;
+            background: #e0e7ff; color: #4338ca;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 0.75rem; font-size: 1.1rem;
+        }
+        .role-details h6 { margin: 0; font-weight: 600; color: #333; }
+
+        .action-btns .btn {
+            padding: 0.35rem 0.6rem; font-size: 0.8rem;
+            border-radius: 6px; margin: 0 2px;
+        }
+    </style>
 </head>
 <body>
-<div layout:fragment="content" class="container-fluid px-4">
-    <h2 class="mt-4">Quản lý Quyền (Roles)</h2>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
-        <li class="breadcrumb-item active">Roles</li>
-    </ol>
+<div layout:fragment="content" class="container-fluid py-4">
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-table me-1"></i>
-            Danh sách Role
-            <a th:href="@{/admin/roles/add}" class="btn btn-primary btn-sm float-end">
-                <i class="fas fa-plus"></i> Thêm Role Mới
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-shield-alt me-2"></i>Quản lý Phân quyền</h1>
+                <p>Cấu hình các nhóm quyền và vai trò trong hệ thống</p>
+            </div>
+            <a th:href="@{/admin/roles/add}" class="btn btn-light btn-lg">
+                <i class="fas fa-plus me-2"></i>Thêm Role mới
             </a>
         </div>
-        <div class="card-body">
-            <table class="table table-hover table-bordered">
-                <thead class="table-dark">
+    </div>
+
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i><span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="stats-cards">
+        <div class="stat-card">
+            <div class="stat-icon role"><i class="fas fa-user-tag"></i></div>
+            <div class="stat-info">
+                <h4 th:text="${roles != null ? roles.size() : 0}">0</h4>
+                <p>Tổng số Role</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="data-table-card">
+        <div class="card-header">
+            <h5><i class="fas fa-table me-2"></i>Danh sách Quyền hạn</h5>
+            <span class="badge bg-primary" th:text="${roles != null ? roles.size() + ' roles' : '0 roles'}"></span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-modern">
+                <thead>
                 <tr>
-                    <th style="width: 10%">ID</th>
-                    <th style="width: 25%">Tên Role</th>
-                    <th>Mô tả</th>
-                    <th style="width: 15%">Hành động</th>
+                    <th style="width: 80px;" class="text-center">ID</th>
+                    <th style="width: 30%;">Tên Quyền </th>
+                    <th>Mô tả chi tiết</th>
+                    <th class="text-center" style="width: 200px;">Hành động</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="r : ${roles}">
-                    <td th:text="${r.roleId}"></td>
-                    <td><span class="badge bg-info text-dark" th:text="${r.roleName}"></span></td>
-                    <td th:text="${r.description}"></td>
+                    <td class="text-center fw-bold text-muted" th:text="${r.roleId}">1</td>
                     <td>
+                        <div class="role-info">
+                            <div class="role-icon-box">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="role-details">
+                                <h6 th:text="${r.roleName}">ADMIN</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span th:text="${r.description}" class="text-secondary">Mô tả quyền hạn...</span>
+                    </td>
+                    <td class="text-center action-btns">
                         <a th:href="@{/admin/roles/edit/{id}(id=${r.roleId})}"
-                           class="btn btn-warning btn-sm" title="Sửa">
+                           class="btn btn-warning btn-sm" title="Chỉnh sửa">
                             <i class="fas fa-edit">Sửa</i>
                         </a>
                         <a th:href="@{/admin/roles/delete/{id}(id=${r.roleId})}"
                            class="btn btn-danger btn-sm"
-                           onclick="return confirm('Bạn có chắc chắn muốn xóa quyền này?')" title="Xóa">
-                            <i class="fas fa-trash">Xoá</i>
+                           onclick="return confirm('CẢNH BÁO: Xóa quyền này có thể ảnh hưởng đến người dùng đang sử dụng. Bạn có chắc chắn?');"
+                           title="Xóa">
+                            <i class="fas fa-trash-alt">Xoá</i>
                         </a>
                     </td>
                 </tr>
                 </tbody>
             </table>
+
+            <div th:if="${roles == null || roles.isEmpty()}" class="empty-state">
+                <i class="fas fa-shield-alt"></i>
+                <h5>Chưa có dữ liệu Role</h5>
+                <p class="text-muted">Hãy thêm role đầu tiên để phân quyền cho hệ thống</p>
+                <a th:href="@{/admin/roles/add}" class="btn btn-primary mt-2">
+                    <i class="fas fa-plus me-1"></i>Thêm Role mới
+                </a>
+            </div>
         </div>
     </div>
 </div>

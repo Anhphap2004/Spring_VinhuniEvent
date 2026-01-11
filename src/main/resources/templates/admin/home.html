@@ -5,270 +5,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
+    <title>Dashboard - Vinhuni Event</title>
+    <style>
+        .welcome-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        .welcome-banner h1 { margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 700; }
+        .welcome-banner p { margin: 0; opacity: 0.9; }
+        .welcome-banner .time { font-size: 0.9rem; opacity: 0.8; margin-top: 0.5rem; }
+
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+        .stat-card.events::before { background: linear-gradient(180deg, #667eea, #764ba2); }
+        .stat-card.users::before { background: linear-gradient(180deg, #11998e, #38ef7d); }
+        .stat-card.registrations::before { background: linear-gradient(180deg, #f093fb, #f5576c); }
+        .stat-card.pending::before { background: linear-gradient(180deg, #f59e0b, #fbbf24); }
+
+        .stat-card .icon {
+            width: 50px; height: 50px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .stat-card.events .icon { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .stat-card.users .icon { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; }
+        .stat-card.registrations .icon { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+        .stat-card.pending .icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; }
+
+        .stat-card h3 { margin: 0; font-size: 2rem; font-weight: 700; color: #333; }
+        .stat-card p { margin: 0.25rem 0 0; font-size: 0.9rem; color: #888; }
+        .stat-card a {
+            display: inline-block;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .stat-card a:hover { text-decoration: underline; }
+
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .content-card .card-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .content-card .card-header h5 { margin: 0; font-weight: 600; color: #333; }
+        .content-card .card-body { padding: 1.5rem; }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        .quick-action {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 1.25rem;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s;
+        }
+        .quick-action:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-3px);
+        }
+        .quick-action i { font-size: 1.5rem; margin-bottom: 0.5rem; display: block; }
+        .quick-action span { font-weight: 600; font-size: 0.9rem; }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-icon {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 1rem;
+            font-size: 0.9rem;
+        }
+        .activity-icon.success { background: #d1fae5; color: #059669; }
+        .activity-icon.info { background: #e0e7ff; color: #4f46e5; }
+        .activity-icon.warning { background: #fef3c7; color: #d97706; }
+        .activity-info h6 { margin: 0 0 3px; font-weight: 600; color: #333; }
+        .activity-info small { color: #888; }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
     <main class="content">
-        <div class="container-fluid p-0">
-            <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
-            <div class="row">
-                <div class="col-xl-6 col-xxl-5 d-flex">
-                    <div class="w-100">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col mt-0">
-                                                <h5 class="card-title">Sales</h5>
-                                            </div>
+        <div class="container-fluid p-0 py-4">
 
-                                            <div class="col-auto">
-                                                <div class="stat text-primary">
-                                                    <i class="align-middle" data-feather="truck"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h1 class="mt-1 mb-3">2.382</h1>
-                                        <div class="mb-0">
-                                            <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span>
-                                            <span class="text-muted">Since last week</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col mt-0">
-                                                <h5 class="card-title">Visitors</h5>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="stat text-primary">
-                                                    <i class="align-middle" data-feather="users"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h1 class="mt-1 mb-3">14.212</h1>
-                                        <div class="mb-0">
-                                            <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
-                                            <span class="text-muted">Since last week</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col mt-0">
-                                                <h5 class="card-title">Earnings</h5>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="stat text-primary">
-                                                    <i class="align-middle" data-feather="dollar-sign"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h1 class="mt-1 mb-3">$21.300</h1>
-                                        <div class="mb-0">
-                                            <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
-                                            <span class="text-muted">Since last week</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col mt-0">
-                                                <h5 class="card-title">Orders</h5>
-                                            </div>
-
-                                            <div class="col-auto">
-                                                <div class="stat text-primary">
-                                                    <i class="align-middle" data-feather="shopping-cart"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h1 class="mt-1 mb-3">64</h1>
-                                        <div class="mb-0">
-                                            <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -2.25% </span>
-                                            <span class="text-muted">Since last week</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-6 col-xxl-7">
-                    <div class="card flex-fill w-100">
-                        <div class="card-header">
-
-                            <h5 class="card-title mb-0">Recent Movement</h5>
-                        </div>
-                        <div class="card-body py-3">
-                            <div class="chart chart-sm">
-                                <canvas id="chartjs-dashboard-line"></canvas>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <h1><i class="fas fa-hand-sparkles me-2"></i>Chào mừng đến Dashboard!</h1>
+                <p>Quản lý sự kiện, người dùng và đăng ký từ một nơi duy nhất.</p>
+                <div class="time">
+                    <i class="fas fa-clock me-1"></i>
+                    <span id="currentTime"></span>
                 </div>
             </div>
 
+
+
             <div class="row">
-                <div class="col-12 col-md-6 col-xxl-3 d-flex order-2 order-xxl-3">
-                    <div class="card flex-fill w-100">
+                <!-- Quick Actions -->
+                <div class="col-lg-6">
+                    <div class="content-card">
                         <div class="card-header">
-
-                            <h5 class="card-title mb-0">Browser Usage</h5>
+                            <h5><i class="fas fa-bolt me-2"></i>Thao tác nhanh</h5>
                         </div>
-                        <div class="card-body d-flex">
-                            <div class="align-self-center w-100">
-                                <div class="py-3">
-                                    <div class="chart chart-xs">
-                                        <canvas id="chartjs-dashboard-pie"></canvas>
-                                    </div>
-                                </div>
-
-                                <table class="table mb-0">
-                                    <tbody>
-                                    <tr>
-                                        <td>Chrome</td>
-                                        <td class="text-end">4306</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Firefox</td>
-                                        <td class="text-end">3801</td>
-                                    </tr>
-                                    <tr>
-                                        <td>IE</td>
-                                        <td class="text-end">1689</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <a th:href="@{/admin/events/create}" class="quick-action">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>Tạo sự kiện</span>
+                                </a>
+                                <a th:href="@{/admin/users/new}" class="quick-action">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span>Thêm người dùng</span>
+                                </a>
+                                <a th:href="@{/admin/event_register}" class="quick-action">
+                                    <i class="fas fa-clipboard-list"></i>
+                                    <span>Duyệt đăng ký</span>
+                                </a>
+                                <a th:href="@{/admin/role-requests}" class="quick-action">
+                                    <i class="fas fa-user-tag"></i>
+                                    <span>Yêu cầu quyền</span>
+                                </a>
+                                <a th:href="@{/admin/event-categories}" class="quick-action">
+                                    <i class="fas fa-tags"></i>
+                                    <span>Danh mục</span>
+                                </a>
+                                <a th:href="@{/admin/school-info}" class="quick-action">
+                                    <i class="fas fa-school"></i>
+                                    <span>Thông tin trường</span>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
-                    <div class="card flex-fill w-100">
-                        <div class="card-header">
 
-                            <h5 class="card-title mb-0">Real-Time</h5>
-                        </div>
-                        <div class="card-body px-4">
-                            <div id="world_map" style="height:350px;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-xxl-3 d-flex order-1 order-xxl-1">
-                    <div class="card flex-fill">
+                <!-- Recent Activity -->
+                <div class="col-lg-6">
+                    <div class="content-card">
                         <div class="card-header">
-
-                            <h5 class="card-title mb-0">Calendar</h5>
+                            <h5><i class="fas fa-history me-2"></i>Hoạt động gần đây</h5>
+                            <a th:href="@{/admin/events}" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
                         </div>
-                        <div class="card-body d-flex">
-                            <div class="align-self-center w-100">
-                                <div class="chart">
-                                    <div id="datetimepicker-dashboard"></div>
+                        <div class="card-body">
+                            <div class="activity-item">
+                                <div class="activity-icon success">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="activity-info">
+                                    <h6>Hệ thống đã sẵn sàng</h6>
+                                    <small>Tất cả dịch vụ hoạt động bình thường</small>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 col-lg-8 col-xxl-9 d-flex">
-                    <div class="card flex-fill">
-                        <div class="card-header">
-
-                            <h5 class="card-title mb-0">Latest Projects</h5>
-                        </div>
-                        <table class="table table-hover my-0">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th class="d-none d-xl-table-cell">Start Date</th>
-                                <th class="d-none d-xl-table-cell">End Date</th>
-                                <th>Status</th>
-                                <th class="d-none d-md-table-cell">Assignee</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>Project Apollo</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-success">Done</span></td>
-                                <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                            </tr>
-                            <tr>
-                                <td>Project Fireball</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-danger">Cancelled</span></td>
-                                <td class="d-none d-md-table-cell">William Harris</td>
-                            </tr>
-                            <tr>
-                                <td>Project Hades</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-success">Done</span></td>
-                                <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                            </tr>
-                            <tr>
-                                <td>Project Nitro</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-warning">In progress</span></td>
-                                <td class="d-none d-md-table-cell">Vanessa Tucker</td>
-                            </tr>
-                            <tr>
-                                <td>Project Phoenix</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-success">Done</span></td>
-                                <td class="d-none d-md-table-cell">William Harris</td>
-                            </tr>
-                            <tr>
-                                <td>Project X</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-success">Done</span></td>
-                                <td class="d-none d-md-table-cell">Sharon Lessman</td>
-                            </tr>
-                            <tr>
-                                <td>Project Romeo</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-success">Done</span></td>
-                                <td class="d-none d-md-table-cell">Christina Mason</td>
-                            </tr>
-                            <tr>
-                                <td>Project Wombat</td>
-                                <td class="d-none d-xl-table-cell">01/01/2021</td>
-                                <td class="d-none d-xl-table-cell">31/06/2021</td>
-                                <td><span class="badge bg-warning">In progress</span></td>
-                                <td class="d-none d-md-table-cell">William Harris</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-4 col-xxl-3 d-flex">
-                    <div class="card flex-fill w-100">
-                        <div class="card-header">
-
-                            <h5 class="card-title mb-0">Monthly Sales</h5>
-                        </div>
-                        <div class="card-body d-flex w-100">
-                            <div class="align-self-center chart chart-lg">
-                                <canvas id="chartjs-dashboard-bar"></canvas>
+                            <div class="activity-item">
+                                <div class="activity-icon info">
+                                    <i class="fas fa-info"></i>
+                                </div>
+                                <div class="activity-info">
+                                    <h6>Mẹo: Kiểm tra yêu cầu quyền</h6>
+                                    <small>Có thể có yêu cầu mới từ người dùng</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon warning">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <div class="activity-info">
+                                    <h6>Nhắc nhở: Duyệt đăng ký</h6>
+                                    <small>Kiểm tra các đăng ký sự kiện mới</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -277,8 +233,24 @@
 
         </div>
     </main>
-
 </div>
 
+<script layout:fragment="script">
+    // Hiển thị thời gian hiện tại
+    function updateTime() {
+        const now = new Date();
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        document.getElementById('currentTime').textContent = now.toLocaleDateString('vi-VN', options);
+    }
+    updateTime();
+    setInterval(updateTime, 60000);
+</script>
 </body>
 </html>

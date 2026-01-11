@@ -38,6 +38,12 @@ public class AdminEventController {
     public String index(Model model) {
         List<Event> events = eventService.getAllEvents();
         model.addAttribute("events", events);
+        long activeCount = events.stream().filter(Event::getIsActive).count();
+        long inactiveCount = events.stream().filter(e -> !e.getIsActive()).count();
+
+        model.addAttribute("activeCount", activeCount);
+        model.addAttribute("inactiveCount", inactiveCount);
+
         return "admin/event/list";
     }
 

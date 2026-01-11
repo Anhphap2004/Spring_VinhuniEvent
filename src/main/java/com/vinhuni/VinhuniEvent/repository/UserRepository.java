@@ -12,15 +12,16 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 
-    // Filter theo role_id và keyword
-    @Query(value = """
-        SELECT u.* FROM users u 
-        LEFT JOIN roles r ON r.role_id = u.role_id
-        WHERE (:roleId IS NULL OR u.role_id = :roleId)
-          AND (:keyword IS NULL OR :keyword = ''
-               OR LOWER(CAST(u.full_name AS TEXT)) LIKE LOWER(CONCAT('%', CAST(:keyword AS TEXT), '%'))
-               OR LOWER(CAST(u.email AS TEXT)) LIKE LOWER(CONCAT('%', CAST(:keyword AS TEXT), '%'))
-               OR LOWER(CAST(u.student_code AS TEXT)) LIKE LOWER(CONCAT('%', CAST(:keyword AS TEXT), '%')))
-        """, nativeQuery = true)
+    // Tìm users theo roleId
+    @Query("SELECT u FROM User u WHERE u.role.roleId = :roleId")
+    List<User> findByRoleId(@Param("roleId") Integer roleId);
+
+    // Filter theo role_id và keyword - Sử dụng JPQL đơn giản
+    @Query("SELECT u FROM User u LEFT JOIN u.role r WHERE " +
+           "(:roleId IS NULL OR u.role.roleId = :roleId) AND " +
+           "(:keyword IS NULL OR :keyword = '' OR " +
+           "LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(u.studentCode) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     List<User> searchUsers(@Param("roleId") Integer roleId, @Param("keyword") String keyword);
 }
