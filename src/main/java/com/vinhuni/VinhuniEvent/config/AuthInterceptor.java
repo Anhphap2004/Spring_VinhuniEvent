@@ -50,8 +50,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             }
         }
         if (!isAllowed) {
-            // Đăng nhập rồi nhưng không đủ quyền -> Chuyển về trang chủ hoặc trang lỗi
-            // Bạn có thể tạo file 403.html sau, giờ tạm thời đẩy về trang chủ kèm thông báo
+
             response.sendRedirect("/403");
             return false; // Chặn lại
         }
