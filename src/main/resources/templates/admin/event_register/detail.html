@@ -293,8 +293,8 @@
             <label for="statusFilter" class="form-label mb-1 fw-bold"><i class="fas fa-filter me-1"></i>Lọc trạng thái:</label>
             <select id="statusFilter" class="form-select">
                 <option value="Tất cả">Tất cả trạng thái</option>
-                <option value="Đã đăng ký">⏳ Chờ duyệt</option>
-                <option value="Đã xác nhận đăng ký">✅ Đã xác nhận</option>
+                <option value="Đã đăng ký">Chờ duyệt</option>
+                <option value="Đã xác nhận đăng ký">Đã xác nhận</option>
             </select>
         </div>
         <div class="filter-stats">
@@ -335,47 +335,51 @@
                     <td>
                         <div class="user-cell">
                             <div class="user-avatar"
-                                 th:text="${reg.user.fullName != null ? reg.user.fullName.substring(0,1).toUpperCase() : 'U'}">U</div>
+                                 th:text="${reg.user != null && reg.user.fullName != null ? reg.user.fullName.substring(0,1).toUpperCase() : 'U'}">U</div>
                             <div class="user-info">
-                                <h6 th:text="${reg.user.fullName}">Nguyễn Văn A</h6>
-                                <span class="email" th:text="${reg.user.email}">email@example.com</span>
+                                <h6 th:text="${reg.user != null ? reg.user.fullName : 'Unknown'}">Tên User</h6>
+                                <span class="email" th:text="${reg.user != null ? reg.user.email : ''}">email</span>
                             </div>
                         </div>
                     </td>
 
                     <td>
-                        <div th:if="${reg.user.studentCode}" class="fw-semibold text-primary" th:text="${reg.user.studentCode}"></div>
-                        <div th:if="${reg.user.faculty}" class="small text-muted" th:text="${reg.user.faculty}"></div>
-                        <div th:if="${reg.user.major}" class="small text-muted" th:text="${reg.user.major}"></div>
-                        <span th:unless="${reg.user.studentCode || reg.user.faculty}" class="text-muted">-</span>
+                        <div th:if="${reg.user != null}">
+                            <div th:if="${reg.user.studentCode}" class="fw-semibold text-primary" th:text="${reg.user.studentCode}"></div>
+                            <div th:if="${reg.user.faculty}" class="small text-muted" th:text="${reg.user.faculty}"></div>
+                        </div>
                     </td>
 
                     <td>
-                        <div class="contact-info">
+                        <div class="contact-info" th:if="${reg.user != null}">
                             <div th:if="${reg.user.phoneNumber}">
-                                <i class="fas fa-phone"></i>
-                                <span th:text="${reg.user.phoneNumber}"></span>
+                                <i class="fas fa-phone"></i> <span th:text="${reg.user.phoneNumber}"></span>
                             </div>
                             <div>
-                                <i class="fas fa-envelope"></i>
-                                <span th:text="${reg.user.email}"></span>
+                                <i class="fas fa-envelope"></i> <span th:text="${reg.user.email}"></span>
                             </div>
                         </div>
                     </td>
 
                     <td>
-                        <span th:if="${reg.registrationDate}"
-                              th:text="${#temporals.format(reg.registrationDate, 'dd/MM/yyyy HH:mm')}"></span>
-                        <span th:unless="${reg.registrationDate}" class="text-muted">-</span>
+        <span th:if="${reg.registrationDate}"
+              th:text="${#temporals.format(reg.registrationDate, 'dd/MM/yyyy HH:mm')}"></span>
                     </td>
 
                     <td class="text-center">
-                        <span th:if="${reg.status == 'Đã xác nhận đăng ký'}" class="status-badge status-confirmed">
-                            <i class="fas fa-check-circle me-1"></i>Đã duyệt
-                        </span>
-                        <span th:if="${reg.status == 'Đã đăng ký'}" class="status-badge status-pending">
-                            <i class="fas fa-clock me-1"></i>Chờ duyệt
-                        </span>
+        <span th:if="${reg.status == 'Đã xác nhận đăng ký' || reg.status == 'Đã xác nhận' || reg.status == 'Confirmed'}"
+              class="status-badge status-confirmed">
+            <i class="fas fa-check-circle me-1"></i>Đã duyệt
+        </span>
+
+                        <span th:if="${reg.status == 'Đã đăng ký' || reg.status == 'Chờ duyệt' || reg.status == 'Pending'}"
+                              class="status-badge status-pending">
+            <i class="fas fa-clock me-1"></i>Chờ duyệt
+        </span>
+
+                        <span th:unless="${reg.status == 'Đã xác nhận đăng ký' || reg.status == 'Đã xác nhận' || reg.status == 'Confirmed' || reg.status == 'Đã đăng ký' || reg.status == 'Chờ duyệt' || reg.status == 'Pending'}"
+                              class="badge bg-secondary text-white" th:text="${reg.status != null ? reg.status : 'NULL'}">
+        </span>
                     </td>
 
                     <td class="text-center">
@@ -384,7 +388,7 @@
                             <input type="hidden" name="eventId" th:value="${event.eventId}" />
 
                             <button type="submit" name="action" value="confirm"
-                                    th:if="${reg.status != 'Đã xác nhận đăng ký'}"
+                                    th:unless="${reg.status == 'Đã xác nhận đăng ký' || reg.status == 'Đã xác nhận' || reg.status == 'Confirmed'}"
                                     class="btn btn-success" title="Xác nhận đăng ký">
                                 <i class="fas fa-check me-1"></i>Duyệt
                             </button>
@@ -419,13 +423,20 @@
         const pendingCountEl = document.getElementById('pendingCount');
         const confirmedCountEl = document.getElementById('confirmedCount');
 
+        // Danh sách các trạng thái được coi là "Đã duyệt" và "Chờ duyệt"
+        const confirmedStatuses = ['Đã xác nhận đăng ký', 'Đã xác nhận', 'Confirmed'];
+        const pendingStatuses = ['Đã đăng ký', 'Chờ duyệt', 'Pending'];
+
         // Đếm số lượng theo trạng thái
         function countStatus() {
             let pending = 0, confirmed = 0;
             rows.forEach(row => {
                 const status = row.getAttribute('data-status');
-                if (status === 'Đã đăng ký') pending++;
-                else if (status === 'Đã xác nhận đăng ký') confirmed++;
+                if (pendingStatuses.includes(status)) {
+                    pending++;
+                } else if (confirmedStatuses.includes(status)) {
+                    confirmed++;
+                }
             });
             pendingCountEl.textContent = pending;
             confirmedCountEl.textContent = confirmed;
@@ -433,14 +444,23 @@
 
         // Lọc bảng
         function filterTable() {
-            const selectedStatus = filterSelect.value;
+            const selectedValue = filterSelect.value; // Giá trị chọn từ dropdown
+
             rows.forEach(row => {
                 const rowStatus = row.getAttribute('data-status');
-                if (selectedStatus === 'Tất cả' || rowStatus === selectedStatus) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+                let shouldShow = false;
+
+                if (selectedValue === 'Tất cả') {
+                    shouldShow = true;
+                } else if (selectedValue === 'Đã đăng ký') {
+                    // Lọc chờ duyệt
+                    shouldShow = pendingStatuses.includes(rowStatus);
+                } else if (selectedValue === 'Đã xác nhận đăng ký') {
+                    // Lọc đã duyệt
+                    shouldShow = confirmedStatuses.includes(rowStatus);
                 }
+
+                row.style.display = shouldShow ? '' : 'none';
             });
         }
 

@@ -1,5 +1,6 @@
 package com.vinhuni.VinhuniEvent.controller;
 
+import com.vinhuni.VinhuniEvent.config.RequiredRole;
 import com.vinhuni.VinhuniEvent.model.User;
 import com.vinhuni.VinhuniEvent.service.RoleService;
 import com.vinhuni.VinhuniEvent.service.UserService;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
-
+@RequiredRole(1)
 @Controller
 @RequestMapping("/admin/users")
 public class UserController {

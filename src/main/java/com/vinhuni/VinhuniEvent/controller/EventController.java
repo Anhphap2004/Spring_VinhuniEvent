@@ -1,5 +1,6 @@
 package com.vinhuni.VinhuniEvent.controller;
 
+import com.vinhuni.VinhuniEvent.config.RequiredRole;
 import com.vinhuni.VinhuniEvent.exception.RegistrationException;
 import com.vinhuni.VinhuniEvent.model.Event;
 import com.vinhuni.VinhuniEvent.model.EventRegistration;
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@Controller// Chỉ cho phép User (roleId = 1) truy cập
 @RequestMapping("/events")
 public class EventController {
 
@@ -68,6 +71,19 @@ public class EventController {
         Event event = eventOptional.get();
         model.addAttribute("event", event);
 
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startTime = event.getStartTime();
+        LocalDateTime endTime = event.getEndTime();
+        boolean hasStarted = startTime != null && !startTime.isAfter(now);
+        boolean hasEnded = endTime != null && !endTime.isAfter(now);
+        long startCountdownSeconds = (startTime != null && startTime.isAfter(now))
+                ? Duration.between(now, startTime).getSeconds()
+                : 0;
+
+        model.addAttribute("hasStarted", hasStarted);
+        model.addAttribute("hasEnded", hasEnded);
+        model.addAttribute("startCountdownSeconds", startCountdownSeconds);
+
         // Mặc định là chưa đăng ký
         boolean isRegistered = false;
         String registrationStatus = "";
@@ -106,12 +122,28 @@ public class EventController {
             return "redirect:/login";
         }
 
+        var eventOptional = eventService.getEventById(eventId);
+        if (eventOptional.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Sự kiện không tồn tại.");
+            return "redirect:/events";
+        }
+
+        Event event = eventOptional.get();
+        LocalDateTime now = LocalDateTime.now();
+        if (event.getEndTime() != null && !event.getEndTime().isAfter(now)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Sự kiện đã kết thúc, không thể đăng ký.");
+            return "redirect:/events/" + eventId;
+        }
+        if (event.getStartTime() != null && !event.getStartTime().isAfter(now)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Sự kiện đã bắt đầu, không thể đăng ký thêm.");
+            return "redirect:/events/" + eventId;
+        }
+
         Long currentUserId = loggedInUser.getUserId();
 
         try {
             registrationService.registerForEvent(eventId, currentUserId);
 
-            // Thông báo hiển thị ngay sau khi bấm nút
             redirectAttributes.addFlashAttribute("successMessage",
                     "Đã đăng ký thành công, vui lòng chờ duyệt!");
 
@@ -135,3 +167,4 @@ public class EventController {
         return "redirect:/events";
     }
 }
+

@@ -59,6 +59,16 @@
             border-color: #f5c2c7;
         }
 
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .status-ended { background: #fdecea; color: #b42318; border: 1px solid #f6c3c0; }
+        .status-upcoming { background: #e8f5e9; color: #1b5e20; border: 1px solid #c8e6c9; }
+        .status-started { background: #fff4e5; color: #b35c00; border: 1px solid #ffd8a8; }
     </style>
 </head>
 <body>
@@ -116,6 +126,13 @@
                 <div class="info-box shadow-sm mb-4">
                     <h5 class="fw-bold text-primary mb-3"><i class="fas fa-calendar-alt me-2"></i>Thông Tin Chung</h5>
 
+                    <div class="mb-3">
+                        <span class="fw-bold d-block">Trạng thái</span>
+                        <span th:if="${hasEnded}" class="status-badge status-ended"><i class="fas fa-flag-checkered me-1"></i>Sự kiện đã kết thúc</span>
+                        <span th:if="${!hasEnded and hasStarted}" class="status-badge status-started"><i class="fas fa-play me-1"></i>Đang diễn ra</span>
+                        <span th:if="${!hasEnded and !hasStarted}" class="status-badge status-upcoming"><i class="fas fa-hourglass-start me-1"></i>Sắp diễn ra</span>
+                    </div>
+
                     <ul class="list-unstyled">
                         <li class="mb-3">
                             <span class="fw-bold d-block">Thời Gian</span>
@@ -147,23 +164,33 @@
                 </div>
                 <div class="mb-4">
 
-                    <div th:if="${isRegistered}">
+                    <div th:if="${hasEnded}">
+                        <div class="alert alert-secondary text-center border-0 shadow-sm">
+                            <i class="fas fa-flag-checkered me-2"></i>Sự kiện đã kết thúc.
+                        </div>
+                    </div>
 
+                    <div th:if="${!hasEnded and hasStarted}">
+                        <div class="alert alert-warning text-center border-warning shadow-sm">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Sự kiện đã bắt đầu, hiện không nhận đăng ký mới.
+                        </div>
+                    </div>
+
+                    <div th:if="${!hasEnded and !hasStarted and isRegistered}">
                         <div th:if="${registrationStatus == 'Đã đăng ký'}"
                              class="alert alert-warning text-center border-warning shadow-sm">
-                            <h5 class="alert-heading fw-bold"><i class="fas fa-hourglass-half me-2"></i>Đã đăng ký thành công, vui lòng chờ duyệt</h5>
-                            <p class="mb-0 small">Ban tổ chức sẽ xem xét và xác nhận đăng ký của bạn sớm nhất.</p>
+                            <h5 class="alert-heading fw-bold"><i class="fas fa-hourglass-half me-2"></i>Đã đăng ký, chờ duyệt</h5>
+                            <p class="mb-0 small">Ban tổ chức sẽ xác nhận đăng ký của bạn sớm nhất.</p>
                         </div>
 
                         <div th:if="${registrationStatus == 'Đã xác nhận đăng ký'}"
                              class="alert alert-success text-center border-success shadow-sm">
-                            <h5 class="alert-heading fw-bold"><i class="fas fa-check-circle me-2"></i>Đã Được Duyệt, Đăng Kí thành công</h5>
-                            <p class="mb-0 small">Hẹn gặp lại bạn tại sự kiện!</p>
+                            <h5 class="alert-heading fw-bold"><i class="fas fa-check-circle me-2"></i>Đã được duyệt</h5>
+                            <p class="mb-0 small">Hẹn gặp bạn tại sự kiện!</p>
                         </div>
-
                     </div>
 
-                    <div th:unless="${isRegistered}">
+                    <div th:if="${!hasEnded and !hasStarted and !isRegistered}">
                         <form th:action="@{/events/{id}/register(id=${event.eventId})}" method="post">
                             <button type="submit"
                                     class="btn btn-primary btn-lg w-100 fw-bold shadow-sm"
@@ -176,12 +203,53 @@
 
                 </div>
                 <div class="info-box mt-4 text-center">
-                    <small class="text-muted">Sự kiện bắt đầu sau:</small>
-                    <h3 class="fw-bold text-success">07 Ngày 14 Giờ</h3>
+                    <div th:if="${hasEnded}">
+                        <small class="text-muted">Sự kiện đã kết thúc.</small>
+                        <h3 class="fw-bold text-danger">Đã đóng</h3>
+                    </div>
+                    <div th:if="${!hasEnded and hasStarted}">
+                        <small class="text-muted">Sự kiện đang diễn ra.</small>
+                        <h3 class="fw-bold text-warning">Đang diễn ra</h3>
+                    </div>
+                    <div th:if="${!hasEnded and !hasStarted}">
+                        <small class="text-muted">Sự kiện bắt đầu sau:</small>
+                        <h3 id="countdown" class="fw-bold text-success">Đang tính...</h3>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script th:if="${!hasEnded and !hasStarted}" th:inline="javascript">
+    const totalSeconds = /*[[${startCountdownSeconds}]]*/ 0;
+    const countdownEl = document.getElementById('countdown');
+
+    function formatDuration(seconds) {
+        if (seconds < 0) return 'Đang diễn ra';
+        const d = Math.floor(seconds / 86400);
+        const h = Math.floor((seconds % 86400) / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        const parts = [];
+        if (d > 0) parts.push(`${d} ngày`);
+        if (h > 0) parts.push(`${h} giờ`);
+        if (m > 0) parts.push(`${m} phút`);
+        parts.push(`${s} giây`);
+        return parts.join(' ');
+    }
+
+    let remaining = totalSeconds;
+    const tick = () => {
+        if (!countdownEl) return;
+        countdownEl.textContent = formatDuration(remaining);
+        remaining -= 1;
+        if (remaining >= 0) {
+            setTimeout(tick, 1000);
+        }
+    };
+    tick();
+</script>
 </body>
 </html>
+

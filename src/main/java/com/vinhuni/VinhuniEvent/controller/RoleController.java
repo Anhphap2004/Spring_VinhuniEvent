@@ -1,11 +1,13 @@
 package com.vinhuni.VinhuniEvent.controller;
 
+import com.vinhuni.VinhuniEvent.config.RequiredRole;
 import com.vinhuni.VinhuniEvent.model.Role;
 import com.vinhuni.VinhuniEvent.service.RoleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 @Controller
+@RequiredRole(1)
 @RequestMapping("/admin/roles")
 public class RoleController {
 

@@ -1,5 +1,6 @@
 package com.vinhuni.VinhuniEvent.controller;
 
+import com.vinhuni.VinhuniEvent.config.RequiredRole;
 import com.vinhuni.VinhuniEvent.exception.RegistrationException;
 import com.vinhuni.VinhuniEvent.service.RoleRequestService;
 import com.vinhuni.VinhuniEvent.service.UserService;
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+@RequiredRole(1)
 @Controller
 @RequestMapping("/admin/role-requests")
 public class RoleRequestController {
